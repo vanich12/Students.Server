@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="DTO\" />
+      <Folder Include="Services\" />
+      <Folder Include="Utillities\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Students.Infrastructure\Students.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ClosedXML" Version="0.105.0-rc" />
+      <PackageReference Include="ClosedXML.Report" Version="0.2.12-rc" />
+    </ItemGroup>
+
+</Project>

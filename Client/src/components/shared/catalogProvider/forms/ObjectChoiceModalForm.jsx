@@ -55,16 +55,15 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
     const onSubmit = () => {
         console.log('Submitting selected keys:', selectedRowKeys, 'for group id:', id);
         // Вызываем ТРИГГЕР мутации, передавая массив КЛЮЧЕЙ (ID)
-        // Убедитесь, что ваш API ожидает поле 'objects' и массив ID
         addItemsTrigger({ objects: selectedRowKeys, groupId: id });
     };
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableParams(prev => ({
             ...prev,
-            pagination, // Обновляем пагинацию
-            // filters, // Можно добавить обработку фильтров
-            // sorter, // Можно добавить обработку сортировки
+            pagination,
+            // filters,
+            // sorter,
         }));
     };
 
@@ -108,7 +107,6 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
         onChange: (newSelectedRowKeys) => {
             setSelectedRowKeys(newSelectedRowKeys);
             console.log(selectedRowKeys)
-            // Обновляем состояние при изменении
         },
     };
 
@@ -125,14 +123,13 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
             cancelText="Отмена"
             width={900}
             okButtonProps={{
-                form: 'objects_choice_form_in_modal', // ID формы
-                htmlType: 'submit',                  // Тип кнопки
-                loading: isMutationLoading,          // Показываем загрузку при отправке
-                disabled: selectedRowKeys.length === 0, // Блокируем, если ничего не выбрано
+                form: 'objects_choice_form_in_modal',
+                htmlType: 'submit',
+                loading: isMutationLoading,
+                disabled: selectedRowKeys.length === 0,
             }}
-            onCancel={() => setShowRangeForm(false)}// Или другая подходящая ширина
+            onCancel={() => setShowRangeForm(false)}
             destroyOnClose
-            // Убрали style={{minWidth:'180vh'}} - это скорее всего ошибка, ширина задается через width
         >
             <Form
                 layout="vertical"
@@ -150,7 +147,6 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
                     style={{ marginBottom: 16 }}
                 />
 
-                {/* Ошибки */}
                 {queryError && (
                     <Alert message="Ошибка загрузки данных" description={JSON.stringify(queryError)} type="error" showIcon style={{ marginBottom: 16 }} />
                 )}
@@ -158,24 +154,22 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
                     <Alert message="Ошибка добавления" description={JSON.stringify(mutationError)} type="error" showIcon style={{ marginBottom: 16 }} />
                 )}
 
-                {/* Таблица */}
                 <Table
-                    rowSelection={{ // Используем стандартный выбор строк
+                    rowSelection={{
                         type: 'checkbox',
                         ...rowSelectionConfig,
                     }}
-                    rowKey={(record) => record.id} // Ключ строки (убедитесь, что ID уникальны)
-                    dataSource={processedTableData} // Обработанные данные
-                    loading={isQueryLoading || isQueryFetching} // Загрузка данных для таблицы
-                    columns={columns} // Колонки
-                    scroll={{ y: 400 }} // Ограничение высоты
-                    pagination={{ // Настройки пагинации
+                    rowKey={(record) => record.id}
+                    dataSource={processedTableData}
+                    loading={isQueryLoading || isQueryFetching}
+                    columns={columns}
+                    scroll={{ y: 400 }}
+                    pagination={{
                         ...tableParams.pagination,
                         position: ['bottomRight'],
-                        showSizeChanger: true, // Разрешить менять кол-во на странице
+                        showSizeChanger: true,
                     }}
-                    onChange={handleTableChange} // Обработчик пагинации/фильтров/сортировки
-                    // Убрали onRow - используем rowSelection
+                    onChange={handleTableChange}
                 />
             </Form>
         </Modal>

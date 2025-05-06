@@ -17,12 +17,12 @@ public interface IRequestRepository : IGenericRepository<Request>
   /// <returns>Идентификатор заявки.</returns>
   Task<Guid?> AddOrderToRequest(Guid requestId, Order order);
 
-  /// <summary>
-  /// Список заявок, в которые подавал студент.
-  /// </summary>
-  /// <param name="studentId">Идентификатор студента.</param>
-  /// <returns>Список заявок.</returns>
-  Task<IEnumerable<Request>?> GetListRequestsOfStudentExists(Guid studentId);
+    /// <summary>
+    /// Список заявок, в которые подавал студент.
+    /// </summary>
+    /// <param name="studentId">Идентификатор студента.</param>
+    /// <returns>Список заявок.</returns>
+    Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId);
 
   /// <summary>
   /// Пагинация заявок.
@@ -30,5 +30,5 @@ public interface IRequestRepository : IGenericRepository<Request>
   /// <param name="page">Номер страницы.</param>
   /// <param name="pageSize">Размер страницы.</param>
   /// <returns>Пагинированные DTO заявок.</returns>
-  Task<PagedPage<RequestsDTO>> GetRequestsDTOByPage(int page, int pageSize);
+  Task<PagedPage<RequestsDTO>> GetRequestsDTOByPage(int page, int pageSize, RequestFilterDTO filters);
 }

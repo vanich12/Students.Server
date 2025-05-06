@@ -61,6 +61,7 @@ namespace Students.Models
                 {
                     age--;
                 }
+
                 return age;
             }
         }
@@ -149,7 +150,9 @@ namespace Students.Models
             set
             {
                 value = value.ToLower();
-                if (Regex.IsMatch(value, @"^\s*[\w\-\+_']+(\.[\w\-\+_']+)*\@[A-Za-z0-9]([\w\.-]*[A-Za-z0-9])?\.[A-Za-z][A-Za-z\.]*[A-Za-z]$") && MailAddress.TryCreate(value, out var address))
+                if (Regex.IsMatch(value,
+                        @"^\s*[\w\-\+_']+(\.[\w\-\+_']+)*\@[A-Za-z0-9]([\w\.-]*[A-Za-z0-9])?\.[A-Za-z][A-Za-z\.]*[A-Za-z]$") &&
+                    MailAddress.TryCreate(value, out var address))
                     this._email = address.Address;
                 else
                     throw new ValidationException("Not a valid Email address.");
@@ -216,12 +219,18 @@ namespace Students.Models
         /// </summary>
         public DateTime? DateTakeDiplom { get; set; }
 
+
         /// <summary>
         /// Уровень образования
         /// экспорт из заявки, хотя по факту тут тоже некий справочник Высшее образование / Среднее профессиональное образование / Студент ВО / Студент СПО
         /// </summary>
         [JsonIgnore]
         public virtual TypeEducation? TypeEducation { get; set; }
+
+        /// <summary>
+        /// Идентификатор пользователя, кто последний вносил изменения в данные студента
+        /// </summary>
+        [JsonIgnore] public Guid? LastChangedByUserId { get; set; }
 
         /// <summary>
         /// Сфера деятельности, уже есть как бы класс сфера деятельности с уровнями

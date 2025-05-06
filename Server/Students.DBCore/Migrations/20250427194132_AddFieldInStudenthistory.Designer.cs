@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Students.DBCore.Contexts;
@@ -11,9 +12,11 @@ using Students.DBCore.Contexts;
 namespace Students.DBCore.Migrations
 {
     [DbContext(typeof(PgContext))]
-    partial class PgContextModelSnapshot : ModelSnapshot
+    [Migration("20250427194132_AddFieldInStudenthistory")]
+    partial class AddFieldInStudenthistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -905,9 +908,6 @@ namespace Students.DBCore.Migrations
                     b.Property<string>("IT_Experience")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid?>("LastChangedByUserId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");

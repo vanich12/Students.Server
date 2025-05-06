@@ -7,6 +7,7 @@ namespace Students.Infrastructure.DTO
         [FromQuery(Name = "birthDate")]
         public DateOnly? BirthDate { get; set; }
 
+        [FromQuery(Name = "groupId")]
         public Guid? GroupId { get; set; }
 
         [FromQuery(Name = "educationProgram")]

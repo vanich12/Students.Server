@@ -62,6 +62,7 @@ const EntityTable = ({ config }) => {
         JSON.stringify(tableParams.filters)*/,
     ]);
 
+    // форматированеи строки фильрации для запроса
     const generateQueryString = useCallback(() => {
         return Object.entries(query)
             .map(([key, value]) => `&${key}=${value}`)

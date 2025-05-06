@@ -23,12 +23,10 @@ const useGetAllPagedAsync = ({ pageNumber, pageSize, filterDataReq: queryString 
 };
 
 const useRemoveOneAsync = () => {
-  const [removeItem, removingResult] = useRemoveStudentMutation();
+  const [removeTrigger, removingResult] = useRemoveStudentMutation();
   const { data, error, isUninitialized, isLoading, isSuccess, isError, reset } = removingResult;
 
-
-
-  return [removeItem, removingResult];
+  return [removeTrigger, removingResult];
 };
 
 export {

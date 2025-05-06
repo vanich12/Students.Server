@@ -4,6 +4,7 @@ import { CheckCircleFilled } from '@ant-design/icons';
 import {
     useGetAllAsync,
     useGetAllPagedAsync,
+    useGetReqByStudentId,
     useGetOneByIdAsync,
     useAddOneAsync,
     useEditOneAsync,
@@ -64,6 +65,7 @@ export default {
     crud: {
         useGetAllAsync,
         useGetAllPagedAsync,
+        useGetReqByStudentId,
         useGetOneByIdAsync,
         useAddOneAsync,
         useEditOneAsync,

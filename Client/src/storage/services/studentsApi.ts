@@ -24,35 +24,47 @@ export const studentsApi = createApi({
   reducerPath: 'students',
   keepUnusedDataFor: 5,
   baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/student` }),
-  tagTypes: ['Students', 'Student'], // 1. Определяем типы тегов
+  tagTypes: ['Students', 'Student', 'GroupStudentList'], // 1. Определяем типы тегов
   endpoints: (builder) => ({
     getStudents: builder.query<StudentDTO[], void>({
       query: () => '',
     }),
 
     getStudentsPaged: builder.query<IPagedPageData<StudentDTO>, IPagedParams>({
-          query: ({ pageNumber, pageSize, filterDataReq }) => {
-            // 1. Формируем строку запроса (относительную часть URL)
-            const relativeUrlString = `paged?page=${pageNumber}&size=${pageSize}${filterDataReq}`;
+      // query остается как был, принимая filterDataReq
+      query: ({ pageNumber, pageSize, filterDataReq }) => {
+        const relativeUrlString = `paged?page=${pageNumber}&size=${pageSize}${filterDataReq}`;
+        console.log('[RTK Query Log] Endpoint: getStudentsPaged');
+        console.log('[RTK Query Log] Input Params:', { pageNumber, pageSize, filterDataReq });
+        console.log('[RTK Query Log] Generated Relative URL:', relativeUrlString);
+        return relativeUrlString;
+      },
+      // 2. ОБНОВЛЯЕМ providesTags, АНАЛИЗИРУЯ filterDataReq
+      providesTags: (result, error, { filterDataReq }) => {
+        // Базовые теги для отдельных студентов и общего списка
+        const studentTags = result?.data
+            ? result.data.map(({ id }) => ({ type: 'Student' as const, id }))
+            : [];
+        const listTag = { type: 'Students' as const, id: 'LIST' };
 
-            // 2. ВЫВОДИМ В КОНСОЛЬ сформированную строку и входные параметры
-            console.log('[RTK Query Log] Endpoint: getStudentsPaged');
-            console.log('[RTK Query Log] Input Params:', { pageNumber, pageSize, filterDataReq });
-            console.log('[RTK Query Log] Generated Relative URL:', relativeUrlString);
+        // Пытаемся извлечь groupId из строки filterDataReq
+   const groupIdMatch = filterDataReq?.match(/&groupId=([^&]+)/);
 
-            // 3. Возвращаем строку, как и раньше
-            return relativeUrlString;
-          },
-      // используется для кеширования, нужно для того чтобы каждый обьект был за кэширован по id, и в случае мутации одного из студентов,
-      // изменялся только этот студент из списка всех студентов
-      // по средствам сравнения значений в кэше
+        const groupId = groupIdMatch ? groupIdMatch[1] : null;
 
-      providesTags: (result) => {
-        if (!result?.data) return ['Students'];
-        return [
-          ...result.data.map(({ id }) => ({ type: 'Student' as const, id })),
-          { type: 'Students', id: 'LIST' }
-        ];
+        // Если groupId найден в фильтре, добавляем специфичный тег
+       if (groupId) {
+          console.log(`[RTK Query Log - providesTags] Found groupId=${groupId} in filter. Providing GroupStudentList tag.`);
+          return [
+            ...studentTags,
+            listTag,
+            { type: 'GroupStudentList' as const, id: groupId } // <--- Наш специфичный тег
+          ];
+        }
+
+        // Иначе возвращаем только базовые теги
+        console.log("[RTK Query Log - providesTags] No groupId found in filter. Providing only base tags.");
+        return [...studentTags, listTag];
       }
     }),
 
@@ -79,17 +91,23 @@ export const studentsApi = createApi({
     }),
 
     editStudent: builder.mutation<StudentDTO, { id: string; data: Partial<StudentDTO> }>({
-      query: ({ id, data }) => ({
-        url: id,
-        method: 'PUT',
-        body: data,
-      }),
-      // тут мы помечаем что обьект студента должен быть обновлен
+      query: ({id, data}) =>{
+        console.log('ID перед отправкой:', id);
+        console.log('DATA перед отправкой:', data);
+
+        const config = {
+          url: `/${id}`, // Убедитесь, что URL правильный
+          method: 'PUT',
+          body: data, // Проблема здесь: почему 'data' не уходит в тело?
+        };
+        return config;
+      },
       invalidatesTags: (result, error, { id }) => [
         { type: 'Student', id },
         'Students'
       ],
     }),
+
 
     removeStudent: builder.mutation<void, string>({
       query: (id) => ({

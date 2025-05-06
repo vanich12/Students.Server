@@ -1,5 +1,6 @@
 ﻿using Students.Infrastructure.DTO;
 using Students.Infrastructure.Extension.Pagination;
+using Students.Models;
 
 
 namespace Students.Infrastructure.Interfaces;
@@ -7,7 +8,7 @@ namespace Students.Infrastructure.Interfaces;
 /// <summary>
 /// Интерфейс репозитория студентов.
 /// </summary>
-public interface IStudentRepository : IGenericRepository<Students.Models.Student>
+public interface IStudentRepository : IGenericRepository<Student>
 {
     /// <summary>
     /// Пагинация писка студентов.

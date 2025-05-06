@@ -3,9 +3,11 @@ import { Layout, Loading, DetailsPageData, RoutingWarningModal } from '../shared
 import { useParams, useBlocker } from 'react-router-dom';
 import { Row, Col, Space, Button } from 'antd';
 import config from '../../storage/catalogConfigs/groups.js';
+import studentConfig from '../../storage/catalogConfigs/students';
 import requestConfig from '../../storage/catalogConfigs/personRequests';
 import { PlusOutlined } from '@ant-design/icons'
-import ObjectsChoiceModalForm from '../shared/business/ObjectChoiceModalForm'
+import ObjectsChoiceModalForm from '../shared/catalogProvider/forms/ObjectChoiceModalForm'
+import ModalItemsPanel from '../shared/catalogProvider/forms/ModalItemsPanel'
 
 const GroupDetailsPage = () => {
     const { id } = useParams();
@@ -14,10 +16,12 @@ const GroupDetailsPage = () => {
     const [isChanged, setIsChanged] = useState(false);
     const { properties, crud } = config;
     const [showRangeForm, setShowRangeForm] = useState(false);
-    const { useGetOneByIdAsync, useEditOneAsync } = crud;
+    const [showStudentInGroupForm, setShowStudentInGroupForm] = useState(false);
+    const { useGetOneByIdAsync, useEditOneAsync ,useRemoveSubjectRangeAsync} = crud;
     const { data, isLoading, isFetching, refetch } = useGetOneByIdAsync(id);
 
     const [editGroup] = useEditOneAsync();
+    const [removeFromGroupTrigger , removeFromGroupResult] = useRemoveSubjectRangeAsync();
 
     useEffect(() => {
         if (!isLoading && !isFetching) {
@@ -64,11 +68,21 @@ const GroupDetailsPage = () => {
                 <Col>
                     <Button  style={{ margin: '0 10px' }} onClick={onCancel}>Отмена</Button>
                 </Col>
+
                 {crud?.useAddSubjectRangeAsync && (
-                    <Button type="primary" onClick={() => setShowRangeForm(true)}>
-                        <PlusOutlined />
-                        Добавить студентов в группу
-                    </Button>
+                    <Col>
+                        <Button type="primary" onClick={() => setShowRangeForm(true)}>
+                            <PlusOutlined />
+                            Добавить студентов в группу
+                        </Button>
+                    </Col>
+                )}
+                {crud?.useAddSubjectRangeAsync && (
+                    <Col>
+                        <Button style={{ margin: '0 10px' }}  type="primary" onClick={() => setShowStudentInGroupForm(true)}>
+                            Студенты в группе
+                        </Button>
+                    </Col>
                 )}
             </Row>
             <RoutingWarningModal
@@ -76,7 +90,7 @@ const GroupDetailsPage = () => {
                 blocker={blocker} 
             />
         </Layout>
-            {crud?.useAddSubjectRangeAsync && (
+            {showRangeForm && (
                 <ObjectsChoiceModalForm
                     requestConfig={requestConfig}
                     groupConfig={config}
@@ -84,6 +98,13 @@ const GroupDetailsPage = () => {
                     id={id}
                 />
             )}
+            {showStudentInGroupForm && (<ModalItemsPanel
+                    requestConfig={requestConfig}
+                    studentConfig={studentConfig}
+                    control={{ showStudentInGroupForm, setShowStudentInGroupForm, removeFromGroupTrigger }}
+                    id={id}
+                />)}
+
         </>
     );
 };

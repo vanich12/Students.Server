@@ -4,7 +4,9 @@ import apiUrl from './apiUrl.js';
 export const groupsApi = createApi({
   reducerPath: 'groups',
   keepUnusedDataFor: 30,
-  baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/group` }),
+  baseQuery: fetchBaseQuery(
+      { baseUrl: `${apiUrl}/group` }),
+  tagTypes: ['Groups', 'GroupStudents', 'GroupStudentList'],
   endpoints: (builder) => ({
     getGroups: builder.query({
       query: () => '',
@@ -17,7 +19,9 @@ export const groupsApi = createApi({
 
     getGroupById: builder.query({
       query: (id) => id,
-      invalidatesTags: ['Groups'],
+      providesTags: (result, error, id) => [
+        { type: 'Groups', id: 'LIST' },
+      ],
     }),
 
     addGroup: builder.mutation({
@@ -36,9 +40,28 @@ export const groupsApi = createApi({
           method: 'POST',
           body: objects,
         };
-
         return requestConfig;
-      }
+      },
+      // ИНВАЛИДИРУЕМ тег для студентов КОНКРЕТНОЙ группы
+      invalidatesTags: (result, error, { groupId }) => {
+        console.log(`[RTK Query Log - invalidatesTags] Invalidating GroupStudentList tag for groupId=${groupId}`);
+        return [{ type: 'GroupStudentList', id: groupId }];
+      },
+    }),
+    removeStudentFromGroup: builder.mutation({
+      query: ({studentId, groupId}) => {
+        const relativeUrlString = `RemoveStudentsFromGroupByRequest?studentId=${studentId}&groupId=${groupId}`;
+        console.log(relativeUrlString);
+        const requestConfig = {
+          url: relativeUrlString,
+          method: 'DELETE',
+        };
+        return requestConfig;
+      },
+      invalidatesTags: (result, error, { groupId }) => {
+        console.log(`[RTK Query Log - invalidatesTags] Invalidating GroupStudentList tag for groupId=${groupId}`);
+        return [{ type: 'GroupStudentList', id: groupId },{type: 'Requests', id: 'LIST' }];
+      },
     }),
       editGroup: builder.mutation({
         query: ({id, item}) => ({
@@ -46,7 +69,6 @@ export const groupsApi = createApi({
           method: 'PUT',
           body: item,
         }),
-        invalidatesTags: ['Groups'],
       }),
       removeGroup: builder.mutation({
         query: (id) => ({
@@ -64,6 +86,7 @@ export const {
   useGetGroupByIdQuery,
   useAddGroupMutation,
   useAddStudentInGroupMutation,
+    useRemoveStudentFromGroupMutation,
   useEditGroupMutation,
   useRemoveGroupMutation,
 } = groupsApi;

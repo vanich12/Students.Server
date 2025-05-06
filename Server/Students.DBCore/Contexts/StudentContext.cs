@@ -10,6 +10,8 @@ public abstract class StudentContext : DbContext
 {
   public DbSet<EducationForm> EducationForms { get; set; }
 
+  public DbSet<StudentHistory> StudentHistory { get; set; }
+
   public DbSet<EducationProgram> EducationPrograms { get; set; }
 
   //public DbSet<EducationType> EducationTypes { get; set; }

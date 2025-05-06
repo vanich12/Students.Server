@@ -33,6 +33,7 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
     {
         // достаем студентов с подгрузкой данных о группах и заявках
         // 1. Базовый запрос + Includes
+        // группы достаем чере GroupStudent
         IQueryable<Student> studentQuery = this._ctx.Students
             .Include(gs => gs.GroupStudent!)         
             .ThenInclude(r => r.Request!)         
@@ -67,6 +68,7 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
 
         return student;
     }
+
 
     public async Task<PagedPage<StudentDTO>> GetFilteredStudentByDateOfBirth(int page, int pageSize, DateOnly birthDate)
     {

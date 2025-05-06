@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Students.DBCore.Contexts;
@@ -11,9 +12,11 @@ using Students.DBCore.Contexts;
 namespace Students.DBCore.Migrations
 {
     [DbContext(typeof(PgContext))]
-    partial class PgContextModelSnapshot : ModelSnapshot
+    [Migration("20250427182522_AddHistoryOfStudentData")]
+    partial class AddHistoryOfStudentData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -906,9 +909,6 @@ namespace Students.DBCore.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("LastChangedByUserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -1015,13 +1015,6 @@ namespace Students.DBCore.Migrations
 
                     b.Property<DateOnly>("ChangeDate")
                         .HasColumnType("date");
-
-                    b.Property<string>("ChangeType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("LastChangedUserId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("NewFamily")
                         .IsRequired()

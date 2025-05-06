@@ -3,14 +3,33 @@ import apiUrl from './apiUrl.js';
 
 export const requestsApi = createApi({
   reducerPath: 'personrequests',
+  keepUnusedDataFor:0,
   baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/Request` }), //  TODO: уточнить url
+  tagTypes: ['Request','RequestById','Requests'],
   endpoints: (builder) => ({
     getPersonRequests: builder.query({
       query: () => '',
     }),
     getPersonRequestsPaged: builder.query({
       query: ({ pageNumber, pageSize, filterDataReq }) => `paged?page=${pageNumber}&size=${pageSize}${filterDataReq}`,
-      providesTags: ['Request'],
+      providesTags: (result)=>{
+        var requestTags = result?.data ?
+          result.data.map(({id})=>({type: 'Request', id })):[];
+        const listTag = { type: 'Requests', id: 'LIST' };
+
+        return [...requestTags, listTag];
+      },
+    }),
+    getPersonRequestsOfStudent: builder.query({
+      query: (studentId) => {
+       const relativeUrlString = `GetListRequestsOfStudentExists?studentId=${studentId}`;
+       const requestConfig ={
+         url: relativeUrlString,
+         method: 'GET'
+       };
+
+       return requestConfig;
+      }
     }),
     getPersonRequestById: builder.query({
       query: (id) => id,
@@ -23,6 +42,7 @@ export const requestsApi = createApi({
         body: request,
         invalidatesTags: ['Requests'],
       }),
+      invalidatesTags: [{type: 'Students', id: 'LIST'}]
     }),
     editPersonRequest: builder.mutation({
       query: ({ id, item }) => ({
@@ -30,7 +50,8 @@ export const requestsApi = createApi({
         method: 'PUT',
         body: item,
       }),
-      invalidatesTags: ['Requests', 'RequestById'],
+
+      invalidatesTags: (result, error, { id }) => [{ type: 'Request', id }],
     }),
     removePersonRequest: builder.mutation({
       query: (id) => ({
@@ -45,6 +66,7 @@ export const requestsApi = createApi({
 export const {
   useGetPersonRequestsQuery,
   useGetPersonRequestsPagedQuery,
+  useLazyGetPersonRequestsOfStudentQuery,
   useGetPersonRequestByIdQuery,
   useAddPersonRequestMutation,
   useEditPersonRequestMutation,

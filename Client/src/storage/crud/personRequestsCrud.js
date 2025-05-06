@@ -3,11 +3,13 @@ import useNotifications from '../../notifications/useNotifications.js';
 import { 
     useGetPersonRequestsQuery,
     useGetPersonRequestsPagedQuery,
+    useLazyGetPersonRequestsOfStudentQuery,
     useGetPersonRequestByIdQuery,
     useAddPersonRequestMutation,
     useEditPersonRequestMutation,
     useRemovePersonRequestMutation,
 } from '../services/requestsApi.js';
+import { useAddStudentInGroupMutation } from '../services/groupsApi'
 
 const useGetAllAsync = () => {
     const { data, isError, isSuccess, error, isLoading, isFetching, refetch } = useGetPersonRequestsQuery();
@@ -22,6 +24,23 @@ const useGetAllPagedAsync = ({ pageNumber, pageSize, filterDataReq: queryString 
   
     return { data, isError, isSuccess, error, isLoading, isFetching, refetch };
 };
+
+/*const useGetReqByStudentId = ({studentId}) => {
+    const { data, isError, isSuccess, error, isLoading, isFetching, refetch } = useGetPersonRequestsOfStudentQuery({ studentId });
+    return { data, isError, isSuccess, error, isLoading, isFetching, refetch };
+};*/
+
+
+const useGetReqByStudentId = () => {
+    // 1. Вызываем оригинальный хук БЕЗ аргументов данных
+    const [trigger, result] = useLazyGetPersonRequestsOfStudentQuery();
+
+    // 2. Возвращаем полученный массив [функцияЗапуска, объектРезультата]
+    // Теперь компонент, использующий useAddSubjectRangeAsync, получит то же самое,
+    // как если бы он использовал useAddStudentInGroupMutation напрямую.
+    return [trigger, result];
+};
+
   
 const useRemoveOneAsync = () => {
     const [removeItem, removingResult] = useRemovePersonRequestMutation();
@@ -56,6 +75,7 @@ const useEditOneAsync = () => {
 export {
     useGetPersonRequestsQuery as useGetAllAsync,
     useGetPersonRequestsPagedQuery as useGetAllPagedAsync,
+    useGetReqByStudentId,
     useGetPersonRequestByIdQuery as useGetOneByIdAsync,
     useAddPersonRequestMutation as useAddOneAsync,
     useEditOneAsync,

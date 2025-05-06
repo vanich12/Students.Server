@@ -4,6 +4,7 @@ import {
     useGetOneByIdAsync,
     useAddOneAsync,
     useAddSubjectRangeAsync,
+    useRemoveSubjectRangeAsync,
     useEditOneAsync,
     useRemoveOneAsync
 } from '../crud/groupsCrud.js'
@@ -22,6 +23,7 @@ export default {
         useGetOneByIdAsync,
         useAddOneAsync,
         useAddSubjectRangeAsync,
+        useRemoveSubjectRangeAsync,
         useEditOneAsync,
         useRemoveOneAsync,
     },

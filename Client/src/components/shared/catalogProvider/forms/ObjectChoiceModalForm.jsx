@@ -24,7 +24,6 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
         },
     });
 
-
     const {
         data: dataFromServer,
         isLoading: isQueryLoading,
@@ -33,7 +32,14 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
     } = useGetAllPagedAsync({
         pageNumber: tableParams.pagination.current,
         pageSize: tableParams.pagination.pageSize,
-        filterDataReq: queryString,
+        filterDataReq: `&withoutGroups=true`,
+    });
+
+    console.log('ObjectsChoiceModalForm - State on Render:', {
+        isQueryLoading, // Первичная загрузка
+        isQueryFetching, // Идет ли фоновый запрос?
+        dataFromServer, // Какие данные сейчас?
+        queryError
     });
 
 
@@ -51,10 +57,8 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
         return dataConverter(normalizedData || []);
     }, [dataFromServer, serverPaged, dataConverter]);
 
-    // --- Обработчики ---
     const onSubmit = () => {
         console.log('Submitting selected keys:', selectedRowKeys, 'for group id:', id);
-        // Вызываем ТРИГГЕР мутации, передавая массив КЛЮЧЕЙ (ID)
         addItemsTrigger({ objects: selectedRowKeys, groupId: id });
     };
 
@@ -109,11 +113,6 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
             console.log(selectedRowKeys)
         },
     };
-
-    // --- Рендер ---
-    if (!showRangeForm) {
-        return null;
-    }
 
     return (
         <Modal

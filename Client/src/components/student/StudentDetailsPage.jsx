@@ -33,7 +33,7 @@ const StudentDetailsPage = () => {
     );
 
     const onSave = useCallback(() => {
-        editStudent({ id, item: studentData });
+        editStudent({ id, data: studentData });
         setIsChanged(false);
     },[id,studentData]);
 

@@ -1,4 +1,5 @@
-﻿using Students.DBCore.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using Students.DBCore.Contexts;
 using Students.Infrastructure.Interfaces;
 using Students.Models;
 
@@ -9,48 +10,52 @@ namespace Students.Infrastructure.Storages;
 /// </summary>
 public class GroupStudentRepository : GenericRepository<GroupStudent>, IGroupStudentRepository
 {
-  #region Поля и свойства
+    #region Поля и свойства
 
-  private readonly StudentContext _ctx;
+    private readonly StudentContext _ctx;
 
-  #endregion
+    #endregion
 
-  #region Методы
+    #region
 
-  /// <summary>
-  /// Добавление студента по заявке в группу.
-  /// </summary>
-  /// <param name="request">Заявка.</param>
-  /// <param name="groupId">Идентификатор группы.</param>
-  /// <returns>Группа студентов.</returns>
-  public async Task<GroupStudent?> Create(Request request, Guid groupId)
-  {
-      //делает именно яв­ную под­груз­ку навигационного свойства Student у уже отслеживаемого объекта
-
-      await this._ctx.Entry(request).Reference(r => r.Student).LoadAsync();
-    if(request.Student is null)
-      return null;
-
-    return await base.Create(new GroupStudent
+    public override async Task<IEnumerable<GroupStudent>> Get()
     {
-      StudentId = request.Student.Id,
-      GroupId = groupId,
-      RequestId = request.Id
-    });
-  }
+        return await this._ctx.GroupStudent.Include(s => s.Student).ToListAsync();
+    }
 
-  #endregion
+    /// <summary>
+    /// Добавление студента по заявке в группу.
+    /// </summary>
+    /// <param name="request">Заявка.</param>
+    /// <param name="groupId">Идентификатор группы.</param>
+    /// <returns>Группа студентов.</returns>
+    public async Task<GroupStudent?> Create(Request request, Guid groupId)
+    {
+        //делает именно яв­ную под­груз­ку навигационного свойства Student у уже отслеживаемого объекта
+        await this._ctx.Entry(request).Reference(r => r.Student).LoadAsync();
+        if (request.Student is null)
+            return null;
 
-  #region Конструкторы
+        return await base.Create(new GroupStudent
+        {
+            StudentId = request.Student.Id,
+            GroupId = groupId,
+            RequestId = request.Id
+        });
+    }
 
-  /// <summary>
-  /// Конструктор.
-  /// </summary>
-  /// <param name="context">Контекст базы данных.</param>
-  public GroupStudentRepository(StudentContext context) : base(context)
-  {
-    this._ctx = context;
-  }
+    #endregion
 
-  #endregion
+    #region Конструкторы
+
+    /// <summary>
+    /// Конструктор.
+    /// </summary>
+    /// <param name="context">Контекст базы данных.</param>
+    public GroupStudentRepository(StudentContext context) : base(context)
+    {
+        this._ctx = context;
+    }
+
+    #endregion
 }

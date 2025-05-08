@@ -229,6 +229,7 @@ namespace Students.Models
 
         /// <summary>
         /// Идентификатор пользователя, кто последний вносил изменения в данные студента
+        /// необходимо для отслеживания изменений данных студента
         /// </summary>
         [JsonIgnore] public Guid? LastChangedByUserId { get; set; }
 

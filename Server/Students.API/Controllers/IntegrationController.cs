@@ -32,7 +32,7 @@ public class IntegrationController : ControllerBase
   /// <summary>
   /// Репозиторий студентов.
   /// </summary>
-  private readonly IGenericRepository<Models.Student> _studentRepository;
+  private readonly IGenericRepository<Student> _studentRepository;
 
   /// <summary>
   /// Репозиторий образовательных программ.

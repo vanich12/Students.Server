@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState, useMemo, useCallback } from 'react'
-import { Modal, Form, Table, Alert, Spin, Button, Dropdown } from "antd"
+import { Modal, Form, Table, Alert, Spin, Button } from "antd"
 import DropdownMenu from '../../business/baseComponents/DropdownMenu'
 import { useNavigate } from 'react-router-dom'
 
@@ -9,12 +9,12 @@ const ModalItemsPanel = ({ control, requestConfig, studentConfig,id }) => {
     const {detailsLink: requestDetailsLink, crud: crudRequestData, columns: requestColumns, dataConverter: requestDataConverter, serverPaged: requestServerPaged } = requestConfig;
 
     const { useGetReqByStudentId } = crudRequestData;
-    const { useGetAllPagedAsync, useRemoveOneAsync } = crudStudentData;
+    const { useGetAllPagedAsync } = crudStudentData;
 
     const [currentEntity, setCurrentEntity] = useState();
     const [menuVisible, setMenuVisible] = useState(false);
     const [viewMode, setViewMode] = useState('students');
-    const [studentQueryString, setStudentQueryString] = useState(`?groupId={}`);
+    const [studentQueryString, setStudentQueryString] = useState();
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
     const navigate = useNavigate();
 
@@ -31,8 +31,6 @@ const ModalItemsPanel = ({ control, requestConfig, studentConfig,id }) => {
     });
 
     const [triggerGetRequest, requestQueryResult] = useGetReqByStudentId();
-
-    const [removeTrigger, removeResult] = useRemoveOneAsync();
 
     const processedRequestsData = useMemo(() => {
         return requestDataConverter(requestQueryResult.data || []);
@@ -69,6 +67,7 @@ const ModalItemsPanel = ({ control, requestConfig, studentConfig,id }) => {
 
 
     const handleTableChange = (pagination, filters, sorter) => {
+        console.log("handleTableChange")
         setTableParams(prev => ({
             ...prev,
             pagination,

@@ -55,7 +55,7 @@ namespace Students.Models
         public Guid LastChangedUserId { get; set; }
 
         /// <summary>
-        /// Студент, чьи измеения зафиксированы
+        /// Студент, чьи изменения зафиксированы
         /// </summary>
         public virtual Student? Student { get; set; }
 

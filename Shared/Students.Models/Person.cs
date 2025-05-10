@@ -1,10 +1,12 @@
 ﻿using Students.Models.Enums;
+using Students.Models.ReferenceModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -33,12 +35,14 @@ namespace Students.Models
         /// экспорт из заявки
         /// </summary>
         public string? Patron { get; set; }
+
         /// <summary>
         /// ФИО
         /// экспорт из заявки
         /// </summary>
         //Возможно нужна стратегия отображения ФИО, но тогда через конструктор
         public string FullName => $"{this.Family} {this.Name} {this.Patron}";
+
         /// <summary>
         /// Дата рождения
         /// </summary>
@@ -126,6 +130,59 @@ namespace Students.Models
             }
         }
 
+        /// <summary>
+        /// Опыт в ИТ
+        /// экспорт из заявки
+        /// </summary>
+        public required string IT_Experience { get; set; }
 
+        /// <summary>
+        /// Ид Уровень образования
+        /// экспорт из заявки, хотя по факту тут тоже некий справочник Высшее образование / Среднее профессиональное образование / Студент ВО / Студент СПО
+        /// </summary>
+        public Guid? TypeEducationId { get; set; }
+
+        /// <summary>
+        /// Id сферы деятельности(1 уровень).
+        /// </summary>
+        public required Guid ScopeOfActivityLevelOneId { get; set; }
+
+        /// <summary>
+        /// Id сферы деятельности(2 уровень).
+        /// </summary>
+        public Guid? ScopeOfActivityLevelTwoId { get; set; }
+
+        /// <summary>
+        /// ссылка на студента (связь 1 к 1)
+        /// </summary>
+        [JsonIgnore]
+        public virtual Student? Student { get; set; }
+
+        /// <summary>
+        /// поданные студентом заявки
+        /// </summary>
+        [JsonIgnore]
+        public virtual ICollection<Request>? Requests { get; set; }
+
+
+        /// <summary>
+        /// Сфера деятельности, уже есть как бы класс сфера деятельности с уровнями
+        /// Хоть и список, но по факту должен содержать только 2 значения (1 уровень и второй???)
+        /// </summary>
+        [JsonIgnore]
+        public virtual ScopeOfActivity? ScopeOfActivityLevelOne { get; set; }
+
+        /// <summary>
+        /// Сфера деятельности, уже есть как бы класс сфера деятельности с уровнями
+        /// Хоть и список, но по факту должен содержать только 2 значения (1 уровень и второй???)
+        /// </summary>
+        [JsonIgnore]
+        public virtual ScopeOfActivity? ScopeOfActivityLevelTwo { get; set; }
+        /// <summary>
+        /// Уровень образования
+        /// экспорт из заявки, хотя по факту тут тоже некий справочник Высшее образование / Среднее профессиональное образование / Студент ВО / Студент СПО
+        /// </summary>
+        [JsonIgnore]
+        public virtual TypeEducation? TypeEducation { get; set; }
     }
 }

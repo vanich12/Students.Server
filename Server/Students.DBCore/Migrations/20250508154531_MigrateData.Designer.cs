@@ -12,8 +12,8 @@ using Students.DBCore.Contexts;
 namespace Students.DBCore.Migrations
 {
     [DbContext(typeof(PgContext))]
-    [Migration("20250427194132_AddFieldInStudenthistory")]
-    partial class AddFieldInStudenthistory
+    [Migration("20250508154531_MigrateData")]
+    partial class MigrateData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,14 +51,14 @@ namespace Students.DBCore.Migrations
                         new
                         {
                             Id = new Guid("b28d1f29-0aa9-4209-8bab-cd49a8ad548d"),
-                            Date = new DateTime(2024, 9, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             KindDocumentRiseQualificationId = new Guid("f3963a72-8d77-47cc-85e5-0e46c1846f15"),
                             Number = "1"
                         },
                         new
                         {
                             Id = new Guid("5dde5f20-a247-45b5-b989-800a858d0b70"),
-                            Date = new DateTime(2024, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             KindDocumentRiseQualificationId = new Guid("aa7a8325-4b0d-4dd2-bedc-2c4a065ab332"),
                             Number = "2"
                         });
@@ -240,10 +240,111 @@ namespace Students.DBCore.Migrations
                         new
                         {
                             Id = new Guid("0f6779b4-4e09-4f91-b7df-881205ea39d0"),
-                            Date = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             KindOrderId = new Guid("753df8b7-2d6f-4499-9f86-563771f016c1"),
                             Number = "42",
                             RequestId = new Guid("4178e3fa-dca8-4e28-a815-46cfacb61fe5")
+                        });
+                });
+
+            modelBuilder.Entity("Students.Models.Person", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("BirthDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Family")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("IT_Experience")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nationality")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Patron")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ScopeOfActivityLevelOneId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ScopeOfActivityLevelTwoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Sex")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TypeEducationId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Phone")
+                        .IsUnique();
+
+                    b.HasIndex("ScopeOfActivityLevelOneId");
+
+                    b.HasIndex("ScopeOfActivityLevelTwoId");
+
+                    b.HasIndex("TypeEducationId");
+
+                    b.ToTable("Persons");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c337e8c4-142a-4f01-a54f-fea1be3d874b"),
+                            Address = "Проспект Сишарпа, 42",
+                            BirthDate = new DateOnly(2003, 3, 3),
+                            Email = "iii@gmail.com",
+                            Family = "Иванов",
+                            IT_Experience = "Есть",
+                            Name = "Иван",
+                            Nationality = "Россия",
+                            Patron = "Иванович",
+                            Phone = "+7 (123) 453-78-90",
+                            ScopeOfActivityLevelOneId = new Guid("e768a213-0421-4c6f-85b8-0069882870c6"),
+                            Sex = 1,
+                            TypeEducationId = new Guid("a4f6d736-28e7-4a63-845e-24e62b433fc1")
+                        },
+                        new
+                        {
+                            Id = new Guid("ce523bbd-dbd2-4bc6-8986-0f0c83926c57"),
+                            Address = "Проспект PHP, 47",
+                            BirthDate = new DateOnly(2004, 4, 4),
+                            Email = "iai@gmail.com",
+                            Family = "Иванова",
+                            IT_Experience = "Есть",
+                            Name = "Анна",
+                            Nationality = "Россия",
+                            Patron = "Ивановна",
+                            Phone = "+7 (123) 451-71-90",
+                            ScopeOfActivityLevelOneId = new Guid("9b70f630-83bf-4805-b9c9-e0a96c0a39b2"),
+                            Sex = 0,
+                            TypeEducationId = new Guid("f87eaad5-5d84-45ce-b862-8da5c45ead5b")
                         });
                 });
 
@@ -802,6 +903,9 @@ namespace Students.DBCore.Migrations
                     b.Property<bool?>("IsAlreadyStudied")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid?>("PersonId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("text");
@@ -827,6 +931,8 @@ namespace Students.DBCore.Migrations
                         .IsUnique();
 
                     b.HasIndex("EducationProgramId");
+
+                    b.HasIndex("PersonId");
 
                     b.HasIndex("StatusRequestId");
 
@@ -875,13 +981,6 @@ namespace Students.DBCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateOnly>("BirthDate")
-                        .HasColumnType("date");
-
                     b.Property<DateTime?>("DateTakeDiplom")
                         .HasColumnType("timestamp with time zone");
 
@@ -894,33 +993,15 @@ namespace Students.DBCore.Migrations
                     b.Property<string>("DocumentSeries")
                         .HasColumnType("text");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Family")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("FullNameDocument")
                         .HasColumnType("text");
 
-                    b.Property<string>("IT_Experience")
+                    b.Property<Guid?>("LastChangedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("PersonId")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Nationality")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Patron")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Projects")
                         .HasColumnType("text");
@@ -928,37 +1009,16 @@ namespace Students.DBCore.Migrations
                     b.Property<string>("SNILS")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ScopeOfActivityLevelOneId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ScopeOfActivityLevelTwoId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Sex")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Speciality")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("TypeEducationId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("Phone")
+                    b.HasIndex("PersonId")
                         .IsUnique();
 
                     b.HasIndex("SNILS")
                         .IsUnique();
-
-                    b.HasIndex("ScopeOfActivityLevelOneId");
-
-                    b.HasIndex("ScopeOfActivityLevelTwoId");
-
-                    b.HasIndex("TypeEducationId");
 
                     b.ToTable("Students");
 
@@ -966,44 +1026,22 @@ namespace Students.DBCore.Migrations
                         new
                         {
                             Id = new Guid("c337e8c4-142a-4f01-a54f-fea1be3d874b"),
-                            Address = "Проспект Сишарпа, 42",
-                            BirthDate = new DateOnly(2003, 3, 3),
-                            DateTakeDiplom = new DateTime(2077, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTakeDiplom = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Disability = false,
-                            Email = "iii@gmail.com",
-                            Family = "Иванов",
                             FullNameDocument = "Иванов",
-                            IT_Experience = "Есть",
-                            Name = "Иван",
-                            Nationality = "Россия",
-                            Patron = "Иванович",
-                            Phone = "+7 (123) 453-78-90",
+                            PersonId = new Guid("c337e8c4-142a-4f01-a54f-fea1be3d874b"),
                             Projects = "Немало",
-                            ScopeOfActivityLevelOneId = new Guid("e768a213-0421-4c6f-85b8-0069882870c6"),
-                            Sex = 1,
-                            Speciality = "Сварщик",
-                            TypeEducationId = new Guid("a4f6d736-28e7-4a63-845e-24e62b433fc1")
+                            Speciality = "Сварщик"
                         },
                         new
                         {
                             Id = new Guid("ce523bbd-dbd2-4bc6-8986-0f0c83926c57"),
-                            Address = "Проспект PHP, 47",
-                            BirthDate = new DateOnly(2004, 4, 4),
-                            DateTakeDiplom = new DateTime(2042, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTakeDiplom = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Disability = false,
-                            Email = "iai@gmail.com",
-                            Family = "Иванова",
                             FullNameDocument = "Иванова",
-                            IT_Experience = "Есть",
-                            Name = "Анна",
-                            Nationality = "Россия",
-                            Patron = "Ивановна",
-                            Phone = "+7 (123) 451-71-90",
+                            PersonId = new Guid("ce523bbd-dbd2-4bc6-8986-0f0c83926c57"),
                             Projects = "Мало",
-                            ScopeOfActivityLevelOneId = new Guid("9b70f630-83bf-4805-b9c9-e0a96c0a39b2"),
-                            Sex = 0,
-                            Speciality = "HR",
-                            TypeEducationId = new Guid("f87eaad5-5d84-45ce-b862-8da5c45ead5b")
+                            Speciality = "HR"
                         });
                 });
 
@@ -1158,49 +1196,7 @@ namespace Students.DBCore.Migrations
                     b.Navigation("Request");
                 });
 
-            modelBuilder.Entity("Students.Models.ReferenceModels.ScopeOfActivity", b =>
-                {
-                    b.HasOne("Students.Models.ReferenceModels.ScopeOfActivity", "ScopeOfActivityParent")
-                        .WithMany()
-                        .HasForeignKey("ScopeOfActivityParentId");
-
-                    b.Navigation("ScopeOfActivityParent");
-                });
-
-            modelBuilder.Entity("Students.Models.Request", b =>
-                {
-                    b.HasOne("Students.Models.DocumentRiseQualification", "DocumentRiseQualification")
-                        .WithMany()
-                        .HasForeignKey("DocumentRiseQualificationId");
-
-                    b.HasOne("Students.Models.EducationProgram", "EducationProgram")
-                        .WithMany()
-                        .HasForeignKey("EducationProgramId");
-
-                    b.HasOne("Students.Models.ReferenceModels.StatusRequest", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusRequestId");
-
-                    b.HasOne("Students.Models.Student", "Student")
-                        .WithMany("Requests")
-                        .HasForeignKey("StudentId");
-
-                    b.HasOne("Students.Models.ReferenceModels.StudentStatus", "StudentStatus")
-                        .WithMany()
-                        .HasForeignKey("StudentStatusId");
-
-                    b.Navigation("DocumentRiseQualification");
-
-                    b.Navigation("EducationProgram");
-
-                    b.Navigation("Status");
-
-                    b.Navigation("Student");
-
-                    b.Navigation("StudentStatus");
-                });
-
-            modelBuilder.Entity("Students.Models.Student", b =>
+            modelBuilder.Entity("Students.Models.Person", b =>
                 {
                     b.HasOne("Students.Models.ReferenceModels.ScopeOfActivity", "ScopeOfActivityLevelOne")
                         .WithMany()
@@ -1223,6 +1219,65 @@ namespace Students.DBCore.Migrations
                     b.Navigation("TypeEducation");
                 });
 
+            modelBuilder.Entity("Students.Models.ReferenceModels.ScopeOfActivity", b =>
+                {
+                    b.HasOne("Students.Models.ReferenceModels.ScopeOfActivity", "ScopeOfActivityParent")
+                        .WithMany()
+                        .HasForeignKey("ScopeOfActivityParentId");
+
+                    b.Navigation("ScopeOfActivityParent");
+                });
+
+            modelBuilder.Entity("Students.Models.Request", b =>
+                {
+                    b.HasOne("Students.Models.DocumentRiseQualification", "DocumentRiseQualification")
+                        .WithMany()
+                        .HasForeignKey("DocumentRiseQualificationId");
+
+                    b.HasOne("Students.Models.EducationProgram", "EducationProgram")
+                        .WithMany()
+                        .HasForeignKey("EducationProgramId");
+
+                    b.HasOne("Students.Models.Person", "Person")
+                        .WithMany("Requests")
+                        .HasForeignKey("PersonId");
+
+                    b.HasOne("Students.Models.ReferenceModels.StatusRequest", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusRequestId");
+
+                    b.HasOne("Students.Models.Student", "Student")
+                        .WithMany("Requests")
+                        .HasForeignKey("StudentId");
+
+                    b.HasOne("Students.Models.ReferenceModels.StudentStatus", "StudentStatus")
+                        .WithMany()
+                        .HasForeignKey("StudentStatusId");
+
+                    b.Navigation("DocumentRiseQualification");
+
+                    b.Navigation("EducationProgram");
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("StudentStatus");
+                });
+
+            modelBuilder.Entity("Students.Models.Student", b =>
+                {
+                    b.HasOne("Students.Models.Person", "Person")
+                        .WithOne("Student")
+                        .HasForeignKey("Students.Models.Student", "PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+                });
+
             modelBuilder.Entity("Students.Models.StudentHistory", b =>
                 {
                     b.HasOne("Students.Models.Student", "Student")
@@ -1240,6 +1295,13 @@ namespace Students.DBCore.Migrations
             modelBuilder.Entity("Students.Models.Group", b =>
                 {
                     b.Navigation("GroupStudent");
+                });
+
+            modelBuilder.Entity("Students.Models.Person", b =>
+                {
+                    b.Navigation("Requests");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Students.Models.Request", b =>

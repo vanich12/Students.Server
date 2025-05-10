@@ -29,6 +29,8 @@ public class IntegrationController : ControllerBase
   /// </summary>
   private readonly IRequestRepository _requestRepository;
 
+  private readonly IPersonRepository _personRepository;
+
   /// <summary>
   /// Репозиторий студентов.
   /// </summary>
@@ -70,17 +72,17 @@ public class IntegrationController : ControllerBase
     {
       var request = await Mapper.WebhookToRequest(form, this._educationProgramRepository, this._statusRequestRepository);
 
-      var student = await this._studentRepository.GetOne(x =>
+      var person = await this._personRepository.GetOne(x =>
         x.FullName == form.Name && x.BirthDate.ToString() == form.Birthday && x.Email == form.Email);
 
-      if(student is null)
+      if(person is null)
       {
         request.IsAlreadyStudied = false;
-        if(await this._studentRepository.GetOne(x =>
+        if(await this._personRepository.GetOne(x =>
               x.FullName == form.Name || x.BirthDate.ToString() == form.Birthday || x.Email == form.Email) is null)
         {
-          student = await Mapper.WebhookToStudent(form, this._typeEducationRepository, this._scopeOfActivityRepository);
-          student = await this._studentRepository.Create(student);
+            person = await Mapper.WebhookToStudent(form, this._typeEducationRepository, this._scopeOfActivityRepository);
+            person = await this._personRepository.Create(person);
         }
       }
       else
@@ -88,7 +90,7 @@ public class IntegrationController : ControllerBase
         request.IsAlreadyStudied = true;
       }
 
-      request.StudentId = student?.Id;
+      request.StudentId = person?.Id;
 
       await this._requestRepository.Create(request);
       return this.Ok(form);

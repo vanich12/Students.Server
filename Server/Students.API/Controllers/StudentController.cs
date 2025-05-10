@@ -40,21 +40,6 @@ public class StudentController : GenericAPiController<Models.Student>
     }
   }
 
-  [HttpGet("filter")]
-  public async Task<IActionResult> FilterByBirthDate([FromQuery] Pageable pageable, DateOnly birthDate)
-  {
-      try
-      {
-          var items = await this._studentRepository.GetFilteredStudentByDateOfBirth(pageable.PageNumber,
-              pageable.PageSize, birthDate);
-          return this.Ok(items);
-      }
-      catch (Exception e)
-      {
-          this._logger.LogError(e, "Error while getting Entities");
-          return this.Exception();
-      }
-  }
 
   /// <summary>
   /// Получить студента с заявками и группами(не работает).

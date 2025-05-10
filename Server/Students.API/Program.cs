@@ -15,8 +15,8 @@ using Students.Models.ReportsModel;
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = new ConfigurationBuilder()
-  .AddJsonFile("appsettings.json")
-  .Build();
+    .AddJsonFile("appsettings.json")
+    .Build();
 
 // builder.Services.AddLogging(loggingBuilder =>
 // {
@@ -35,6 +35,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupStudentRepository, GroupStudentRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 builder.Services.AddScoped<IReportRepository<FRDOModel>, FRDOReportRepository>();
 builder.Services.AddScoped<IReportRepository<RosstatModel>, RosstatReportRepository>();
@@ -73,10 +74,10 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder => builder
-         .SetIsOriginAllowed(e => true)
-         .AllowAnyMethod()
-         .AllowAnyHeader()
-         .AllowCredentials());
+        .SetIsOriginAllowed(e => true)
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
 });
 
 
@@ -94,7 +95,6 @@ builder.Services.AddApiVersioning(options =>
     // (��������������� AssumeDefaultVersionWhenUnspecified � DefaultApiVersion ����, ���� �������� ���� �������)
     // options.AssumeDefaultVersionWhenUnspecified = false;
     // options.ApiVersionReader = new QueryStringApiVersionReader("api-version"); // ������ �� ?api-version=
-
 });
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -102,15 +102,15 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 var app = builder.Build();
 
 app.UseCors(builder => builder
-.AllowAnyOrigin()
-.AllowAnyMethod()
-.AllowAnyHeader());
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
- if (app.Environment.IsDevelopment())
- {
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
- }
+}
 
 app.UseCors("CorsPolicy");
 app.UseAuthorization();

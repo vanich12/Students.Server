@@ -35,15 +35,16 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
         // 1. Базовый запрос + Includes
         // группы достаем чере GroupStudent
         IQueryable<Student> studentQuery = this._ctx.Students
-            .Include(gs => gs.GroupStudent!)         
-            .ThenInclude(r => r.Request!)         
-            .ThenInclude(st => st.Status)     
-            .Include(gs1 => gs1.GroupStudent!)      
-            .ThenInclude(g => g.Group!)          
-            .ThenInclude(e => e.EducationProgram) 
-            .Include(te => te.TypeEducation!);    
+            .Include(p => p.Person)
+            .Include(gs => gs.GroupStudent!)
+            .ThenInclude(r => r.Request!)
+            .ThenInclude(st => st.Status)
+            .Include(gs1 => gs1.GroupStudent!)
+            .ThenInclude(g => g.Group!)
+            .ThenInclude(e => e.EducationProgram)
+            .Include(p => p.Person.TypeEducation!);
 
-        studentQuery = studentQuery.ApplyFilters(filters); 
+        studentQuery = studentQuery.ApplyFilters(filters);
 
         // 3. Проекция в DTO
         var dtoQuery = studentQuery.Select(x => Mapper.StudentToStudentDTO(x).Result);
@@ -70,20 +71,20 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
     }
 
 
-    public async Task<PagedPage<StudentDTO>> GetFilteredStudentByDateOfBirth(int page, int pageSize, DateOnly birthDate)
-    {
-        IQueryable<StudentDTO> query = this._ctx.Students
-            .Include(gs => gs.GroupStudent!)
-            .ThenInclude(r => r.Request!)
-            .ThenInclude(st => st.Status)
-            .Include(gs1 => gs1.GroupStudent!)
-            .ThenInclude(g => g.Group!)
-            .ThenInclude(e => e.EducationProgram)
-            .Include(te => te.TypeEducation!)
-            .Select(x => Mapper.StudentToStudentDTO(x).Result);
+    //public async Task<PagedPage<StudentDTO>> GetFilteredStudentByDateOfBirth(int page, int pageSize, DateOnly birthDate)
+    //{
+    //    IQueryable<StudentDTO> query = this._ctx.Students
+    //        .Include(gs => gs.GroupStudent!)
+    //        .ThenInclude(r => r.Request!)
+    //        .ThenInclude(st => st.Status)
+    //        .Include(gs1 => gs1.GroupStudent!)
+    //        .ThenInclude(g => g.Group!)
+    //        .ThenInclude(e => e.EducationProgram)
+    //        .Include(p => p.Person.TypeEducation!)
+    //        .Select(x => Mapper.StudentToStudentDTO(x).Result);
 
-        return await PagedPage<StudentDTO>.ToPagedPage(query, page, pageSize, x => x.StudentFamily);
-    }
+    //    return await PagedPage<StudentDTO>.ToPagedPage(query, page, pageSize, x => x.StudentFamily);
+    //}
 
     #endregion
 
@@ -101,5 +102,4 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
     }
 
     #endregion
-
 }

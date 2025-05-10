@@ -49,9 +49,10 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     [HttpGet("GetListRequestsOfStudentExists")]
     public async Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId)
     {
-        var student = await this._ctx.FindAsync<Students.Models.Student>(studentId);
+        var student = await this._ctx.FindAsync<Student>(studentId);
+        if (student is null) return null;
 
-        var request = await this._ctx.Requests.Where(s => s.StudentId == studentId)
+        var request = await this._ctx.Requests.Where(s => s.Person.Id == studentId)
             .Select(x => Mapper.RequestToRequestDTO(x).Result).ToListAsync();
 
         if (student is null)
@@ -71,6 +72,7 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     {
         var query = this._ctx.Requests.AsNoTracking()
             .Include(s => s.Student)
+            .Include(p => p.Person)
             .ThenInclude(te => te.TypeEducation)
             .Include(ep => ep.EducationProgram)
             .Include(st => st.Status)
@@ -93,6 +95,7 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     {
         return await this._ctx.Requests.AsNoTracking()
             .Include(x => x.Student)
+            .Include(p => p.Person)
             .ThenInclude(y => y.TypeEducation)
             .Include(x => x.EducationProgram)
             .Include(x => x.Status)

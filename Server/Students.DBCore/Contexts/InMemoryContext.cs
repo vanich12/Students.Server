@@ -539,30 +539,30 @@ public sealed class InMemoryContext : StudentContext
           //Request = Requests!.AsNoTracking().FirstOrDefault(x => x.Id!.Equals(new Guid("6A4D3929-B049-4400-80EF-264C90914F61")))!
         }
     );
-    modelBuilder.Entity<Student>().HasData(
-        new Student
-        {
-          Id = new Guid("6CCEA275-77D3-439F-9E20-E86C1B2952F6"),
-          BirthDate = new DateOnly(1990,
-            5,
-            10),
-          Family = "Иванов",
-          Name = "Иван",
-          Patron = "Иванович",
-          Nationality = "РФ",
-          DocumentNumber = "АААА123456",
-          DocumentSeries = "1234",
-          SNILS = "123-456-789 00",
-          Email = "test@mail.ru",
-          Phone = "+7 (123) 456-32-90",
-          FullNameDocument = "Эх, сейчас бы сиды полные",
-          Address = "Иваново",
-          IT_Experience = "Какой-то опыт есть",
-          TypeEducationId = new Guid("7CF2BA34-080B-4FEF-8BFE-83731AC54742"),
-          Sex = SexHuman.Woman,
-          ScopeOfActivityLevelOneId = default
-        }
-    );
+    //modelBuilder.Entity<Student>().HasData(
+    //    new Student
+    //    {
+    //      Id = new Guid("6CCEA275-77D3-439F-9E20-E86C1B2952F6"),
+    //      BirthDate = new DateOnly(1990,
+    //        5,
+    //        10),
+    //      Family = "Иванов",
+    //      Name = "Иван",
+    //      Patron = "Иванович",
+    //      Nationality = "РФ",
+    //      DocumentNumber = "АААА123456",
+    //      DocumentSeries = "1234",
+    //      SNILS = "123-456-789 00",
+    //      Email = "test@mail.ru",
+    //      Phone = "+7 (123) 456-32-90",
+    //      FullNameDocument = "Эх, сейчас бы сиды полные",
+    //      Address = "Иваново",
+    //      IT_Experience = "Какой-то опыт есть",
+    //      TypeEducationId = new Guid("7CF2BA34-080B-4FEF-8BFE-83731AC54742"),
+    //      Sex = SexHuman.Woman,
+    //      ScopeOfActivityLevelOneId = default
+    //    }
+    //);
     modelBuilder.Entity<GroupStudent>().HasData(
         new GroupStudent
         {

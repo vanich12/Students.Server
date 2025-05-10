@@ -8,7 +8,7 @@ public class PgContext : StudentContext
   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
   {
     optionsBuilder.UseNpgsql(
-      $"Host=localhost;Port=5432;Database=cifralabs_studentDB;Username=postgres;Password=123;",
+      $"Host=localhost;Port=5432;Database=cifralabs_studentDb;Username=postgres;Password=123;",
       o => o.CommandTimeout(60));
 #if DEBUG
     optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);

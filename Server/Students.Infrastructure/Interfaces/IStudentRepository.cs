@@ -25,5 +25,5 @@ public interface IStudentRepository : IGenericRepository<Student>
   /// <returns>Студент.</returns>
   Task<Students.Models.Student?> GetStudentWithGroupsAndRequests(Guid studentId);
 
-  Task<PagedPage<StudentDTO>> GetFilteredStudentByDateOfBirth(int page, int pageSize, DateOnly date);
+  //Task<PagedPage<StudentDTO>> GetFilteredStudentByDateOfBirth(int page, int pageSize, DateOnly date);
 }

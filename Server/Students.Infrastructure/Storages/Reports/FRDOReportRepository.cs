@@ -38,14 +38,14 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
     var listStudents = await _studentRepository.Get();
     var typeEducationList = await _typeEducationRepository.Get();
     return (from student in listStudents
-      let typeEducation = typeEducationList.FirstOrDefault(x => x.Id == student.TypeEducationId)
+      let typeEducation = typeEducationList.FirstOrDefault(x => x.Id == student.Person.TypeEducationId)
       select new FRDOModel
       {
-        RecipientLastName = student.Family,
-        RecipientName = student.Name,
-        RecipientPatronymic = student.Patron,
-        RecipientDateBirth = student.BirthDate,
-        RecipientGender = student.Sex.ToString(),
+        RecipientLastName = student.Person.Family,
+        RecipientName = student.Person.Name,
+        RecipientPatronymic = student.Person.Patron,
+        RecipientDateBirth = student.Person.BirthDate,
+        RecipientGender = student.Person.Sex.ToString(),
         RecipientSNILS = student.SNILS,
         SurnameIndicatedHE = student.FullNameDocument,
         SeriesHE = student.DocumentSeries,

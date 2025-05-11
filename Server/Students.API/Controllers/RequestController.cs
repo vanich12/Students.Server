@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Students.Application.Services.Interfaces;
 using Students.Infrastructure.DTO;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
@@ -19,9 +20,7 @@ public class RequestController : GenericAPiController<Request>
 
     private readonly ILogger<Request> _logger;
     private readonly IRequestRepository _requestRepository;
-    private readonly IStudentRepository _studentRepository;
-    private readonly IPersonRepository _personRepository;
-    private readonly IGenericRepository<StatusRequest> _statusRequestRepository;
+    private readonly IRequestService _requestService;
 
     #endregion
 
@@ -64,35 +63,8 @@ public class RequestController : GenericAPiController<Request>
     {
         try
         {
-            var request = await Mapper.NewRequestDTOToRequest(form, this._statusRequestRepository);
-
-            var fio = $"{form.family} {form.name} {form.patron}";
-            var date = form.birthDate;
-
-            var student = await this._personRepository.GetOne(x =>
-                x.Name == form.name && x.Family == form.family && x.Patron == form.patron && x.BirthDate == date &&
-                x.Email == form.email);
-
-            if (student is null)
-            {
-                request.IsAlreadyStudied = false;
-                // если нашелся студент, то тогда мы должны отдать список совпадений
-                if (await this._personRepository.GetOne(x =>
-                        x.FullName == fio || x.BirthDate == date || x.Email == form.email) is null)
-                {
-                    student = await Mapper.NewRequestDTOToPerson(form);
-                    student = await this._personRepository.Create(student);
-                }
-            }
-            else
-            {
-                request.IsAlreadyStudied = true;
-            }
-
-            request.StudentId = student?.Id;
-
-            var result = await this._requestRepository.Create(request);
-            return this.Ok(result);
+            await this._requestService.CreateRequestFromClient(form);
+            return this.Ok(form);
         }
         catch (Exception e)
         {
@@ -113,85 +85,7 @@ public class RequestController : GenericAPiController<Request>
     {
         try
         {
-            var resultOld = await this._requestRepository.FindById(id);
-
-            if (resultOld is null)
-            {
-                return this.NotFoundException();
-            }
-
-            Person? person;
-
-            //Если студент уже привязан, то меняем его реквизиты, но если он совпадет по трем полям с уже существующим, то пусть идут в топку
-            if (form.StudentId is not null)
-            {
-                person = await this._personRepository.FindById(form.StudentId.Value);
-                if (person is not null)
-                {
-                    var tempNewStudent = await this._personRepository.GetOne(x => x.Phone == form.phone &&
-                        x.Email == form.Email &&
-                        x.Family == form.family &&
-                        x.Name == form.name! &&
-                        x.Patron == form.patron!);
-
-                    if (tempNewStudent is not null && person.Id != tempNewStudent.Id)
-                    {
-                        //throw new Exception("Попытка задублировать студентов");
-                        person = tempNewStudent;
-                    }
-
-                    person.Family = form.family!;
-                    person.Name = form.name;
-                    person.Patron = form.patron;
-                    person.BirthDate = (DateOnly)form.BirthDate!;
-                    person.Sex = person.Sex;
-                    person.Address = form.Address!;
-                    person.Phone = form.phone ?? "";
-                    person.Email = form.Email ?? "";
-                    //person.Projects = form.projects;
-                    person.IT_Experience = form.IT_Experience!;
-                    person.TypeEducationId = form.TypeEducationId;
-                    //Ебать-кололить, нет этого в мокапе, и не нужно было бы, коли выбор был бы из списка, короче этот метод нужно переделывать
-                    person.ScopeOfActivityLevelOneId = form.ScopeOfActivityLevelOneId != null &&
-                                                       (Guid)form.ScopeOfActivityLevelOneId! != Guid.Empty
-                        ? (Guid)form.ScopeOfActivityLevelOneId
-                        : Guid.Parse("a5e1e718-4747-47f4-b7c3-08e56bb7ea34");
-                    person.ScopeOfActivityLevelTwoId = form.ScopeOfActivityLevelTwoId;
-                    //  person.Speciality = form.speciality;
-
-
-                    resultOld.StudentId = person.Id;
-                    await this._personRepository.Update(person.Id, person);
-                }
-            }
-            else
-            {
-                person = await this._personRepository.GetOne(x => x.Phone == form.phone &&
-                                                                  x.Email == form.Email &&
-                                                                  x.Family == form.family! &&
-                                                                  x.Name == form.name! &&
-                                                                  x.Patron == form.patron!);
-
-                if (person is null)
-                {
-                    person = await Mapper.RequestDTOToPerson(form);
-
-                    person = await this._personRepository.Create(person);
-                    resultOld.StudentId = person.Id;
-                }
-            }
-
-            resultOld.StatusRequestId = form!.StatusRequestId;
-            resultOld.StatusEntrancExams = form.statusEntrancExams;
-            resultOld.Email = form.Email ?? "";
-            resultOld.Phone = form.phone ?? "";
-            resultOld.Agreement = form.agreement;
-            resultOld.EducationProgramId = form.EducationProgramId;
-
-            await this._requestRepository.Update(id, resultOld);
-
-            //var result = await this.Get(id);
-
+            await _requestService.UpdateRequestData(id, form);
             return this.Ok(form);
         }
         catch (Exception e)
@@ -302,13 +196,11 @@ public class RequestController : GenericAPiController<Request>
     /// <param name="statusRequestRepository">Репозиторий состояний заявок.</param>
     /// <param name="studentRepository">Репозиторий студентов).</param>
     public RequestController(IGenericRepository<Request> repository, ILogger<Request> logger,
-        IRequestRepository requestRepository, IGenericRepository<StatusRequest> statusRequestRepository,
-        IStudentRepository studentRepository, IPersonRepository personRepository) : base(repository, logger)
+        IRequestRepository requestRepository,
+        IRequestService requestService) : base(repository, logger)
     {
         this._requestRepository = requestRepository;
-        this._statusRequestRepository = statusRequestRepository;
-        this._studentRepository = studentRepository;
-        this._personRepository = personRepository;
+        this._requestService = requestService;
         this._logger = logger;
     }
 

@@ -46,13 +46,12 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     /// </summary>
     /// <param name="studentId">Идентификатор студента.</param>
     /// <returns>Список заявок.</returns>
-    [HttpGet("GetListRequestsOfStudentExists")]
     public async Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId)
     {
         var student = await this._ctx.FindAsync<Student>(studentId);
         if (student is null) return null;
-
-        var request = await this._ctx.Requests.Where(s => s.Person.Id == studentId)
+        // надо подтянуть данные о студенте
+        var request = await this._ctx.Requests.Where(s => s.StudentId == studentId)
             .Select(x => Mapper.RequestToRequestDTO(x).Result).ToListAsync();
 
         if (student is null)

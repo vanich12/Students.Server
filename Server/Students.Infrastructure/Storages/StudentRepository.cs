@@ -58,7 +58,7 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
     /// </summary>
     /// <param name="studentId">Идентификатор студента.</param>
     /// <returns>Студент.</returns>
-    public async Task<Students.Models.Student?> GetStudentWithGroupsAndRequests(Guid studentId)
+    public async Task<Student?> GetStudentWithGroupsAndRequests(Guid studentId)
     {
         var student = await base.FindById(studentId);
         if (student is null)
@@ -70,21 +70,15 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
         return student;
     }
 
+    public async Task<Student?> GetStudentWithInitPerson(Guid studentId)
+    {
+        var student = await this.FindById(studentId);
+        if (student is null)
+            return null;
 
-    //public async Task<PagedPage<StudentDTO>> GetFilteredStudentByDateOfBirth(int page, int pageSize, DateOnly birthDate)
-    //{
-    //    IQueryable<StudentDTO> query = this._ctx.Students
-    //        .Include(gs => gs.GroupStudent!)
-    //        .ThenInclude(r => r.Request!)
-    //        .ThenInclude(st => st.Status)
-    //        .Include(gs1 => gs1.GroupStudent!)
-    //        .ThenInclude(g => g.Group!)
-    //        .ThenInclude(e => e.EducationProgram)
-    //        .Include(p => p.Person.TypeEducation!)
-    //        .Select(x => Mapper.StudentToStudentDTO(x).Result);
-
-    //    return await PagedPage<StudentDTO>.ToPagedPage(query, page, pageSize, x => x.StudentFamily);
-    //}
+        await this._ctx.Entry(student).Reference(p => p.Person).LoadAsync();
+        return student;
+    }
 
     #endregion
 

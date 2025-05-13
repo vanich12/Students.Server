@@ -32,6 +32,15 @@ namespace Students.Application.Services
             return requestsEntities.Select(entity => Mapper.RequestToRequestDTO(entity).Result).ToList();
         }
 
+        public async Task BindRequestToPerson(RequestsDTO request, PersonDTO person)
+        {
+            var requestOld = await requestRepository.FindById(request.Id.Value);
+            requestOld.PersonId = person.Id;
+
+           var newRequest = await requestRepository.Update(requestOld.Id, requestOld);
+
+        }
+
         public async Task<PagedPage<RequestsDTO>> GetRequestsDTOByPage(int page, int pageSize, RequestFilterDTO filters)
         {
             return await requestRepository.GetRequestsDTOByPage(page, pageSize, filters);

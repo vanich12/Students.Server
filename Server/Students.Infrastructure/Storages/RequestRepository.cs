@@ -50,7 +50,7 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     {
         var student = await this._ctx.FindAsync<Student>(studentId);
         if (student is null) return null;
-        // надо подтянуть данные о студенте
+        // TODO: надо подтянуть данные о студенте
         var request = await this._ctx.Requests.Where(s => s.StudentId == studentId)
             .Select(x => Mapper.RequestToRequestDTO(x).Result).ToListAsync();
 

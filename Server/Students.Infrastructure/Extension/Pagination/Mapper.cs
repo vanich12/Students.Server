@@ -117,7 +117,7 @@ public static class Mapper
     /// </summary>
     /// <param name="student">Студент.</param>
     /// <returns>DTO студента.</returns>
-    public static async Task<StudentDTO> StudentToStudentDTO(Students.Models.Student student)
+    public static async Task<StudentDTO> StudentToStudentDTO(Student student)
     {
         var groupStudent = student.GroupStudent?.FirstOrDefault();
         return new StudentDTO
@@ -138,6 +138,21 @@ public static class Mapper
             GroupName = groupStudent?.Group?.Name,
             GroupStartDate = groupStudent?.Group?.StartDate,
             GroupEndDate = groupStudent?.Group?.EndDate
+        };
+    }
+
+    public static async Task<PersonDTO> PersonToPersonDTO(Person person)
+    {
+        return new PersonDTO
+        {
+            Id = person.Id,
+            PersonName = person.Name,
+            PersonFamily = person.Family,
+            PersonFullName = person.FullName,
+            BirthDate = person.BirthDate,
+            Email = person.Email,
+            PersonPatron = person.Patron,
+            PhoneNumber = person.Phone
         };
     }
 

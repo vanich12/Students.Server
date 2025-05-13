@@ -14,8 +14,9 @@ const GroupDetailsPage = () => {
     const [groupData, setGroupData] = useState({});
     const [initialData, setInitialData] = useState({});
     const [isChanged, setIsChanged] = useState(false);
-    const { properties, crud } = config;
     const [showRangeForm, setShowRangeForm] = useState(false);
+
+    const { properties, crud } = config;
     const [showStudentInGroupForm, setShowStudentInGroupForm] = useState(false);
     const { useGetOneByIdAsync, useEditOneAsync ,useRemoveSubjectRangeAsync} = crud;
     const { data, isLoading, isFetching, refetch } = useGetOneByIdAsync(id);

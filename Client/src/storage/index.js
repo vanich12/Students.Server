@@ -2,6 +2,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import userReducer  from './slices/userSlice.js';
 import { authApi }  from './services/authApi.js';
 import { studentsApi }  from './services/studentsApi.ts';
+
+import { personApi }  from './services/personApi';
 import { educationFormApi }  from './services/educationFormApi.js';
 import { requestStatusApi }  from './services/requestStatusApi.js';
 import { typeEducationApi }  from './services/typeEducationApi.js';
@@ -21,6 +23,7 @@ export default configureStore({
     user: userReducer,
     [authApi.reducerPath]: authApi.reducer,
     [studentsApi.reducerPath]: studentsApi.reducer,
+    [personApi.reducerPath]:personApi.reducer,
     [educationFormApi.reducerPath]: educationFormApi.reducer,
     [requestStatusApi.reducerPath]: requestStatusApi.reducer,
     [typeEducationApi.reducerPath]: typeEducationApi.reducer,
@@ -39,6 +42,7 @@ export default configureStore({
     (getDefaultMiddleware) => getDefaultMiddleware()
     .concat(authApi.middleware)
     .concat(studentsApi.middleware)
+        .concat(personApi.middleware)
     .concat(educationFormApi.middleware)
     .concat(requestStatusApi.middleware)
     .concat(typeEducationApi.middleware)

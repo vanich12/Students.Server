@@ -122,6 +122,12 @@ public class RequestController : GenericAPiController<Request>
         }
     }
 
+    //[HttpPut("BindRequestToPerson")]
+    //public async Task<IActionResult> BindRequestToPerson(Guid requestId, [FromBody] PersonDTO person)
+    //{
+
+    //}
+
     /// <summary>
     /// Добавление приказа.
     /// </summary>

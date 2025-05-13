@@ -2,6 +2,7 @@
 using Students.Infrastructure.DTO;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
+using Students.Models;
 
 namespace Students.API.Controllers;
 
@@ -11,7 +12,7 @@ namespace Students.API.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiVersion("1.0")]
-public class StudentController : GenericAPiController<Models.Student>
+public class StudentController : GenericAPiController<Student>
 {
   #region Поля и свойства
 

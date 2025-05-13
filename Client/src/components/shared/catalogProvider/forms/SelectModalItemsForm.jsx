@@ -5,7 +5,7 @@ import { request } from 'axios'
 
 // модальое окно для отображения в нем чьих либо данных
 
-const ModalItems = ({ control, config, filterString,request,modalFooter, modalTitle}) => {
+const SelectModalItemsForm = ({ control, config, filterString,request,modalFooter, modalTitle}) => {
     const {detailsLink, crud , columns , dataConverter , serverPaged } = config;
     const { useGetAllPagedAsync} = crud;
 
@@ -42,7 +42,7 @@ const ModalItems = ({ control, config, filterString,request,modalFooter, modalTi
         }
     );
     const processedEntityData = useMemo(() => {
-        console.log("[ModalItems] Recalculating processedEntityData. Input:", dataFromServer);
+        console.log("[SelectModalItemsForm] Recalculating processedEntityData. Input:", dataFromServer);
         const normalizedData = dataFromServer ? dataFromServer?.data : dataFromServer;
         return dataConverter(normalizedData || []);
     }, [dataFromServer, serverPaged, dataConverter]);
@@ -148,10 +148,8 @@ const ModalItems = ({ control, config, filterString,request,modalFooter, modalTi
                     />*/}
                 </>
             </Modal>
-
-
         </>
     );
 };
 
-export default ModalItems;
+export default SelectModalItemsForm;

@@ -3,8 +3,8 @@ import { Modal, Form, Table, Alert, Spin, Button } from "antd"
 import DropdownMenu from '../../business/baseComponents/DropdownMenu'
 
 // модальое окно для отображения в нем чьих либо данных, с дроплаун меню
-const ModalItemsForm = ({ control, modalCongig}) => {
-    const {config, menuItems} = modalCongig;
+const ModalItemsForm = ({ control, modalConfig}) => {
+    const {config, menuItems} = modalConfig;
     const {detailsLink, crud , columns , dataConverter , serverPaged } = config;
     const { useGetAllPagedAsync} = crud;
     // надо подумать как передавать флаг закрытия формы

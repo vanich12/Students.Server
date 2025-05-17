@@ -14,12 +14,12 @@ namespace Students.API.Controllers
         private readonly IRequestService _requestService;
         private readonly ILogger<PendingRequest> _logger;
 
-        [HttpGet("GetPendingRequestByPage")]
-        public async Task<IActionResult> GetPendingRequestByPage([FromQuery] Pageable page)
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPendingRequestByPage([FromQuery] Pageable pageable)
         {
             try
             {
-                var items = await this._requestService.GetPendingRequestsDTOByPage(page.PageNumber, page.PageSize);
+                var items = await this._requestService.GetPendingRequestsDTOByPage(pageable.PageNumber, pageable.PageSize);
                 return this.Ok(items);
             }
             catch (Exception e)

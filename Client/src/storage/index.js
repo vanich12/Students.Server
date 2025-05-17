@@ -15,6 +15,7 @@ import { feaProgramApi }  from './services/feaProgramApi.js';
 import { educationProgramApi }  from './services/educationProgramApi.js';
 import { groupsApi }  from './services/groupsApi.js';
 import { requestsApi }  from './services/requestsApi.js';
+import { pendingRequestApi }  from './services/pendingRequestApi.js';
 import { scopeOfActivityApi }  from './services/scopeOfActivityApi.js';
 import { ordersApi } from './services/orderApi.js';
 
@@ -36,6 +37,7 @@ export default configureStore({
     [educationProgramApi.reducerPath]: educationProgramApi.reducer,
     [groupsApi.reducerPath]: groupsApi.reducer,
     [requestsApi.reducerPath]: requestsApi.reducer,
+    [pendingRequestApi.reducerPath]: pendingRequestApi.reducer,
     [scopeOfActivityApi.reducerPath]: scopeOfActivityApi.reducer
   },
   middleware: (
@@ -55,6 +57,7 @@ export default configureStore({
     .concat(groupsApi.middleware)
     .concat(ordersApi.middleware)
     .concat(requestsApi.middleware)
+        .concat(pendingRequestApi.middleware)
     .concat(scopeOfActivityApi.middleware)
   ),
 });

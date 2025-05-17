@@ -189,6 +189,11 @@ public static class Mapper
         IGenericRepository<StatusRequest> _statusRequestRepository,
         IGenericRepository<EducationProgram> educationProgramRepository)
     {
+        bool agreementValue = false; // Значение по умолчанию
+        if (!string.IsNullOrEmpty(form.Agreement))
+        {
+            bool.TryParse(form.Agreement, out agreementValue);
+        }
         return new RequestsDTO
         {
             Id = form.Id,
@@ -205,7 +210,7 @@ public static class Mapper
             Email = form.Email,
             ScopeOfActivityLevelOneId = Guid.Parse(form.ScopeOfActivityLevelOneId),
             ScopeOfActivityLevelTwoId = Guid.Parse(form.ScopeOfActivityLevelTwoId),
-            agreement = Convert.ToBoolean(Convert.ToInt32(form.Agreement)),
+            agreement = agreementValue,
         };
     }
 

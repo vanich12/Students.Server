@@ -22,14 +22,29 @@ namespace Students.Infrastructure.Storages
         public async Task<PagedPage<RequestsDTO>> GetRequestPendingByPage(int page, int pageSize)
         {
             IQueryable<PendingRequest> pendingRequestQuery = this._ctx.PendingRequests;
-            var dtoQuery = pendingRequestQuery.Select(x =>
-                Mapper.PendingRequestToRequestDTO(x, _statusRequestRepository, _educationProgramRepository).Result);
-            return await PagedPage<RequestsDTO>.ToPagedPage(dtoQuery, page, pageSize, x => x.StudentFullName);
+            var dtoQuery = pendingRequestQuery;
+            var pagedData = await PagedPage<PendingRequest>.ToPagedPage(dtoQuery, page, pageSize, x => x.Family);
+
+            List<RequestsDTO> dtoList = new();
+            foreach (var item in pagedData.Data)
+            {
+                var dtoItem =
+                    await Mapper.PendingRequestToRequestDTO(item, _statusRequestRepository,
+                        _educationProgramRepository);
+                dtoList.Add(dtoItem);
+            }
+
+            return new PagedPage<RequestsDTO>(
+                dtoList.OrderBy(x => x.StudentFullName).ToList(),
+                pagedData.TotalCount,
+                pagedData.CurrentPage,
+                pagedData.PageSize
+            );
         }
 
         public override Task<PendingRequest> Create(PendingRequest item)
         {
-            item.CreatedAt = DateTime.Now;
+            item.CreatedAt = DateTime.UtcNow;
             return base.Create(item);
         }
 
@@ -38,6 +53,8 @@ namespace Students.Infrastructure.Storages
             IGenericRepository<EducationProgram> educationProgramRepository) : base(context)
         {
             this._ctx = context;
+            this._statusRequestRepository = statusRequestRepository;
+            this._educationProgramRepository = educationProgramRepository;
         }
     }
 }

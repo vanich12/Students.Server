@@ -1,17 +1,21 @@
 ﻿import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import apiUrl from './apiUrl.js';
 
-export const requestsApi = createApi({
+export const pendingRequestApi = createApi({
     reducerPath: 'pendingrequests',
     keepUnusedDataFor:0,
-    baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/Request` }), //  TODO: уточнить url
+    baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/PendingRequest` }), //  TODO: уточнить url
     tagTypes: ['PRequest','PRequestById','PRequests'],
     endpoints: (builder) => ({
         getPendingRequests: builder.query({
             query: () => '',
         }),
         getPendingRequestsPaged: builder.query({
-            query: ({ pageNumber, pageSize, filterDataReq }) => `paged?page=${pageNumber}&size=${pageSize}${filterDataReq}`,
+            query: ({ pageNumber, pageSize, filterDataReq }) => {const relativeUrlString = `paged?page=${pageNumber}&size=${pageSize}${filterDataReq}`
+            console.log("Запрос идет на неподтвержденные заявки")
+                console.log('[RTK Query Log] Generated Relative URL:', relativeUrlString);
+                return relativeUrlString;
+            },
             providesTags: (result)=>{
                 var requestTags = result?.data ?
                     result.data.map(({id})=>({type: 'PRequest', id })):[];
@@ -65,8 +69,8 @@ export const {
     useGetPendingRequestsPagedQuery,
     // надо правильно называть хзуки, от этого зависят их свойства (мутации, или запрос)
     useGetPendingRequestByIdQuery,
-    useAddRequestFromPendingRequest,
-    useAddPersonRequestMutation,
-    useEditPersonRequestMutation,
-    useRemovePersonRequestMutation,
-} = requestsApi;
+    useAddRequestFromPendingRequestMutation,
+    useAddPendingRequestMutation,
+    useEditPendingRequestMutation,
+    useRemovePendingRequestMutation,
+} = pendingRequestApi;

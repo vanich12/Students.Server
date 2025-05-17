@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 
 const openedKey = {
+    '/pendingRequest' : 'catalogs',
     '/program': 'catalogs',
     '/group' : 'catalogs',
     '333' : 'catalogs',
@@ -27,6 +28,11 @@ const useMenuConfig = () => {
     const location = useLocation();
 
     const menuItems = [
+        {
+            key: '/pendingRequest',
+            label: 'Неподтвержденные заявки',
+            onClick: () => {navigate('/pendingRequest')},
+        },
         {
             key: '/requests',
             label: 'Заявки',

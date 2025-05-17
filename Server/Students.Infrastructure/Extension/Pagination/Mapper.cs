@@ -46,7 +46,7 @@ public static class Mapper
         IGenericRepository<ScopeOfActivity> scopeOfActivityRepository)
     {
         var fio = form.Name.Split(" ");
-        return new Students.Models.Person
+        return new Person
         {
             Address = form.Address,
             Family = fio.FirstOrDefault() ?? "",
@@ -176,6 +176,50 @@ public static class Mapper
             Email = form.email,
             Phone = form.phone,
             Agreement = form.agreement
+        };
+    }
+
+    /// <summary>
+    /// Преобразование NewRequestDTO в заявку.
+    /// </summary>
+    /// <param name = "form" > DTO новой заявки.</param>
+    /// <param name = "_statusRequestRepository" > Репозиторий статусов заявок.</param>
+    /// <returns>Заявка.</returns>
+    public static async Task<RequestsDTO> PendingRequestToRequestDTO(PendingRequest form,
+        IGenericRepository<StatusRequest> _statusRequestRepository,
+        IGenericRepository<EducationProgram> educationProgramRepository)
+    {
+        return new RequestsDTO
+        {
+            Id = form.Id,
+            StudentFullName = $"{form.Name}{form.Family}{form.Patron}",
+            family = form.Family,
+            name = form.Name,
+            patron = form.Patron,
+            EducationProgram = form.Education,
+            EducationProgramId = (await educationProgramRepository.GetOne(x => x.Name == form.Education))?.Id,
+            IT_Experience = form.IT_Experience,
+            BirthDate = DateOnly.FromDateTime(Convert.ToDateTime(form.Birthday)),
+            Address = form.Address,
+            phone = form.Phone,
+            Email = form.Email,
+            ScopeOfActivityLevelOneId = Guid.Parse(form.ScopeOfActivityLevelOneId),
+            ScopeOfActivityLevelTwoId = Guid.Parse(form.ScopeOfActivityLevelTwoId),
+            agreement = Convert.ToBoolean(Convert.ToInt32(form.Agreement)),
+        };
+    }
+
+    public static async Task<Request> PendingRequestToRequest(PendingRequest form,
+        IGenericRepository<EducationProgram> educationProgramRepository,
+        IGenericRepository<StatusRequest> statusRequestRepository)
+    {
+        return new Request()
+        {
+            Email = form.Email,
+            Phone = form.Phone,
+            Agreement = Convert.ToBoolean(form.Agreement),
+            EducationProgramId = (await educationProgramRepository.GetOne(x => x.Name == form.Education))?.Id,
+            StatusRequestId = (await statusRequestRepository.GetOne(x => x.Name == "Новая заявка"))?.Id,
         };
     }
 

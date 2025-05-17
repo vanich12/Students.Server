@@ -18,5 +18,6 @@ namespace Students.Infrastructure.Interfaces
         /// <param name="pageSize"> размер страницы</param>
         /// <returns></returns>
         Task<PagedPage<PersonDTO>> GetStudentsByPage(int page, int pageSize, PersonFilterDTO filters);
+
     }
 }

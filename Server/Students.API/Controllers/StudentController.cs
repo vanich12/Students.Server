@@ -72,7 +72,7 @@ public class StudentController : GenericAPiController<Student>
   /// <param name="repository">Репозиторий студентов.</param>
   /// <param name="logger">Логгер.</param>
   /// <param name="studentRepository">Репозиторий студентов.</param>
-  public StudentController(IGenericRepository<Models.Student> repository, ILogger<Models.Student> logger,
+  public StudentController(IGenericRepository<Student> repository, ILogger<Student> logger,
     IStudentRepository studentRepository) : base(repository, logger)
   {
     this._studentRepository = studentRepository;

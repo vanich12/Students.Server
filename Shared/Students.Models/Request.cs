@@ -22,6 +22,7 @@ public class Request
     /// экспорт из заявки
     /// </summary>
     public Guid? StudentId { get; set; }
+
     /// <summary>
     /// Id Персоны
     /// </summary>
@@ -118,6 +119,7 @@ public class Request
 
     #endregion PotomuchtoMincifraNeOtdaetSNILS
 
+  
     /// <summary>
     /// Студент
     /// </summary>

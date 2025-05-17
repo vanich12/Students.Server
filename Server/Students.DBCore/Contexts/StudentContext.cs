@@ -19,6 +19,8 @@ public abstract class StudentContext : DbContext
     public DbSet<FinancingType> FinancingTypes { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<Request> Requests { get; set; }
+
+    public DbSet<PendingRequest> PendingRequests { get; set; }
     public DbSet<ScopeOfActivity> ScopesOfActivity { get; set; }
     public DbSet<Student> Students { get; set; }
 
@@ -43,6 +45,7 @@ public abstract class StudentContext : DbContext
 
     private static void MakeModelsConfiguration(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new PendingRequestConfiguration());
         modelBuilder.ApplyConfiguration(new GroupConfiguration());
         modelBuilder.ApplyConfiguration(new GroupStudentConfiguration());
         modelBuilder.ApplyConfiguration(new StudentConfiguration());

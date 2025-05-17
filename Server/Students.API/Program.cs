@@ -40,6 +40,7 @@ builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
+builder.Services.AddScoped<IPendingRequestRepository, PendingRequestRepository>();
 builder.Services.AddScoped<IReportRepository<FRDOModel>, FRDOReportRepository>();
 builder.Services.AddScoped<IReportRepository<RosstatModel>, RosstatReportRepository>();
 builder.Services.AddScoped<IReport<XLWorkbook>, GenerateReports>();
@@ -87,17 +88,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddApiVersioning(options =>
 {
     options.ReportApiVersions = true;
-    // === ������� 1: ������������ ������ �� ��������� (���� ������) ===
-    // ���� ������ �� ������� ��������, ������������ ������ �� ��������� 1.0
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
-    // ��� ���� �������� ApiVersionReader ����� �� ���������,
-    // �� ����� ������������ ���������� �� ��������� (QueryString, Header, MediaType)
-
-    // === ������� 2: ��������� ����� ������ (��������, ����� Query String) ===
-    // (��������������� AssumeDefaultVersionWhenUnspecified � DefaultApiVersion ����, ���� �������� ���� �������)
-    // options.AssumeDefaultVersionWhenUnspecified = false;
-    // options.ApiVersionReader = new QueryStringApiVersionReader("api-version"); // ������ �� ?api-version=
 });
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

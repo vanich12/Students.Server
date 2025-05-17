@@ -72,7 +72,7 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
     /// <returns>Список групп.</returns>
     public async Task<IEnumerable<Group?>?> GetListGroupsOfStudentExists(Guid studentId)
     {
-        var student = await this._ctx.FindAsync<Students.Models.Student>(studentId);
+        var student = await this._ctx.FindAsync<Student>(studentId);
 
         if (student is null)
             return null;

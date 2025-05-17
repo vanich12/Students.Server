@@ -8,18 +8,29 @@ using Students.Models.ReferenceModels;
 
 namespace Students.Application.Services
 {
+    /// <summary>
+    /// Сервис обработки заявок
+    /// </summary>
+    /// <param name="requestRepository"></param>
+    /// <param name="studentRepository"></param>
+    /// <param name="statusRequestRepository"></param>
+    /// <param name="pendingRequestRepository"></param>
+    /// <param name="personRepository"></param>
     public class RequestService(
         IRequestRepository requestRepository,
         IStudentRepository studentRepository,
         IGenericRepository<StatusRequest> statusRequestRepository,
+        IGenericRepository<EducationProgram> educationProgramRepository,
+        IPendingRequestRepository pendingRequestRepository,
         IPersonRepository personRepository)
         : GenericService<Request>(requestRepository), IRequestService
     {
-        public async Task<Guid?> AddOrderToRequest(Guid requestId, Order order)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Получение заявок, которые есть у студента
+        /// </summary>
+        /// <param name="studentId">Id студента</param>
+        /// <returns></returns>
+        /// <exception cref="StudentNotFoundException"></exception>
         public async Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId)
         {
             var student = await studentRepository.GetStudentWithInitPerson(studentId);
@@ -32,18 +43,62 @@ namespace Students.Application.Services
             return requestsEntities.Select(entity => Mapper.RequestToRequestDTO(entity).Result).ToList();
         }
 
-        public async Task BindRequestToPerson(RequestsDTO request, PersonDTO person)
-        {
-            var requestOld = await requestRepository.FindById(request.Id.Value);
-            requestOld.PersonId = person.Id;
-
-           var newRequest = await requestRepository.Update(requestOld.Id, requestOld);
-
-        }
-
         public async Task<PagedPage<RequestsDTO>> GetRequestsDTOByPage(int page, int pageSize, RequestFilterDTO filters)
         {
             return await requestRepository.GetRequestsDTOByPage(page, pageSize, filters);
+        }
+
+        public async Task<PagedPage<RequestsDTO>> GetPendingRequestsDTOByPage(int page, int pageSize)
+        {
+            return await pendingRequestRepository.GetRequestPendingByPage(page, pageSize);
+        }
+
+
+        /// <summary>
+        /// Создание и привязка отвалидированной заявки на основе "сырой"
+        /// </summary>
+        /// <param name="pRequestId">Id "сырой заявк"</param>
+        /// <param name="personId">Id персоны</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<Request> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId)
+        {
+            var pendingReq = await pendingRequestRepository.FindById(pRequestId);
+            if (pendingReq is null)
+                throw new ArgumentException($"по pendingRequest : {pRequestId} ничего не найдено");
+
+            var person = await personRepository.FindById(personId);
+            person.Family = pendingReq.Family;
+            person.Name = pendingReq.Name;
+            person.Patron = pendingReq.Patron;
+            person.Email = pendingReq.Email;
+            person.Phone = pendingReq.Phone;
+
+            var newPerson = await personRepository.Update(personId, person);
+            if (newPerson is null)
+                throw new InvalidOperationException("Ошибка при обновлении пользователя");
+
+            var newRequest = await Mapper.PendingRequestToRequest(pendingReq, educationProgramRepository, statusRequestRepository);
+
+            newRequest.PersonId = personId;
+
+            return await requestRepository.Create(newRequest);
+        }
+
+        public async Task BindRequestToPerson(Guid requestId, Guid personId)
+        {
+            var requestOld = await requestRepository.FindById(requestId);
+            if (requestOld is null)
+                throw new ArgumentException($"заявка по: {requestId} не найдена");
+
+            requestOld.PersonId = personId;
+
+            var newRequest = await requestRepository.Update(requestOld.Id, requestOld);
+        }
+
+        public async Task<Guid?> AddOrderToRequest(Guid requestId, Order order)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

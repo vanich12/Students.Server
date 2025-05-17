@@ -27,9 +27,19 @@ export const requestsApi = createApi({
          url: relativeUrlString,
          method: 'GET'
        };
-
        return requestConfig;
       }
+    }),
+    editBindRequestToPerson: builder.mutation({
+      query: ({requestId,personId}) => {
+        const relativeUrlString = `BindRequestToPerson?requestId=${requestId}&personId=${personId}`;
+        const requestConfig ={
+          url: relativeUrlString,
+          method: 'PUT',
+        };
+        return requestConfig;
+      },
+      invalidatesTags: (result, error, { requestId }) => [{ type: 'Request', id: requestId }],
     }),
     getPersonRequestById: builder.query({
       query: (id) => id,
@@ -67,6 +77,8 @@ export const {
   useGetPersonRequestsQuery,
   useGetPersonRequestsPagedQuery,
   useLazyGetPersonRequestsOfStudentQuery,
+    // надо правильно называть хзуки, от этого зависят их свойства (мутации, или запрос)
+  useEditBindRequestToPersonMutation,
   useGetPersonRequestByIdQuery,
   useAddPersonRequestMutation,
   useEditPersonRequestMutation,

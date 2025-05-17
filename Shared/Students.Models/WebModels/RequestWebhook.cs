@@ -59,14 +59,14 @@ public class RequestWebhook
   /// Идентификатор формы
   /// </summary>
   public required string formid { get; set; }
-
+  // вообще странно, что тут именно Id, нам что будут приходить точно такие же Id с другого ресурса?)
   /// <summary>
   /// Id сферы деятельности(1 уровень).
   /// </summary>
   public string? ScopeOfActivityLevelOneId { get; set; }
-
-  /// <summary>
-  /// Id сферы деятельности(2 уровень).
-  /// </summary>
-  public string? ScopeOfActivityLevelTwoId { get; set; }
+  // вообще странно, что тут именно Id, нам что будут приходить точно такие же Id с другого ресурса?)
+    /// <summary>
+    /// Id сферы деятельности(2 уровень).
+    /// </summary>
+    public string? ScopeOfActivityLevelTwoId { get; set; }
 }

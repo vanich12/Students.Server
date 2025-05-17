@@ -121,12 +121,27 @@ public class RequestController : GenericAPiController<Request>
             return this.Exception();
         }
     }
-
-    //[HttpPut("BindRequestToPerson")]
-    //public async Task<IActionResult> BindRequestToPerson(Guid requestId, [FromBody] PersonDTO person)
-    //{
-
-    //}
+    /// <summary>
+    /// Привязка заявкуи к персоне
+    /// </summary>
+    /// <param name="requestId"></param>
+    /// <param name="person"></param>
+    /// <returns></returns>
+    /// Todo: доделать и протестировать логику
+    [HttpPut("BindRequestToPerson")]
+    public async Task<IActionResult> BindRequestToPerson(Guid requestId, Guid personId)
+    {
+        try
+        {
+            await _requestService.BindRequestToPerson(requestId, personId);
+            return this.Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return this.Exception();
+        }
+    }
 
     /// <summary>
     /// Добавление приказа.

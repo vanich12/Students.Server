@@ -17,10 +17,12 @@ const RequestDetailsPage = () => {
     const [showModal, setShowModal] = useState(false);
     
     const { properties, crud } = config;
-    const { useGetOneByIdAsync, useEditOneAsync } = crud;
+    const { useGetOneByIdAsync, useEditOneAsync, useEditBinding } = crud;
     const { data, isLoading, isFetching, refetch } = useGetOneByIdAsync(id);
 
     const [editRequest] = useEditOneAsync();
+
+   const [bindTrigger, bindingResult] = useEditBinding();
 
    const filterString = useMemo(() => {
         if (!requestData) return '';
@@ -38,10 +40,12 @@ const RequestDetailsPage = () => {
 
         return `&${queryString}` ;
     }, [requestData]);
+
    // футер модалки
     const modalFooter =()=>(
           <>
-              <Button key="confirm" type="primary" disabled={currentPerson === null}>Подтвердить</Button>
+              <Button key="confirm" type="primary" disabled={currentPerson === null}
+              onClick={() => bindTrigger({requestId: id, person: currentPerson.id })}>Подтвердить</Button>
               <Button key="close" onClick={() => setShowModal(false)}>Закрыть</Button>
           </>
     );

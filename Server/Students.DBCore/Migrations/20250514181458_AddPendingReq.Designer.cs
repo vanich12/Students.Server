@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Students.DBCore.Contexts;
@@ -11,9 +12,11 @@ using Students.DBCore.Contexts;
 namespace Students.DBCore.Migrations
 {
     [DbContext(typeof(PgContext))]
-    partial class PgContextModelSnapshot : ModelSnapshot
+    [Migration("20250514181458_AddPendingReq")]
+    partial class AddPendingReq
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,9 +265,6 @@ namespace Students.DBCore.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Education")
                         .IsRequired()
                         .HasColumnType("text");
@@ -303,9 +303,13 @@ namespace Students.DBCore.Migrations
                     b.Property<string>("ScopeOfActivityLevelTwoId")
                         .HasColumnType("text");
 
+                    b.Property<string>("tranid")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
-                    b.ToTable("PendingRequests");
+                    b.ToTable("PendingRequest");
                 });
 
             modelBuilder.Entity("Students.Models.Person", b =>

@@ -23,9 +23,9 @@ import OrdersDetailsPage from './order/OrdersDetailsPage.jsx';
 import OrdersPage from './order/OrdersPage.jsx';
 import ReportsPage from './report/ReportsPage.jsx';
 import { NotificationProvider } from '../notifications/NotificationContext.js';
-import PendingRequestPage from './pendingRequest/PendingRequestPage'
+import PendingRequestPage from './pendingRequest/PendingRequestsPage'
 import PendingRequestDetailPage from './pendingRequest/PendingRequestDetailPage'
-import PendingRequestsPage from './pendingRequest/PendingRequestPage'
+import PendingRequestsPage from './pendingRequest/PendingRequestsPage'
 
 const App = () => {
   return (
@@ -39,7 +39,7 @@ const App = () => {
                 </PrivateRoute>
             )}
             />
-            <Route path="/requests/:id" element={(
+            <Route path="/pendingrequests/:id" element={(
                 <PrivateRoute>
                     <PendingRequestDetailPage />
                 </PrivateRoute>

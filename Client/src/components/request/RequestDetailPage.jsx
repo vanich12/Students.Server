@@ -100,14 +100,6 @@ const RequestDetailsPage = () => {
                 <Col>
                     <Button onClick={onCancel} disabled={isSaveInProgress}>Отмена</Button>
                 </Col>
-                <Col>
-                    {requestData.statusRequest === "Ожидает подтверждения" && (<Button style={{ margin: '0 10px' }}  type="primary" onClick={() => {
-                        setShowModal(true)
-                    }}>
-                        Привязать заявку к персоне
-
-                    </Button>)}
-                </Col>
             </Row>
             <RoutingWarningModal
                 show={blocker.state === "blocked"}

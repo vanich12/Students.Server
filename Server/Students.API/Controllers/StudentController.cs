@@ -17,7 +17,7 @@ public class StudentController : GenericAPiController<Student>
   #region Поля и свойства
 
   private readonly IStudentRepository _studentRepository;
-  private readonly ILogger<Models.Student> _logger;
+  private readonly ILogger<Student> _logger;
 
   #endregion
 

@@ -1,7 +1,7 @@
 ﻿import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import apiUrl from './apiUrl.js';
 
-export const pendingRequestApi = createApi({
+export const pendingRequestsApi = createApi({
     reducerPath: 'pendingrequests',
     keepUnusedDataFor:0,
     baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/PendingRequest` }), //  TODO: уточнить url
@@ -24,7 +24,7 @@ export const pendingRequestApi = createApi({
                 return [...requestTags, listTag];
             },
         }),
-        getPersonRequestById: builder.query({
+        getPendingRequestById: builder.query({
             query: (id) => id,
             providesTags: ['PRequestById'],
         }),
@@ -46,13 +46,19 @@ export const pendingRequestApi = createApi({
             invalidatesTags: [{type: 'Students', id: 'LIST'}]
         }),
         editPendingRequest: builder.mutation({
-            query: ({ id, item }) => ({
-                url: `/EditRequest/${id}`,
-                method: 'PUT',
-                body: item,
-            }),
+            query: ({ id, item }) => {
+                // ЛОГИРОВАНИЕ АРГУМЕНТОВ
+                console.log('Вызван editPendingRequest с аргументами:');
+                console.log('id:', id);
+                console.log('item:', item);
 
-            invalidatesTags: (result, error, { id }) => [{ type: 'Request', id }],
+                return {
+                    url: `/EditPendingRequest/${id}`, // Пример URL, адаптируйте под ваш API
+                    method: 'PUT',
+                    body: item,
+                };
+            },
+            invalidatesTags: (result, error, { id }) => [{ type: 'PRequest', id }],
         }),
         removePendingRequest: builder.mutation({
             query: (id) => ({
@@ -73,4 +79,4 @@ export const {
     useAddPendingRequestMutation,
     useEditPendingRequestMutation,
     useRemovePendingRequestMutation,
-} = pendingRequestApi;
+} = pendingRequestsApi;

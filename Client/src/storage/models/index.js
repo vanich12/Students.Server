@@ -6,6 +6,7 @@ import groupsModel from './groups.js';
 import kindDocumentRiseQualificationModel from './kindDocumentRiseQualification.js';
 import kindOrderModel from './kindOrder.js';
 import personRequestsModel from './personRequests.js';
+import pendingRequestsModel from './pendingRequests.js';
 import requestStatusModel from './requestStatus.js';
 import scopeOfActivityModel from './scopeOfActivity.js';
 import studentsModel from './students.ts';
@@ -19,6 +20,7 @@ export {
     educationProgramsModel,
     feaProgramModel,
     financingTypeModel,
+    pendingRequestsModel,
     groupsModel,
     kindDocumentRiseQualificationModel,
     kindOrderModel,

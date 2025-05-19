@@ -194,6 +194,7 @@ public static class Mapper
         {
             bool.TryParse(form.Agreement, out agreementValue);
         }
+
         return new RequestsDTO
         {
             Id = form.Id,
@@ -202,6 +203,7 @@ public static class Mapper
             name = form.Name,
             patron = form.Patron,
             EducationProgram = form.Education,
+            EducationLevel = form.EducationLevel,
             EducationProgramId = (await educationProgramRepository.GetOne(x => x.Name == form.Education))?.Id,
             IT_Experience = form.IT_Experience,
             BirthDate = DateOnly.FromDateTime(Convert.ToDateTime(form.Birthday)),
@@ -211,6 +213,29 @@ public static class Mapper
             ScopeOfActivityLevelOneId = Guid.Parse(form.ScopeOfActivityLevelOneId),
             ScopeOfActivityLevelTwoId = Guid.Parse(form.ScopeOfActivityLevelTwoId),
             agreement = agreementValue,
+        };
+    }
+
+    public static async Task<PendingRequest> RequestDTOToPendingRequest(RequestsDTO form,
+        IGenericRepository<StatusRequest> _statusRequestRepository,
+        IGenericRepository<EducationProgram> educationProgramRepository)
+
+    {
+        return new PendingRequest()
+        {
+            Phone = form.phone,
+            Email = form.Email,
+            Family = form.family,
+            Name = form.name,
+            Patron = form.patron,
+            Education = form.EducationProgram,
+            Address = form.Address,
+            Agreement = form.agreement.ToString(),
+            Birthday = form.BirthDate.ToString(),
+            IT_Experience = form.IT_Experience,
+            EducationLevel = form.EducationLevel,
+            ScopeOfActivityLevelOneId = form.ScopeOfActivityLevelOneId.ToString(),
+            ScopeOfActivityLevelTwoId = form.ScopeOfActivityLevelTwoId.ToString()
         };
     }
 

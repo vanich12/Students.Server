@@ -12,8 +12,11 @@ const BaseComponent = ({ formParams, params, ...props }) => {
     const [changed, setChanged] = useState(false);
 
     const handleSetValue = useCallback((newValue) => {
+        console.log(newValue);
         setChanged(newValue !== value);
+        console.log(value)
         setValue(newValue);
+        console.log(value);
     }, [value, setValue]);
     //выбирается в зависимости от режима, который был сюда передан, например editableInfo
     const ComponentByMode = { ...defaultComponentsByMode, ...components }[currentMode];

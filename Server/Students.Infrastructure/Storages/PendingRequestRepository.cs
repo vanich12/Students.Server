@@ -18,7 +18,7 @@ namespace Students.Infrastructure.Storages
         private readonly StudentContext _ctx;
         private readonly IGenericRepository<StatusRequest> _statusRequestRepository;
         private readonly IGenericRepository<EducationProgram> _educationProgramRepository;
-
+        // по идее надо бы вынести всю эту бизнес-логику в сервис
         public async Task<PagedPage<RequestsDTO>> GetRequestPendingByPage(int page, int pageSize)
         {
             IQueryable<PendingRequest> pendingRequestQuery = this._ctx.PendingRequests;
@@ -42,10 +42,11 @@ namespace Students.Infrastructure.Storages
             );
         }
 
-        public override Task<PendingRequest> Create(PendingRequest item)
+
+        public async override Task<PendingRequest> Create(PendingRequest item)
         {
             item.CreatedAt = DateTime.UtcNow;
-            return base.Create(item);
+            return await base.Create(item);
         }
 
         public PendingRequestRepository(StudentContext context,

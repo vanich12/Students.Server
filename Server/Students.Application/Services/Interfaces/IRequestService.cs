@@ -27,12 +27,6 @@ namespace Students.Application.Services.Interfaces
         Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId);
 
         /// <summary>
-        /// Создание новой заявки с фронта
-        /// </summary>
-        /// <param name="form">DTO заявки с данными о потенциальном студенте.</param>
-        /// <returns></returns>
-        Task CreateRequestFromClient(NewRequestDTO form);
-        /// <summary>
         /// Создание заявки 
         /// </summary>
         /// <param name="pRequestId"></param>
@@ -41,20 +35,19 @@ namespace Students.Application.Services.Interfaces
         Task<Request> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId);
 
         /// <summary>
+        /// Создание новой заявки с фронта
+        /// </summary>
+        /// <param name="form">DTO заявки с данными о потенциальном студенте.</param>
+        /// <returns></returns>
+        Task CreateRequestFromClient(NewRequestDTO form);
+
+        /// <summary>
         /// Обновить объект.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="form"></param>
         /// <returns></returns>
         Task UpdateRequestData(Guid id, RequestsDTO form);
-
-        /// <summary>
-        /// Привязка заявка к персоне
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="person"></param>
-        /// <returns></returns>
-        Task BindRequestToPerson(Guid requestId, Guid personId);
 
 
         /// <summary>
@@ -66,6 +59,5 @@ namespace Students.Application.Services.Interfaces
         /// <returns>Пагинированные DTO заявок.</returns>
         Task<PagedPage<RequestsDTO>> GetRequestsDTOByPage(int page, int pageSize, RequestFilterDTO filters);
 
-        Task<PagedPage<RequestsDTO>> GetPendingRequestsDTOByPage(int page, int pageSize);
     }
 }

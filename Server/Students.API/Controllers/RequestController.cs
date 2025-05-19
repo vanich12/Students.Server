@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Students.Application.Services;
 using Students.Application.Services.Interfaces;
 using Students.Infrastructure.DTO;
 using Students.Infrastructure.Extension.Pagination;
@@ -73,6 +74,26 @@ public class RequestController : GenericAPiController<Request>
         }
     }
 
+    [HttpPost("CreateRequestFromPendingRequest")]
+    public async Task<IActionResult> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId)
+    {
+        try
+        {
+            var request = await _requestService.CreateRequestFromPendingRequest(pRequestId, personId);
+            return this.Ok(request);
+        }
+        catch (ArgumentException e)
+        {
+            this._logger.LogError(e.Message);
+            return this.Exception();
+        }
+        catch (Exception e)
+        {
+            this._logger.LogError(e.Message);
+            return this.Exception();
+        }
+    }
+
     /// <summary>
     /// Обновить объект.
     /// Пизда, а не мокап, студента выбирать нужно из списка блять
@@ -121,27 +142,7 @@ public class RequestController : GenericAPiController<Request>
             return this.Exception();
         }
     }
-    /// <summary>
-    /// Привязка заявкуи к персоне
-    /// </summary>
-    /// <param name="requestId"></param>
-    /// <param name="person"></param>
-    /// <returns></returns>
-    /// Todo: доделать и протестировать логику
-    [HttpPut("BindRequestToPerson")]
-    public async Task<IActionResult> BindRequestToPerson(Guid requestId, Guid personId)
-    {
-        try
-        {
-            await _requestService.BindRequestToPerson(requestId, personId);
-            return this.Ok();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return this.Exception();
-        }
-    }
+
 
     /// <summary>
     /// Добавление приказа.

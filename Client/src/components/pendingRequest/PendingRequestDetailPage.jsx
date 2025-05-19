@@ -1,8 +1,8 @@
 ﻿import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { Layout, Loading, DetailsPageData, RoutingWarningModal } from '../shared/layout/index.js';
 import { useParams, useBlocker } from 'react-router-dom';
-import { Row, Col, Space, Button, Flex } from 'antd'
-import config from '../../storage/catalogConfigs/pendingRequest';
+import { Row, Col, Button } from 'antd'
+import config from '../../storage/catalogConfigs/pendingRequests';
 import personConfig from '../../storage/catalogConfigs/person';
 import SelectModalItemsForm from '../shared/catalogProvider/forms/SelectModalItemsForm'
 
@@ -17,6 +17,7 @@ const PendingRequestDetailsPage = () => {
     const [showModal, setShowModal] = useState(false);
 
     const { properties, crud } = config;
+
     const { useGetOneByIdAsync, useEditOneAsync, useCreateOneValidRequest} = crud;
     const { data, isLoading, isFetching, refetch } = useGetOneByIdAsync(id);
 
@@ -67,11 +68,10 @@ const PendingRequestDetailsPage = () => {
     );
     const handleSetPerson = (record) => {
         setCurrentPerson(record);
-        console.log("выбранная персона")
-        console.log(currentPerson)
     }
 
     const onSave = useCallback(() => {
+        console.log(requestData)
         editRequest({ id, item: requestData });
         setIsChanged(false);
     },[id,requestData]);
@@ -102,12 +102,11 @@ const PendingRequestDetailsPage = () => {
                             <Button onClick={onCancel} disabled={isSaveInProgress}>Отмена</Button>
                         </Col>
                         <Col>
-                            {requestData.statusRequest === "Ожидает подтверждения" && (<Button style={{ margin: '0 10px' }}  type="primary" onClick={() => {
+                         <Button style={{ margin: '0 10px' }}  type="primary" onClick={() => {
                                 setShowModal(true)
                             }}>
                                 Привязать заявку к персоне
-
-                            </Button>)}
+                            </Button>
                         </Col>
                     </Row>
                     <RoutingWarningModal

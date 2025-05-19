@@ -9,9 +9,9 @@ import {
    useAddOneAsync,
    useEditOneAsync,
     useRemoveOneAsync,
-} from '../crud/pendingRequestCrud.js';
+} from '../crud/pendingRequestsCrud.js';
 import { useGetRequestStatusQuery } from '../services/requestStatusApi.js'
-import { personRequestsModel } from '../models/index.js';
+import { pendingRequestsModel } from '../models/index.js';
 import BirthDate from '../../components/shared/business/BirthDate.jsx';
 
 //  TODO    лучше перенести эту реализацию в компонент RequestStatusSelect в новый режим
@@ -61,7 +61,7 @@ export default {
     detailsLink: 'pendingrequests',
     hasDetailsPage: true,
     serverPaged: true,
-    properties: personRequestsModel,
+    properties: pendingRequestsModel,
     crud: {
         useGetAllAsync,
         useGetAllPagedAsync,

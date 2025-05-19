@@ -65,7 +65,8 @@ const QueryableSelect = ({ formParams, ...props }) => (
                 components,
                 placeholder: 'Выберите значение',
                 ...props,
-                formParams: _.merge({}, defaultFormParams, formParams),
+                formParams: _.merge({}, defaultFormParams,
+                ),
             }
         }
     />

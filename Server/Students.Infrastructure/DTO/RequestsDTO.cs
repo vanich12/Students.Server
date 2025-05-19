@@ -148,6 +148,9 @@ public class RequestsDTO
   ///  Id образовательной программы.
   /// </summary>
   public Guid? EducationProgramId { get; set; }
+
+  public string? EducationLevel { get; set; }
+
   /// <summary>
   /// Образовательная программа.
   /// </summary>

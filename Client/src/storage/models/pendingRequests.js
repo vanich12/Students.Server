@@ -7,6 +7,7 @@ import BirthDate from '../../components/shared/business/BirthDate.jsx';
 import Address from '../../components/shared/business/Address.jsx';
 import Email from '../../components/shared/business/Email.jsx';
 import PhoneNumber from '../../components/shared/business/PhoneNumber.jsx';
+import YesNo from '../../components/shared/business/YesNo'
 
 const model = {
     family: {
@@ -64,6 +65,12 @@ const model = {
     agreement: {
         name: 'Согласие на обработку перс. даннных',
         type: CheckBox,
+    },
+    isArchive: {
+        name: 'В архиве',
+        type: YesNo,
+        show: true,
+        required: true
     },
 };
 

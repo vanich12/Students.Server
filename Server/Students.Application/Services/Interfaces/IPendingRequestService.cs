@@ -18,6 +18,14 @@ namespace Students.Application.Services.Interfaces
         /// <param name="pageSize">размер страницы</param>
         /// <returns></returns>
         Task<PagedPage<RequestsDTO>> GetPendingRequestsDTOByPage(int page, int pageSize);
+
+        /// <summary>
+        /// Создание и привязка отвалидированной заявки на основе "сырой"
+        /// </summary>
+        /// <param name="pRequestId"> id неподтвержденной заявки</param>
+        /// <param name="personId">id персоны</param>
+        /// <returns></returns>
+        Task<Request> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId);
         /// <summary>
         /// Получение неподтвержденной заявки по Id
         /// </summary>

@@ -191,14 +191,13 @@ public static class Mapper
     {
         bool agreementValue = false; // Значение по умолчанию
         if (!string.IsNullOrEmpty(form.Agreement))
-        {
             bool.TryParse(form.Agreement, out agreementValue);
-        }
+        
 
         return new RequestsDTO
         {
             Id = form.Id,
-            StudentFullName = $"{form.Name}{form.Family}{form.Patron}",
+            StudentFullName = $"{form.Name} {form.Family} {form.Patron}",
             family = form.Family,
             name = form.Name,
             patron = form.Patron,
@@ -216,9 +215,7 @@ public static class Mapper
         };
     }
 
-    public static async Task<PendingRequest> RequestDTOToPendingRequest(RequestsDTO form,
-        IGenericRepository<StatusRequest> _statusRequestRepository,
-        IGenericRepository<EducationProgram> educationProgramRepository)
+    public static async Task<PendingRequest> RequestDTOToPendingRequest(RequestsDTO form)
 
     {
         return new PendingRequest()
@@ -235,7 +232,8 @@ public static class Mapper
             IT_Experience = form.IT_Experience,
             EducationLevel = form.EducationLevel,
             ScopeOfActivityLevelOneId = form.ScopeOfActivityLevelOneId.ToString(),
-            ScopeOfActivityLevelTwoId = form.ScopeOfActivityLevelTwoId.ToString()
+            ScopeOfActivityLevelTwoId = form.ScopeOfActivityLevelTwoId.ToString(),
+            IsArchive = form.IsArchive ?? false
         };
     }
 

@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
-import { Select } from 'antd';
+import { Checkbox, Select } from 'antd'
 import { CheckCircleFilled } from '@ant-design/icons';
 import {
     useGetAllAsync,
@@ -13,7 +13,37 @@ import {
 import { useGetRequestStatusQuery } from '../services/requestStatusApi.js'
 import { pendingRequestsModel } from '../models/index.js';
 import BirthDate from '../../components/shared/business/BirthDate.jsx';
+//  TODO    лучше перенести эту реализацию в компонент в новый режим
+const IsArchive = ({ record }) => {
+    const { id, isArchive } = record;
+    const [editProgram, { isSuccess, isError }] = useEditOneAsync();
+    const [status, setStatus] = useState('');
+    const checkboxRef = useRef(null);
 
+    useEffect(() => {
+        if (isError) {
+            setStatus('error');
+        }
+    }, [isSuccess, isError]);
+
+    const onChange = ({ target }) => {
+        const editetProgram = { ...record };
+        // удаляем лишние поля дял отправки
+        delete editetProgram.id;
+        delete editetProgram.educationForm;
+        delete editetProgram.kindDocumentRiseQualification;
+        editProgram({ id, item: { ...editetProgram, isArchive: target.checked }});
+        checkboxRef.current.blur();
+    };
+
+    return (
+        <Checkbox
+            ref={checkboxRef}
+            defaultChecked={isArchive}
+            onChange={onChange}
+        />
+    );
+};
 //  TODO    лучше перенести эту реализацию в компонент RequestStatusSelect в новый режим
 const StatusRequestForm = ({ record }) => {
     const { id, statusRequest, statusRequestId } = record;
@@ -111,12 +141,18 @@ export default {
                 return (<StatusRequestForm record={record} />);
             },
         },*/
-        {
+ /*       {
             title: 'Обучающийся',
             key: 'trined',
             render: (_, { trained }) => {
                 return trained && (<CheckCircleFilled style={{ color: "#52c41a" }}/>);
             },
+        },*/
+        {
+            title: 'В архив',
+            dataIndex: 'isArchive',
+            key: 'archive',
+            render: (_, record) => (<IsArchive record={record} />),
         },
     ],
     dataConverter: (data) => data,

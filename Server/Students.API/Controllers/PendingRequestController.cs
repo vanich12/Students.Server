@@ -56,6 +56,31 @@ namespace Students.API.Controllers
                 return this.Exception();
             }
         }
+        [HttpPost("CreateRequestFromPendingRequest")]
+        public async Task<IActionResult> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId)
+        {
+            try
+            {
+                var request = await _pendingRequestService.CreateRequestFromPendingRequest(pRequestId, personId);
+                return this.Ok(request);
+            }
+            catch (ArgumentException ex)
+            {
+                this._logger.LogError(ex.Message, "Error while getting Item by Id");
+                return this.Exception();
+            }
+            catch (InvalidOperationException ex)
+            {
+                this._logger.LogError(ex.Message, "Error while trying Update Person");
+                return this.Exception();
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message,
+                    $"Error while trying create Request by PendingRequest with pendingRequestId:{pRequestId}, and with personId: {personId} ");
+                return this.Exception();
+            }
+        }
 
 
         /// <summary>

@@ -4,12 +4,10 @@ import { Row, Col, Space } from 'antd';
 const rowStyle = { alignItems: 'center' };
 
 const DetailsPageData = ({ items, data, editData, setIsChanged }) => {
-    console.log(data);
     return (
         <Space direction="vertical" size={0} style={{ display: 'flex' }}>
             {Object.entries(items).map(([key, { name, type, formParams, params }]) => {
                 const Item = type;
-                console.log(`${key}: ${data[key]}`);
 
                 return (
                     <Row style={rowStyle} key={key}>

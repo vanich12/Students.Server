@@ -16,15 +16,57 @@ namespace Students.Application.Services
     public class PendingRequestService(
         IRequestRepository requestRepository,
         IGenericRepository<PendingRequest> repository,
-        IStudentRepository studentRepository,
         IGenericRepository<StatusRequest> statusRequestRepository,
         IGenericRepository<EducationProgram> educationProgramRepository,
-        IPendingRequestRepository pendingRequestRepository,
-        IPersonRepository personRepository) : GenericService<PendingRequest>(repository), IPendingRequestService
+        IPersonRepository personRepository,
+        IPendingRequestRepository pendingRequestRepository)
+        : GenericService<PendingRequest>(repository), IPendingRequestService
     {
         public async Task<PagedPage<RequestsDTO>> GetPendingRequestsDTOByPage(int page, int pageSize)
         {
             return await pendingRequestRepository.GetRequestPendingByPage(page, pageSize);
+        }
+
+        /// <summary>
+        /// Создание и привязка отвалидированной заявки на основе "сырой"
+        /// </summary>
+        /// <param name="pRequestId">Id "сырой заявк"</param>
+        /// <param name="personId">Id персоны</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<Request> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId)
+        {
+            var pendingReq = await pendingRequestRepository.FindById(pRequestId);
+            if (pendingReq is null)
+                throw new ArgumentException($"по pRequestId : {pRequestId} заявки не найдено");
+
+            var person = await personRepository.FindById(personId);
+            if (person is null)
+                throw new ArgumentException($"по personId : {personId} персоны не найдено");
+
+            person.Family = pendingReq.Family;
+            person.Name = pendingReq.Name;
+            person.Patron = pendingReq.Patron;
+            person.Email = pendingReq.Email;
+            person.Phone = pendingReq.Phone;
+
+            var newPerson = await personRepository.Update(personId, person);
+            if (newPerson is null)
+                throw new InvalidOperationException("Ошибка при обновлении пользователя");
+
+            var newRequest =
+                await Mapper.PendingRequestToRequest(pendingReq, educationProgramRepository, statusRequestRepository);
+
+            newRequest.PersonId = personId;
+            // архивируем "сырую" заявку, по хорошему это делать бы после создания уже подтвержденной заявки
+
+            pendingReq.IsArchive = true;
+            var updatePendingRequest = await pendingRequestRepository.Patch(pRequestId, pendingReq);
+            if (updatePendingRequest is null)
+                throw new InvalidOperationException(
+                    $"Ошибка при обновлении статуса неподтвержденной заявки по id:{pRequestId}");
+
+            return await requestRepository.Create(newRequest);
         }
 
         public async Task<RequestsDTO?> FindById(Guid id)
@@ -42,7 +84,7 @@ namespace Students.Application.Services
             var educationProgram = await educationProgramRepository.FindById(form.EducationProgramId.Value);
 
             var pendingReq =
-                await Mapper.RequestDTOToPendingRequest(form, statusRequestRepository, educationProgramRepository);
+                await Mapper.RequestDTOToPendingRequest(form);
 
             if (educationProgram is not null)
                 pendingReq.Education = educationProgram.Name;

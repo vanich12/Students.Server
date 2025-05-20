@@ -206,4 +206,6 @@ public class RequestsDTO
   /// Обучающийся
   /// </summary>
   public bool? trained { get; set; } = false;
+
+  public bool? IsArchive { get; set; }
 }

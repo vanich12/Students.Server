@@ -54,4 +54,12 @@ public interface IGenericRepository<TEntity> where TEntity : class
   /// <param name="item">Объект.</param>
   /// <returns>Объект.</returns>
   Task<TEntity?> Update(Guid id, TEntity item);
+
+  /// <summary>
+  /// Частичное изменение объекта.
+  /// </summary>
+  /// <param name="id">Идентификатор объекта.</param>
+  /// <param name="item">Объект.</param>
+  /// <returns>Объект.</returns>
+  Task<TEntity?> Patch(Guid id, TEntity item);
 }

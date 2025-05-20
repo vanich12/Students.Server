@@ -78,7 +78,14 @@ namespace Students.Models
         /// Id сферы деятельности(2 уровень).
         /// </summary>
         public string? ScopeOfActivityLevelTwoId { get; set; }
-
+        /// <summary>
+        /// Дата и время создания в системе "сырой заявки"
+        /// </summary>
         public DateTime? CreatedAt { get; set; }
+
+        /// <summary>
+        /// Признак "сырой" заявки в архиве.
+        /// </summary>
+        public bool? IsArchive { get; set; } = false;
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Students.Infrastructure.DTO;
+using Students.Infrastructure.DTO.FilterDTO;
 using Students.Models;
 
 

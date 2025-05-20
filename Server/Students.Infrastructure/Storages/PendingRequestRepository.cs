@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Students.DBCore.Contexts;
 using Students.Infrastructure.DTO;
+using Students.Infrastructure.DTO.FilterDTO;
 using Students.Infrastructure.Extension.Filters;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
@@ -19,10 +20,10 @@ namespace Students.Infrastructure.Storages
         private readonly IGenericRepository<StatusRequest> _statusRequestRepository;
         private readonly IGenericRepository<EducationProgram> _educationProgramRepository;
         // по идее надо бы вынести всю эту бизнес-логику в сервис
-        public async Task<PagedPage<RequestsDTO>> GetRequestPendingByPage(int page, int pageSize)
+        public async Task<PagedPage<RequestsDTO>> GetRequestPendingByPage(int page, int pageSize, PendingRequestFilterDTO filters)
         {
             IQueryable<PendingRequest> pendingRequestQuery = this._ctx.PendingRequests;
-            var dtoQuery = pendingRequestQuery;
+            var dtoQuery = pendingRequestQuery.ApplyFilters(filters);
             var pagedData = await PagedPage<PendingRequest>.ToPagedPage(dtoQuery, page, pageSize, x => x.Family);
 
             List<RequestsDTO> dtoList = new();

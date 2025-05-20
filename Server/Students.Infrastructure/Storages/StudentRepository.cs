@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Students.DBCore.Contexts;
 using Students.Infrastructure.DTO;
+using Students.Infrastructure.DTO.FilterDTO;
 using Students.Infrastructure.Extension.Filters;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;

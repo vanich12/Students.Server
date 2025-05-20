@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Students.Application.Services.Interfaces;
 using Students.Infrastructure.DTO;
+using Students.Infrastructure.DTO.FilterDTO;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
 using Students.Infrastructure.Storages;
@@ -22,9 +23,10 @@ namespace Students.Application.Services
         IPendingRequestRepository pendingRequestRepository)
         : GenericService<PendingRequest>(repository), IPendingRequestService
     {
-        public async Task<PagedPage<RequestsDTO>> GetPendingRequestsDTOByPage(int page, int pageSize)
+        public async Task<PagedPage<RequestsDTO>> GetPendingRequestsDTOByPage(int page, int pageSize,
+            PendingRequestFilterDTO filters)
         {
-            return await pendingRequestRepository.GetRequestPendingByPage(page, pageSize);
+            return await pendingRequestRepository.GetRequestPendingByPage(page, pageSize, filters);
         }
 
         /// <summary>

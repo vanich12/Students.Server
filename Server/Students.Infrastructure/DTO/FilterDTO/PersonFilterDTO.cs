@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Students.Infrastructure.DTO
+namespace Students.Infrastructure.DTO.FilterDTO
 {
     public class PersonFilterDTO
     {

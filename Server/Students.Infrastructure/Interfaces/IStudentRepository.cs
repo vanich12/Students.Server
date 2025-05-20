@@ -1,4 +1,5 @@
 ﻿using Students.Infrastructure.DTO;
+using Students.Infrastructure.DTO.FilterDTO;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Models;
 

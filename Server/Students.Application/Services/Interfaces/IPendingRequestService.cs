@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Students.Infrastructure.DTO.FilterDTO;
 
 namespace Students.Application.Services.Interfaces
 {
@@ -17,7 +18,7 @@ namespace Students.Application.Services.Interfaces
         /// <param name="page">номер страницы</param>
         /// <param name="pageSize">размер страницы</param>
         /// <returns></returns>
-        Task<PagedPage<RequestsDTO>> GetPendingRequestsDTOByPage(int page, int pageSize);
+        Task<PagedPage<RequestsDTO>> GetPendingRequestsDTOByPage(int page, int pageSize, PendingRequestFilterDTO filters);
 
         /// <summary>
         /// Создание и привязка отвалидированной заявки на основе "сырой"

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Students.Infrastructure.DTO.FilterDTO;
 using Students.Models;
 
 namespace Students.Infrastructure.Interfaces
@@ -17,6 +18,6 @@ namespace Students.Infrastructure.Interfaces
         /// <param name="page">Номер страницы.</param>
         /// <param name="pageSize">Размер страницы.</param>
         /// <returns>Пагинированные DTO заявок.</returns>
-        Task<PagedPage<RequestsDTO>> GetRequestPendingByPage(int page, int pageSize);
+        Task<PagedPage<RequestsDTO>> GetRequestPendingByPage(int page, int pageSize,PendingRequestFilterDTO filters);
     }
 }

@@ -32,7 +32,7 @@ const EntityTable = ({ config }) => {
     } = useGetAllPagedAsync({ 
         pageNumber: tableParams.pagination.current, 
         pageSize: tableParams.pagination.pageSize, 
-        filterDataReq: queryString 
+        filterDataReq: `${queryString}&IsArchive=false`
     });
 
     useEffect(() => {

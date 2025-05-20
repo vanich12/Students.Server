@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Students.Infrastructure.DTO
+namespace Students.Infrastructure.DTO.FilterDTO
 {
     public class StudentFilterDto
     {

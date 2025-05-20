@@ -1,6 +1,7 @@
 ﻿using Students.Application.Exceptions;
 using Students.Application.Services.Interfaces;
 using Students.Infrastructure.DTO;
+using Students.Infrastructure.DTO.FilterDTO;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
 using Students.Models;

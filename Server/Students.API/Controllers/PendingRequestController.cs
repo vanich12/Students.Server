@@ -2,6 +2,7 @@
 using Students.Application.Services;
 using Students.Application.Services.Interfaces;
 using Students.Infrastructure.DTO;
+using Students.Infrastructure.DTO.FilterDTO;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
 using Students.Models;
@@ -17,12 +18,13 @@ namespace Students.API.Controllers
         private readonly ILogger<PendingRequest> _logger;
 
         [HttpGet("paged")]
-        public async Task<IActionResult> GetPendingRequestByPage([FromQuery] Pageable pageable)
+        public async Task<IActionResult> GetPendingRequestByPage([FromQuery] Pageable pageable,
+            PendingRequestFilterDTO filters)
         {
             try
             {
                 var items = await this._pendingRequestService.GetPendingRequestsDTOByPage(pageable.PageNumber,
-                    pageable.PageSize);
+                    pageable.PageSize, filters);
                 return this.Ok(items);
             }
             catch (Exception e)
@@ -56,6 +58,7 @@ namespace Students.API.Controllers
                 return this.Exception();
             }
         }
+
         [HttpPost("CreateRequestFromPendingRequest")]
         public async Task<IActionResult> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId)
         {

@@ -13,6 +13,9 @@ import {
 import { useGetRequestStatusQuery } from '../services/requestStatusApi.js'
 import { pendingRequestsModel } from '../models/index.js';
 import BirthDate from '../../components/shared/business/BirthDate.jsx';
+import EducationProgramSelect from '../../components/shared/business/selects/EducationProgramSelect'
+import YesNo from '../../components/shared/business/YesNo'
+
 //  TODO    лучше перенести эту реализацию в компонент в новый режим
 const IsArchive = ({ record }) => {
     const { id, isArchive } = record;
@@ -154,6 +157,20 @@ export default {
             key: 'archive',
             render: (_, record) => (<IsArchive record={record} />),
         },
+    ],
+    filters: [
+        {
+            key: 'educationProgram', // Используем оригинальный ключ данных, а не из dataConverter ('birthDate1')
+            label: 'Программа обучения',
+            /*          filterType: 'date',*/ // Тип фильтра - выбор даты
+            /*        format: 'YYYY-MM-DD',  */// Указываем формат даты (важно для DatePicker и API)
+            component:EducationProgramSelect
+        },
+        {
+            key: 'IsArchive',
+            label: 'Архив',
+            component: YesNo
+        }
     ],
     dataConverter: (data) => data,
 };

@@ -60,6 +60,10 @@ const FilterPanel = (props: FilterPanelProps) => {
             actualValue = value.target.value;
         }
 
+        if ( typeof value === 'boolean') {
+            actualValue = value;
+        }
+
         // Форматирование значения ПЕРЕД записью в локальное состояние
         if (moment.isMoment(actualValue)) {
             actualValue = actualValue.format('YYYY-MM-DD');

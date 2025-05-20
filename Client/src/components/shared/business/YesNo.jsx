@@ -39,12 +39,13 @@ const components = {
     editableInfo: DefaultInfoComponent,
     form: DefaultEditFormComponent,
     edit: DefaultEditFormComponent,
+    filter: DefaultEditFormComponent
 };
 
 const rules = [
     {
         required: true,
-        message: 'Выберьте значение',
+        message: 'Выберите значение',
     },
 ];
 

@@ -18,12 +18,15 @@ namespace Students.Infrastructure.Storages
     {
         private readonly StudentContext _ctx;
         private readonly IGenericRepository<StatusRequest> _statusRequestRepository;
+
         private readonly IGenericRepository<EducationProgram> _educationProgramRepository;
+
         // по идее надо бы вынести всю эту бизнес-логику в сервис
-        public async Task<PagedPage<RequestsDTO>> GetRequestPendingByPage(int page, int pageSize, PendingRequestFilterDTO filters)
+        public async Task<PagedPage<RequestsDTO>> GetRequestPendingByPage(int page, int pageSize,
+            PendingRequestFilterDTO filters)
         {
             IQueryable<PendingRequest> pendingRequestQuery = this._ctx.PendingRequests;
-            var dtoQuery = pendingRequestQuery.ApplyFilters(filters);
+            var dtoQuery = await pendingRequestQuery.ApplyFilters(filters, _educationProgramRepository);
             var pagedData = await PagedPage<PendingRequest>.ToPagedPage(dtoQuery, page, pageSize, x => x.Family);
 
             List<RequestsDTO> dtoList = new();

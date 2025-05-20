@@ -11,5 +11,8 @@ namespace Students.Infrastructure.DTO.FilterDTO
     {
         [FromQuery(Name = "IsArchive")]
         public bool? IsArchive { get; set; }
+
+        [FromQuery(Name = "educationProgram")]
+        public Guid? ProgramEducationId { get; set; }
     }
 }

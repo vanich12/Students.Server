@@ -26,6 +26,7 @@ import { NotificationProvider } from '../notifications/NotificationContext.js';
 import PendingRequestPage from './pendingRequest/PendingRequestsPage'
 import PendingRequestDetailPage from './pendingRequest/PendingRequestDetailPage'
 import PendingRequestsPage from './pendingRequest/PendingRequestsPage'
+import ConflictResolutionPage from './conflictResolution/ConflictResolutionPage'
 
 const App = () => {
   return (
@@ -42,6 +43,12 @@ const App = () => {
             <Route path="/pendingrequests/:id" element={(
                 <PrivateRoute>
                     <PendingRequestDetailPage />
+                </PrivateRoute>
+            )}
+            />
+            <Route path="/conflictResolutions/:personId/:pendingRequestId" element={(
+                <PrivateRoute>
+                    <ConflictResolutionPage />
                 </PrivateRoute>
             )}
             />

@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { Layout, Loading, DetailsPageData, RoutingWarningModal } from '../shared/layout/index.js';
-import { useParams, useBlocker } from 'react-router-dom';
+import { useParams, useBlocker, useNavigate } from 'react-router-dom'
 import { Row, Col, Button } from 'antd'
 import config from '../../storage/catalogConfigs/pendingRequests';
 import personConfig from '../../storage/catalogConfigs/person';
@@ -9,6 +9,7 @@ import SelectModalItemsForm from '../shared/catalogProvider/forms/SelectModalIte
 
 const PendingRequestDetailsPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [requestData, setRequestData] = useState({});
     const [isChanged, setIsChanged] = useState(false);
     const [initialData, setInitialData] = useState({});
@@ -47,7 +48,10 @@ const PendingRequestDetailsPage = () => {
     const modalFooter =()=>(
         <>
             <Button key="confirm" type="primary" disabled={currentPerson === null}
-                    onClick={() => mutationTrigger({pRequestId: id, personId: currentPerson.id })}>Подтвердить</Button>
+                    onClick={() => {
+                        mutationTrigger({pRequestId: id, personId: currentPerson.id })
+                        setShowModal(false)
+                    }}>Подтвердить</Button>
             <Button key="close" onClick={() => setShowModal(false)}>Закрыть</Button>
         </>
     );
@@ -69,6 +73,11 @@ const PendingRequestDetailsPage = () => {
     const handleSetPerson = (record) => {
         setCurrentPerson(record);
     }
+
+    const openConflictResolutionPage = useCallback((personId, pendingRequestId) => {
+        const pId = personId && personId.id ? personId.id : personId;
+        navigate(`/conflictResolutions/${pId}/${pendingRequestId}`);
+    }, [navigate]);
 
     const onSave = useCallback(() => {
         console.log(requestData)
@@ -102,11 +111,14 @@ const PendingRequestDetailsPage = () => {
                             <Button onClick={onCancel} disabled={isSaveInProgress}>Отмена</Button>
                         </Col>
                         <Col>
-                         <Button style={{ margin: '0 10px' }}  type="primary" onClick={() => {
+                            {(!requestData?.isArchive && <Button style={{ margin: '0 10px' }}  type="primary" onClick={() => {
                                 setShowModal(true)
                             }}>
                                 Привязать заявку к персоне
-                            </Button>
+                            </Button>)}
+                            {<Button onClick={() => openConflictResolutionPage(currentPerson.id,id)}>
+                                Разрешить конфликты приязки
+                            </Button>}
                         </Col>
                     </Row>
                     <RoutingWarningModal
@@ -114,7 +126,7 @@ const PendingRequestDetailsPage = () => {
                         blocker={blocker}
                     />
                 </Layout>
-               <SelectModalItemsForm
+                <SelectModalItemsForm
                     config={personConfig}
                     modalTitle = {"Выберите человека, который, по вашему, подавал эту заявку"}
                     modalFooter = {modalFooter}

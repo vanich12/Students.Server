@@ -6,7 +6,7 @@ const DefaultForm = ({ Component, props }) => {
     const { key, name, normalize, hasFeedback, rules } = formParams;
     const { show } = params;
     const { form } = show;
-console.log(rules)
+
     return form && (
         <Form.Item
             key={key}

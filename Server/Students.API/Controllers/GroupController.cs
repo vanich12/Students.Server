@@ -41,7 +41,12 @@ public class GroupController : GenericAPiController<Group>
             return this.Exception();
         }
     }
-
+    /// <summary>
+    /// Удаление студента из группы
+    /// </summary>
+    /// <param name="studentId"></param>
+    /// <param name="groupId"></param>
+    /// <returns></returns>
     [HttpDelete("RemoveStudentsFromGroupByRequest")]
     public async Task<IActionResult> RemoveStudentsFromGroupByRequest(Guid studentId, Guid groupId)
     {

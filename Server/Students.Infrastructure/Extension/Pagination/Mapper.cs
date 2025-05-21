@@ -192,7 +192,13 @@ public static class Mapper
         bool agreementValue = false; // Значение по умолчанию
         if (!string.IsNullOrEmpty(form.Agreement))
             bool.TryParse(form.Agreement, out agreementValue);
-        
+
+        Guid scopeActivityFirstLevelId;
+        Guid.TryParse(form.ScopeOfActivityLevelOneId, out scopeActivityFirstLevelId);
+
+
+        Guid scopeActivitySecondLevelId;
+        Guid.TryParse(form.ScopeOfActivityLevelTwoId, out scopeActivitySecondLevelId);
 
         return new RequestsDTO
         {
@@ -209,9 +215,10 @@ public static class Mapper
             Address = form.Address,
             phone = form.Phone,
             Email = form.Email,
-            ScopeOfActivityLevelOneId = Guid.Parse(form.ScopeOfActivityLevelOneId),
-            ScopeOfActivityLevelTwoId = Guid.Parse(form.ScopeOfActivityLevelTwoId),
+            ScopeOfActivityLevelOneId = scopeActivityFirstLevelId,
+            ScopeOfActivityLevelTwoId = scopeActivitySecondLevelId,
             agreement = agreementValue,
+            IsArchive = form.IsArchive
         };
     }
 
@@ -220,17 +227,17 @@ public static class Mapper
     {
         return new PendingRequest()
         {
-            Phone = form.phone,
-            Email = form.Email,
-            Family = form.family,
-            Name = form.name,
-            Patron = form.patron,
-            Education = form.EducationProgram,
-            Address = form.Address,
-            Agreement = form.agreement.ToString(),
-            Birthday = form.BirthDate.ToString(),
-            IT_Experience = form.IT_Experience,
-            EducationLevel = form.EducationLevel,
+            Phone = form.phone ?? String.Empty,
+            Email = form.Email ?? String.Empty,
+            Family = form.family ?? String.Empty,
+            Name = form.name ?? String.Empty,
+            Patron = form.patron ?? String.Empty,
+            Education = form.EducationProgram ?? String.Empty,
+            Address = form.Address ?? String.Empty,
+            Agreement = form.agreement.ToString() ?? String.Empty,
+            Birthday = form.BirthDate.ToString() ?? String.Empty,
+            IT_Experience = form.IT_Experience ?? String.Empty,
+            EducationLevel = form.EducationLevel ?? String.Empty,
             ScopeOfActivityLevelOneId = form.ScopeOfActivityLevelOneId.ToString(),
             ScopeOfActivityLevelTwoId = form.ScopeOfActivityLevelTwoId.ToString(),
             IsArchive = form.IsArchive ?? false

@@ -22,7 +22,7 @@ const BaseComponent = ({ formParams, params, ...props }) => {
     const ComponentByMode = { ...defaultComponentsByMode, ...components }[currentMode];
     //компонент обертка, которая указывает в чем будет ComponentByMode
     const MultimodeComponent = renderByMode[currentMode] ?? renderByMode.info;
-
+// я так понял, что передача нужных пропсов по компонента, которые пришли из components происходит именно тут, то есть MultimodeComponent, отдает нужные пропсы ComponentByMode
     return (
         <MultimodeComponent
             Component={ComponentByMode}

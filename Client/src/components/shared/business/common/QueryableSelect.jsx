@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import BaseComponent from '../baseComponents/BaseComponent.jsx';
-import { Typography, Select } from 'antd';
+import { Typography, Select, Radio, theme } from 'antd'
 
 const { Text } = Typography;
 
 const DefaultInfoComponent = ({ dataById, formParams }) => {
     const { labelKey } = formParams;
-
     return (
         <Text>{dataById?.[labelKey]}</Text>
     );
 };
 
+
+
 const DefaultEditFormComponent = ({ onChange, placeholder, formParams, dataById, allData }) => {
     const { key, labelKey } = formParams;
-
     return (
         <Select
             key={key}
@@ -35,6 +35,27 @@ const DefaultEditFormComponent = ({ onChange, placeholder, formParams, dataById,
     );
 };
 
+const ConflictInfoComponent = ({ onChange,dataById, formParams }) => {
+    const { labelKey, newValue } = formParams;
+    const currentValue = dataById?.[labelKey];
+    const { token } = theme.useToken();
+    return (
+    <Radio.Group style={{ width: '100%' }}>
+        <Radio onChange={onChange} value={currentValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', marginBottom: 8, padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
+            <Text strong>Текущее у персоны:</Text><br/>
+            <Text style={{ wordBreak: 'break-all' }}>
+                {String(currentValue === null || currentValue === undefined ? ' (пусто) ' : currentValue)}
+            </Text>
+        </Radio>
+        <Radio value={newValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
+            <Text strong>Из заявки:</Text><br/>
+            <Text style={{ wordBreak: 'break-all' }}>
+                {String(newValue === null || newValue === undefined ? ' (пусто) ' : newValue)}
+            </Text>
+        </Radio>
+    </Radio.Group>)
+}
+
 // UI - представления в зависимости от режима отображения
 const components = {
     info: DefaultInfoComponent,
@@ -42,6 +63,7 @@ const components = {
     form: DefaultEditFormComponent,
     edit: DefaultEditFormComponent,
     filter: DefaultEditFormComponent,
+    conflict: ConflictInfoComponent,
 };
 
 const rules = [
@@ -65,7 +87,7 @@ const QueryableSelect = ({ formParams, ...props }) => (
                 components,
                 placeholder: 'Выберите значение',
                 ...props,
-                formParams: _.merge({}, defaultFormParams,
+                formParams: _.merge({}, defaultFormParams, formParams
                 ),
             }
         }

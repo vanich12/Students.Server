@@ -1,8 +1,10 @@
 ﻿import React, { useEffect, useState } from 'react'
-import { Modal, Form, Radio, Tag, Typography, Spin, Alert, Button, Divider, theme } from "antd"
+import { Form, Radio, Tag, Typography, Button, Divider, theme, Flex } from "antd"
 import { Loading } from '../shared/layout'
+import ConflictFormItem from './ConflictFormItem'
 const { Text, Title } = Typography;
 
+// ToDo: нужно будет сделать единый конфиг, по которому будет происходить сравнение, чтобы из конфигов не брались лишние поля
 const ConflictResolutionForm = ({ datasId, configs }) => {
 
     const [form] = Form.useForm();
@@ -14,10 +16,13 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
     const { useGetOneByIdAsync:useGetOnePersonByIdAsync} = personCrud;
     const { useGetOneByIdAsync:useGetOnePRequestByIdAsync} = pRequestCrud
 
-    const [resolvedFields, setresolvedFields] = useState({})
-
+    const [resolvedFields, setResolvedFields] = useState({})
+    // isLoading = true только если в кеше RTK Query отсутствуют данные об обьекте и запроса еще не было, а если
     const { data: personData, isLoading: personIsLoading, isFetching:personIsFetching, refetch: personRefetch } = useGetOnePersonByIdAsync(personId);
     const { data: pRequestData, isLoading: pRequestIsLoading, isFetching:pRequestIsFetching, refetch: pRequestRefetch } = useGetOnePRequestByIdAsync(pendingRequestId);
+    const isLoading = personIsLoading || pRequestIsLoading || !personData || !pRequestData;
+
+
     useEffect(() => {
         if (!personIsLoading &&
             !pRequestIsLoading &&
@@ -40,15 +45,15 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                 }
             });
             form.setFieldsValue(initialValues);
+            setResolvedFields(initialValues);
         }
-
+        console.log(`Загрузилась? : ${isLoading}`)
     }, [personIsLoading,
-        personIsLoading,
         personIsFetching,
-        pRequestIsFetching])
+        pRequestIsFetching, personData, pRequestData]);
     const allPropertyKeys = new Set([...Object.keys(personProperties), ...Object.keys(pRequestProperties)]);
 
-    return (personIsLoading && pRequestIsLoading && pRequestIsFetching && personIsFetching) ? (<Loading/>):(
+    return (isLoading) ? (<Loading/>):(
         <Form
             layout="horizontal"
             form={form}
@@ -62,36 +67,41 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                 <Text>Выберите, какие значения использовать для обновления информации о персоне на основе данных из заявки.</Text>
             <Divider style={{background:token.colorPrimary}} />
 
-            {Array.from(allPropertyKeys).map((key) => {
-                const personPropConfig = personProperties[key];
-                const pRequestPropConfig = pRequestProperties[key];
+            {Array.from(allPropertyKeys).map((fieldName) => {
+                const personPropConfig = personProperties[fieldName];
+                const pRequestPropConfig = pRequestProperties[fieldName];
+                console.log(personData)
+                console.log(pRequestData)
 
-                const currentValue = personData.hasOwnProperty(key) ? personData[key] : undefined;
-                const newValue = pRequestData.hasOwnProperty(key) ? pRequestData[key] : undefined;
+                const currentValue = personData.hasOwnProperty(fieldName) ? personData[fieldName] : undefined;
+                const newValue = pRequestData.hasOwnProperty(fieldName) ? pRequestData[fieldName] : undefined;
 
-                const hasPersonValue = personData.hasOwnProperty(key);
-                const hasPRequestValue = pRequestData.hasOwnProperty(key);
+                const hasPersonValue = personData.hasOwnProperty(fieldName);
+                const hasPRequestValue = pRequestData.hasOwnProperty(fieldName);
 
-                const fieldDisplayName = personPropConfig?.name || pRequestPropConfig?.name || key;
-
+                const fieldDisplayName = personPropConfig?.name || pRequestPropConfig?.name || fieldName;
+                console.log(fieldDisplayName)
                 // Если поле есть в обоих, но значения совпадают или нет значения в заявке
                 if (!hasPRequestValue || currentValue === newValue) {
                     if (personPropConfig) {
+
                         const ItemComponent = personPropConfig.type
                         return (
                             <Form.Item
-                                key={key}
+                                key={fieldName}
                                 label={<>{fieldDisplayName} <Tag color="default">Без изменений</Tag></>}
-                                name={key}
+                                name={fieldName}
                                 initialValue={currentValue}
                                 style={{margin:'0 auto',
                                 width:'70%'
                                 }}
                             >
+
                                  <ItemComponent
-                                        key={key}
+                                        key={fieldName}
+                                        value={personPropConfig[fieldName]}
                                         params={personPropConfig.params}
-                                        formParams={{ key, name: fieldDisplayName, ...personPropConfig.formParams }}
+                                        formParams={{ fieldName, name: fieldDisplayName, ...personPropConfig.formParams }}
                                         mode='form'
                                     />
                             </Form.Item>
@@ -99,43 +109,53 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                     }
                     // Если нет конфига для personProperties, просто выводим текст
                     return (
-                        <Form.Item key={key} label={<>{fieldDisplayName} <Tag>Без изменений</Tag></>} name={key} initialValue={currentValue}>
+                        <Form.Item key={fieldName} label={<>{fieldDisplayName} <Tag>Без изменений</Tag></>} name={fieldName} initialValue={currentValue}>
                             <Text>{String(currentValue === null || currentValue === undefined ? ' (пусто) ' : currentValue)}</Text>
                         </Form.Item>
                     );
                 }
 
+                const handleChangeStateItem = ()=>{
+                    console.log(resolvedFields);
+                    console.log(pRequestData);
+                }
+
                 // КОНФЛИКТ: поле есть в обоих и значения разные
                 return (
                     <Form.Item
-                        key={key} // Убедитесь, что key - это строка, а не объект
+                        key={fieldName}
                         label={
-                            <div style={{ display: 'flex', alignItems: 'center', fontWeight: token.fontWeightStrong }}> {/* Сделаем лейбл чуть жирнее */}
+                            <div style={{ display: 'flex', alignItems: 'center', fontWeight: token.fontWeightStrong }}>
                                 {fieldDisplayName}
-                                <Tag color="warning" style={{ marginLeft: '8px' }}> {/* Используем стандартный цвет "warning" для тега */}
+                                <Tag color="warning" style={{ marginLeft: '8px' }}>
                                     Конфликт
                                 </Tag>
                             </div>
                         }
-                        name={key}
+                        name={fieldName}
                         initialValue={currentValue}
-                        labelCol={{ span: 6 }}  // Или подберите соотношение, например, { flex: '0 0 200px' } для фиксированной ширины лейбла
-                        wrapperCol={{ span: 18 }} // Или { flex: '1 1 auto' }
+                        labelCol={{ span: 6 }}
+                        wrapperCol={{ span: 18 }}
                         style={{
-                            backgroundColor: token.colorWarningBg,      // Фон предупреждения (очень светлый желто-оранжевый)
-                            border: `1px solid ${token.colorWarningBorder}`, // Рамка предупреждения (чуть темнее фона)
-                            // Или можно использовать более тонкую/менее заметную рамку:
-                            // border: `1px solid ${token.colorBorderSecondary}`,
+                            backgroundColor: token.colorWarningBg,
+                            border: `1px solid ${token.colorWarningBorder}`,
                              borderLeft: `3px solid ${token.colorWarning}`,
-                            padding: '16px',                            // Внутренние отступы
-                            borderRadius: token.borderRadiusLG,         // Скругление углов
-                            marginBottom: '24px',                       // Отступ снизу для разделения блоков
-                             boxShadow: token.boxShadowSecondary,     // Опционально: легкая тень для "приподнятости"
+                            padding: '16px',
+                            borderRadius: token.borderRadiusLG,
+                            marginBottom: '24px',
+                             boxShadow: token.boxShadowSecondary,
                         }}
                         rules={[{ required: true, message: 'Пожалуйста, сделайте выбор!' }]}
                     >
-                        <Radio.Group style={{ width: '100%' }}>
-                            <Radio value={currentValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', marginBottom: 8, padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
+                        {console.log(fieldName)}
+                        {personPropConfig && ( <ConflictFormItem
+                            config={personPropConfig}
+                            currentValue={currentValue}
+                            newValue={newValue}
+                            identifier={fieldName}
+                        />)}
+                  {/*<Radio.Group style={{ width: '100%' }}>
+                            <Radio onChange={handleChangeStateItem} value={currentValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', marginBottom: 8, padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
                                 <Text strong>Текущее у персоны:</Text><br/>
                                 <Text style={{ wordBreak: 'break-all' }}>
                                     {String(currentValue === null || currentValue === undefined ? ' (пусто) ' : currentValue)}
@@ -148,6 +168,10 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                                 </Text>
                             </Radio>
                         </Radio.Group>
+                        <Flex>
+                            <Button type='primary'>Применить</Button>
+                            <Button>Отмена</Button>
+                        </Flex>*/}
                     </Form.Item>
                 );
             })}

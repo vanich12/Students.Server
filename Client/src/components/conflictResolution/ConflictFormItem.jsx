@@ -1,20 +1,21 @@
-﻿import { Button, Flex, Radio, Tag, Typography } from 'antd'
+﻿import { Button, Flex, Radio, Tag, theme, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 const { Text, Title } = Typography;
 
-const ConflictFormItem =({   config,
+const ConflictFormItem =({   identifier,
+                             config,
                              currentValue,
                              newValue,
                              value: valueFromForm,
                              onChange: onChangeFormItem, }) =>{
-
+    const { token } = theme.useToken();
     const {type, params, formParams, name} = config;
     const ItemComponent = type;
-    const fieldDisplayName = name || key;
+    const fieldDisplayName = name || identifier;
     const [currentSolve, setCurrentSolve] = useState('');
     const [isResultApproved, setIsResultApproved] = useState(false);
 
-    useEffect(() => {
+/*  useEffect(() => {
         // Если значение в форме уже есть (например, из initialValues или предыдущего выбора),
         // и оно совпадает с одним из вариантов конфликта, считаем конфликт "разрешенным" в UI.
         // Это важно, чтобы при повторном рендере с уже установленным значением не показывать снова выбор.
@@ -27,7 +28,7 @@ const ConflictFormItem =({   config,
             setCurrentSolve(currentValue);
             setIsResultApproved(false);
         }
-    }, [valueFromForm, currentValue, newValue]);
+    }, [valueFromForm, currentValue, newValue]);*/
 
     const handleCancelOrEdit = () => {
         setIsResultApproved(false);
@@ -44,16 +45,17 @@ const ConflictFormItem =({   config,
 
 
     if (isResultApproved) {
-
+        console.log(identifier)
         return (
             <Flex align="center" style={{ width: '100%' }}>
                 <div style={{ flexGrow: 1 }}>
                     <ItemComponent
-                        // value={valueFromForm} // ItemComponent получит value от Form.Item автоматически
-                        // onChange={onChangeFormItem} // ItemComponent получит onChange от Form.Item автоматически
+                        value={valueFromForm} // ItemComponent получит value от Form.Item автоматически
+                        onChange={onChangeFormItem} // ItemComponent получит onChange от Form.Item автоматически
+                        key={identifier}
                         params={params}
-                        formParams={{ name: fieldDisplayName, ...formParams }}
-                        mode='form'
+                        formParams={{identifier, name: fieldDisplayName, ...formParams }}
+                        mode='editableInfo'
                     />
                 </div>
                 <Button onClick={handleCancelOrEdit} type="link" style={{ marginLeft: 8 }}>

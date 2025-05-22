@@ -8,12 +8,11 @@ const DetailsPageData = ({ items, data, editData, setIsChanged }) => {
         <Space direction="vertical" size={0} style={{ display: 'flex' }}>
             {Object.entries(items).map(([key, { name, type, formParams, params }]) => {
                 const Item = type;
-
                 return (
                     <Row style={rowStyle} key={key}>
                         <Col span={3}>{name}</Col>
                         <Col span={8}>
-                          {/*  во все элементы управления пропмы передаются (почти все) именно отсюда*/}
+                          {/*  во все элементы управления пропcы передаются (почти все) именно отсюда*/}
                             <Item
                                 key={key}
                                 name={key}

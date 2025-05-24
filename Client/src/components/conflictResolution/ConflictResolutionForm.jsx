@@ -2,6 +2,7 @@
 import { Form, Radio, Tag, Typography, Button, Divider, theme, Flex } from "antd"
 import { Loading } from '../shared/layout'
 import ConflictFormItem from './ConflictFormItem'
+import { useEditOneByPRequest } from '../../storage/crud/personsCrud'
 const { Text, Title } = Typography;
 
 // ToDo: нужно будет сделать единый конфиг, по которому будет происходить сравнение, чтобы из конфигов не брались лишние поля
@@ -13,15 +14,22 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
     const { token } = theme.useToken();
     const { crud:personCrud, properties: personProperties} = personConfig
     const { crud: pRequestCrud, properties: pRequestProperties} = pendingRequestConfig
-    const { useGetOneByIdAsync:useGetOnePersonByIdAsync} = personCrud;
+    const { useGetOneByIdAsync:useGetOnePersonByIdAsync,useEditOneByPRequest:useEditPersonByPRequest} = personCrud;
     const { useGetOneByIdAsync:useGetOnePRequestByIdAsync} = pRequestCrud
 
     const [resolvedFields, setResolvedFields] = useState({})
     // isLoading = true только если в кеше RTK Query отсутствуют данные об обьекте и запроса еще не было, а если
     const { data: personData, isLoading: personIsLoading, isFetching:personIsFetching, refetch: personRefetch } = useGetOnePersonByIdAsync(personId);
+    const [editRequest, editingResult] = useEditPersonByPRequest();
     const { data: pRequestData, isLoading: pRequestIsLoading, isFetching:pRequestIsFetching, refetch: pRequestRefetch } = useGetOnePRequestByIdAsync(pendingRequestId);
     const isLoading = personIsLoading || pRequestIsLoading || !personData || !pRequestData;
 
+    const onSubmit = (formValues) => {
+        console.log("значения в форме")
+        console.log(formValues);
+        console.log({pendingRequestId,personId,formValues})
+        editRequest({pendingRequestId,personId,formValues})
+    };
 
     useEffect(() => {
         if (!personIsLoading &&
@@ -61,9 +69,11 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
             layout="horizontal"
             form={form}
             name="conflict_resolution_form"
+            onFinish={(values) => onSubmit(values)}
             style={{
 
-            }}
+            }
+        }
             scrollToFirstError
         >
             <Title level={4}>Разрешение данных</Title>
@@ -90,7 +100,7 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                             <Form.Item
                                 key={fieldName}
                                 label={<>{fieldDisplayName} <Tag color="default">Без изменений</Tag></>}
-                                name={fieldDisplayName}
+                                name={fieldName}
                                 initialValue={currentValue}
                                 style={{margin:'0 auto',
                                 width:'70%'

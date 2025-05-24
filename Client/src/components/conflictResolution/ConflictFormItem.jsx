@@ -1,5 +1,7 @@
 ﻿import { Button, Flex, Radio, Tag, theme, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { CheckOutlined } from '@ant-design/icons'
+import { CloseOutlined } from '@mui/icons-material'
 const { Text, Title } = Typography;
 
 const ConflictFormItem =({   identifier,
@@ -89,9 +91,24 @@ const ConflictFormItem =({   identifier,
                 formParams={{identifier, name: fieldDisplayName, ...formParams }}
                 mode='conflictResolve'
             />
-            <Flex>
-                <Button type='primary' onClick={handleApprove}>Применить</Button>
-                <Button>Отмена</Button>
+            <Flex  style={{marginTop: '10px'}} gap="small">
+                <Button
+                    icon={<CheckOutlined />}
+                    onClick={handleApprove}
+                    style={{
+                        backgroundColor: '#006400', // DarkGreen
+                        borderColor: '#006400',     // Цвет рамки в тот же цвет
+                        color: 'white',              // Цвет текста белый для контраста
+                    }}
+                    // Чтобы при наведении цвет немного менялся, можно добавить обработчики
+                    // onMouseEnter и onMouseLeave, либо использовать CSS :hover
+                    // Для простоты здесь этого нет, но в CSS это было бы лучше.
+                >
+                    Применить
+                </Button>
+                <Button danger icon={<CloseOutlined />} onClick={handleApprove}>
+                    Отмена
+                </Button>
             </Flex>
         </>
     );

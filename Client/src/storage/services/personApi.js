@@ -47,6 +47,17 @@ export const personApi = createApi({
             }),
             invalidatesTags: { type: 'Persons', id: 'LIST' },
         }),
+
+        CreatePersonBasedOnPRequest: builder.mutation({
+            query: ({ pendingRequestId, form }) => ({
+                url: 'CreatePersonBasedOnPRequest',
+                method: 'POST',
+                params: { pendingRequestId },
+                body: form,
+            }),
+            invalidatesTags: [{type: 'Persons', id: 'LIST'}],
+        }),
+
         editPerson: builder.mutation({
             query: ({id, item}) => ({
                 url: id,
@@ -56,7 +67,28 @@ export const personApi = createApi({
 
             invalidatesTags: (result,error, id) =>[
                 {type: 'Person', id: id},
-                {type:'Persons', id: 'LIST' },],
+                {type:'Persons', id: 'LIST' }],
+        }),
+
+        UpdatePersonBasedOnPRequest: builder.mutation({
+            query: ({ pendingRequestId, personId, formValues }) => { // Изменяем на блочную функцию
+                // Логируем объект form
+                console.log('[RTK Query] UpdatePersonBasedOnPRequest - Input form:', formValues);
+                console.log('[RTK Query] UpdatePersonBasedOnPRequest - pendingRequestId:', pendingRequestId);
+                console.log('[RTK Query] UpdatePersonBasedOnPRequest - personId:', personId);
+
+                // Возвращаем конфигурацию запроса
+                return {
+                    url: 'UpdatePersonBasedOnPRequest',
+                    method: 'PUT',
+                    params: { pendingRequestId, personId },
+                    body: formValues,
+                };
+            },
+            invalidatesTags: (result, error, { personId }) => [ // Не забудьте поправить здесь на id: personId
+                { type: 'Person', id: personId },              // Было: { type: 'Person', personId }
+                { type: 'Persons', id: 'LIST' }
+            ],
         }),
         removePerson: builder.mutation({
             query: (id) => ({
@@ -73,6 +105,8 @@ export const {
     useGetPersonsPagedQuery,
     useGetPersonByIdQuery,
     useAddPersonMutation,
+    useCreatePersonBasedOnPRequestMutation,
     useEditPersonMutation,
+    useUpdatePersonBasedOnPRequestMutation,
     useRemovePersonMutation,
 } = personApi;

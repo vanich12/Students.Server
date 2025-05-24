@@ -156,6 +156,25 @@ public static class Mapper
         };
     }
 
+    public static async Task<Person> NewPersonDTOToPerson(NewPersonDTO form)
+    {
+        return new Person()
+        {
+            Phone = form.Phone ?? String.Empty,
+            Email = form.Email ?? String.Empty,
+            BirthDate = form.BirthDate.Value,
+            Family = form.Family ?? String.Empty,
+            Name = form.Name ?? String.Empty,
+            Patron = form.Patron,
+            Sex = form.Sex,
+            IT_Experience = form.It_Experience,
+            Address = form.Address,
+            ScopeOfActivityLevelOneId = form.ScopeOfActivityLevelOneId,
+            ScopeOfActivityLevelTwoId = form.ScopeOfActivityLevelTwoId,
+            TypeEducationId = form.TypeEducationId
+        };
+    }
+
     /// <summary>
     /// Преобразование NewRequestDTO в заявку.
     /// </summary>

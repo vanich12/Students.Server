@@ -38,6 +38,7 @@ builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupStudentRepository, GroupStudentRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IPendingRequestService, PendingRequestService>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();

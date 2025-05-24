@@ -3,7 +3,9 @@
     useGetAllPagedAsync,
     useGetOneByIdAsync,
     useAddOneAsync,
+    useAddOneByPRequest,
     useEditOneAsync,
+    useEditOneByPRequest,
     useRemoveOneAsync,
 } from '../crud/personsCrud.js';
 import { personModel } from '../models/index.js';
@@ -20,7 +22,9 @@ export default {
         useGetAllPagedAsync,
         useGetOneByIdAsync,
         useAddOneAsync,
+        useAddOneByPRequest,
         useEditOneAsync,
+        useEditOneByPRequest,
         useRemoveOneAsync,
     },
     columns: [

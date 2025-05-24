@@ -18,6 +18,8 @@ const components = {
     filter: DefaultInfoComponent,
     edit: DefaultInfoComponent,
     modal: DefaultInfoComponent,
+    conflictInfo:DefaultInfoComponent,
+    conflict: DefaultInfoComponent,
 };
 
 const formParams = {

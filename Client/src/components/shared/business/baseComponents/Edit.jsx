@@ -3,10 +3,13 @@ import { Form, Button, Space } from 'antd';
 
 const Edit = ({ Component, props }) => {
     const { value, formParams, setValue, setMode } = props;
+    console.log(props)
+    console.log(value)
     const { key, name, rules, normalize, hasFeedback } = formParams;
 
     const onSubmit = (formValue) => {
         setValue(formValue[key]);
+        console.log(formValue[key]);
         setMode('editableInfo');
     };
 

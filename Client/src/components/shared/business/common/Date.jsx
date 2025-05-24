@@ -61,6 +61,8 @@ const components = {
     editableInfo: DefaultEditableInfoComponent,
     form: DefaultFormComponent,
     edit: DefaultEditComponent,
+    conflict:DefaultEditComponent,
+    conflictInfo:DefaultInfoComponent
 };
 
 const rules = [

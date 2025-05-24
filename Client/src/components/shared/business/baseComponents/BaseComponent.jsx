@@ -17,6 +17,7 @@ const BaseComponent = ({ formParams, params, ...props }) => {
         console.log(value)
         setValue(newValue);
         console.log(value);
+        console.log(newValue);
     }, [value, setValue]);
     //выбирается в зависимости от режима, который был сюда передан, например editableInfo
     const ComponentByMode = { ...defaultComponentsByMode, ...components }[currentMode];

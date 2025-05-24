@@ -60,6 +60,9 @@ const defaultComponentsByMode = {
     filter: DefaultFilterComponent,
     edit: DefaultEditComponent,
     modal: DefaultModalComponent,
+    conflictInfo:DefaultInfoComponent,
+    conflict: DefaultEditComponent,
+
 };
 
 export default defaultComponentsByMode;

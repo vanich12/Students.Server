@@ -35,27 +35,6 @@ const DefaultEditFormComponent = ({ onChange, placeholder, formParams, dataById,
     );
 };
 
-const ConflictInfoComponent = ({ onChange,dataById, formParams }) => {
-    const { labelKey, newValue } = formParams;
-    const currentValue = dataById?.[labelKey];
-    const { token } = theme.useToken();
-    return (
-    <Radio.Group style={{ width: '100%' }}>
-        <Radio onChange={onChange} value={currentValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', marginBottom: 8, padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
-            <Text strong>Текущее у персоны:</Text><br/>
-            <Text style={{ wordBreak: 'break-all' }}>
-                {String(currentValue === null || currentValue === undefined ? ' (пусто) ' : currentValue)}
-            </Text>
-        </Radio>
-        <Radio value={newValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
-            <Text strong>Из заявки:</Text><br/>
-            <Text style={{ wordBreak: 'break-all' }}>
-                {String(newValue === null || newValue === undefined ? ' (пусто) ' : newValue)}
-            </Text>
-        </Radio>
-    </Radio.Group>)
-}
-
 // UI - представления в зависимости от режима отображения
 const components = {
     info: DefaultInfoComponent,
@@ -63,7 +42,8 @@ const components = {
     form: DefaultEditFormComponent,
     edit: DefaultEditFormComponent,
     filter: DefaultEditFormComponent,
-    conflict: ConflictInfoComponent,
+    conflict: DefaultEditFormComponent,
+    conflictInfo:DefaultInfoComponent
 };
 
 const rules = [

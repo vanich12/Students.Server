@@ -10,7 +10,7 @@ const ConflictResolutionPage = () =>{
     console.log('Person ID из URL:', personId);
     console.log('Pending Request ID из URL:', pendingRequestId);
     return (
-            <Layout title="Группы">
+            <Layout title="Конфликты">
                 <ConflictResolutionForm datasId={{personId, pendingRequestId}} configs={{personConfig:personConfig,
                     pendingRequestConfig:pRequestConfig}}/>
             </Layout>

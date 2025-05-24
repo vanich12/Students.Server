@@ -28,6 +28,7 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
             !pRequestIsLoading &&
             !pRequestIsFetching &&
             !personIsFetching) {
+            console.log("Перезагрузка")
             const initialValues = {};
             const newPersonData = { ...personData };
             console.log(newPersonData);
@@ -147,7 +148,6 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                         }}
                         rules={[{ required: true, message: 'Пожалуйста, сделайте выбор!' }]}
                     >
-                        {console.log(fieldName)}
                         {personPropConfig && ( <ConflictFormItem
                             config={personPropConfig}
                             currentValue={currentValue}

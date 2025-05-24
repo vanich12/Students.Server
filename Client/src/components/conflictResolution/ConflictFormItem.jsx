@@ -15,20 +15,10 @@ const ConflictFormItem =({   identifier,
     const [currentSolve, setCurrentSolve] = useState('');
     const [isResultApproved, setIsResultApproved] = useState(false);
 
-/*  useEffect(() => {
-        // Если значение в форме уже есть (например, из initialValues или предыдущего выбора),
-        // и оно совпадает с одним из вариантов конфликта, считаем конфликт "разрешенным" в UI.
-        // Это важно, чтобы при повторном рендере с уже установленным значением не показывать снова выбор.
-        if (valueFromForm === currentValue || valueFromForm === newValue) {
-            setCurrentSolve(valueFromForm);
-            setIsResultApproved(true);
-        } else {
-            // Если значение из формы не соответствует ни одному из вариантов,
-            // сбрасываем в состояние выбора (по умолчанию currentValue)
-            setCurrentSolve(currentValue);
-            setIsResultApproved(false);
-        }
-    }, [valueFromForm, currentValue, newValue]);*/
+ useEffect(() => {
+        setCurrentSolve(valueFromForm)
+     console.log(currentSolve);
+    }, [valueFromForm]);
 
     const handleCancelOrEdit = () => {
         setIsResultApproved(false);
@@ -45,7 +35,6 @@ const ConflictFormItem =({   identifier,
 
 
     if (isResultApproved) {
-        console.log(identifier)
         return (
             <Flex align="center" style={{ width: '100%' }}>
                 <div style={{ flexGrow: 1 }}>
@@ -55,7 +44,7 @@ const ConflictFormItem =({   identifier,
                         key={identifier}
                         params={params}
                         formParams={{identifier, name: fieldDisplayName, ...formParams }}
-                        mode='editableInfo'
+                        mode='conflictInfo'
                     />
                 </div>
                 <Button onClick={handleCancelOrEdit} type="link" style={{ marginLeft: 8 }}>

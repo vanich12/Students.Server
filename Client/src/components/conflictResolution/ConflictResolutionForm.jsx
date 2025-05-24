@@ -35,12 +35,14 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
             delete newPersonData.id;
             Object.keys(personProperties).forEach(key => {
                 if (newPersonData.hasOwnProperty(key)) {
-                    initialValues[key] = personData[key];
+                    console.log(initialValues[key]);
+                   /* initialValues[key] = personData[key];*/
                 }
             });
             const newPRequestData = { ...pRequestData };
             console.log(newPRequestData);
             Object.keys(pRequestProperties).forEach(key => {
+                console.log(`данные заявки:${pRequestData[key]}`);
                 if (newPRequestData.hasOwnProperty(key) && !newPRequestData.hasOwnProperty(key)) {
                     initialValues[key] = pRequestData[key];
                 }
@@ -71,17 +73,14 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
             {Array.from(allPropertyKeys).map((fieldName) => {
                 const personPropConfig = personProperties[fieldName];
                 const pRequestPropConfig = pRequestProperties[fieldName];
-                console.log(personData)
-                console.log(pRequestData)
 
                 const currentValue = personData.hasOwnProperty(fieldName) ? personData[fieldName] : undefined;
                 const newValue = pRequestData.hasOwnProperty(fieldName) ? pRequestData[fieldName] : undefined;
 
                 const hasPersonValue = personData.hasOwnProperty(fieldName);
                 const hasPRequestValue = pRequestData.hasOwnProperty(fieldName);
-
+                console.log(`текущее поле:${fieldName}:${currentValue}`)
                 const fieldDisplayName = personPropConfig?.name || pRequestPropConfig?.name || fieldName;
-                console.log(fieldDisplayName)
                 // Если поле есть в обоих, но значения совпадают или нет значения в заявке
                 if (!hasPRequestValue || currentValue === newValue) {
                     if (personPropConfig) {
@@ -91,7 +90,7 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                             <Form.Item
                                 key={fieldName}
                                 label={<>{fieldDisplayName} <Tag color="default">Без изменений</Tag></>}
-                                name={fieldName}
+                                name={fieldDisplayName}
                                 initialValue={currentValue}
                                 style={{margin:'0 auto',
                                 width:'70%'
@@ -100,10 +99,10 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
 
                                  <ItemComponent
                                         key={fieldName}
-                                        value={personPropConfig[fieldName]}
+                                        name={fieldName}
                                         params={personPropConfig.params}
                                         formParams={{ fieldName, name: fieldDisplayName, ...personPropConfig.formParams }}
-                                        mode='form'
+                                        mode='conflictInfo'
                                     />
                             </Form.Item>
                         );
@@ -120,60 +119,45 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                     console.log(resolvedFields);
                     console.log(pRequestData);
                 }
-
-                // КОНФЛИКТ: поле есть в обоих и значения разные
-                return (
-                    <Form.Item
-                        key={fieldName}
-                        label={
-                            <div style={{ display: 'flex', alignItems: 'center', fontWeight: token.fontWeightStrong }}>
-                                {fieldDisplayName}
-                                <Tag color="warning" style={{ marginLeft: '8px' }}>
-                                    Конфликт
-                                </Tag>
-                            </div>
-                        }
-                        name={fieldName}
-                        initialValue={currentValue}
-                        labelCol={{ span: 6 }}
-                        wrapperCol={{ span: 18 }}
-                        style={{
-                            backgroundColor: token.colorWarningBg,
-                            border: `1px solid ${token.colorWarningBorder}`,
-                             borderLeft: `3px solid ${token.colorWarning}`,
-                            padding: '16px',
-                            borderRadius: token.borderRadiusLG,
-                            marginBottom: '24px',
-                             boxShadow: token.boxShadowSecondary,
-                        }}
-                        rules={[{ required: true, message: 'Пожалуйста, сделайте выбор!' }]}
-                    >
-                        {personPropConfig && ( <ConflictFormItem
-                            config={personPropConfig}
-                            currentValue={currentValue}
-                            newValue={newValue}
-                            identifier={fieldName}
-                        />)}
-                  {/*<Radio.Group style={{ width: '100%' }}>
-                            <Radio onChange={handleChangeStateItem} value={currentValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', marginBottom: 8, padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
-                                <Text strong>Текущее у персоны:</Text><br/>
-                                <Text style={{ wordBreak: 'break-all' }}>
-                                    {String(currentValue === null || currentValue === undefined ? ' (пусто) ' : currentValue)}
-                                </Text>
-                            </Radio>
-                            <Radio value={newValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
-                                <Text strong>Из заявки:</Text><br/>
-                                <Text style={{ wordBreak: 'break-all' }}>
-                                    {String(newValue === null || newValue === undefined ? ' (пусто) ' : newValue)}
-                                </Text>
-                            </Radio>
-                        </Radio.Group>
-                        <Flex>
-                            <Button type='primary'>Применить</Button>
-                            <Button>Отмена</Button>
-                        </Flex>*/}
-                    </Form.Item>
-                );
+                // если поле есть в конфигурации персоны
+                if (hasPersonValue) {
+                    // КОНФЛИКТ: поле есть в обоих и значения разные
+                    return (
+                        <Form.Item
+                            key={fieldName}
+                            label={
+                                <div
+                                    style={{display: 'flex', alignItems: 'center', fontWeight: token.fontWeightStrong}}>
+                                    {fieldDisplayName}
+                                    <Tag color="warning" style={{marginLeft: '8px'}}>
+                                        Конфликт
+                                    </Tag>
+                                </div>
+                            }
+                            name={fieldName}
+                            initialValue={currentValue}
+                            labelCol={{span: 6}}
+                            wrapperCol={{span: 18}}
+                            style={{
+                                backgroundColor: token.colorWarningBg,
+                                border: `1px solid ${token.colorWarningBorder}`,
+                                borderLeft: `3px solid ${token.colorWarning}`,
+                                padding: '16px',
+                                borderRadius: token.borderRadiusLG,
+                                marginBottom: '24px',
+                                boxShadow: token.boxShadowSecondary,
+                            }}
+                            rules={[{required: true, message: 'Пожалуйста, сделайте выбор!'}]}
+                        >
+                            {personPropConfig && (<ConflictFormItem
+                                config={personPropConfig}
+                                currentValue={currentValue}
+                                newValue={newValue}
+                                identifier={fieldName}
+                            />)}
+                        </Form.Item>
+                    );
+                }
             })}
             <Divider />
             <Form.Item>

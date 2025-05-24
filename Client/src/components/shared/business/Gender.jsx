@@ -42,6 +42,8 @@ const components = {
     editableInfo: DefaultInfoComponent,
     form: DefaulGenderComponent,
     edit: DefaulGenderComponent,
+    conflictInfo: DefaultInfoComponent,
+    conflict:DefaulGenderComponent
 };
 
 const rules = [

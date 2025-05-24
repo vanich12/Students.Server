@@ -62,7 +62,7 @@ const defaultComponentsByMode = {
     modal: DefaultModalComponent,
     conflictInfo:DefaultInfoComponent,
     conflict: DefaultEditComponent,
-
+    conflictResolve: DefaultEditComponent,
 };
 
 export default defaultComponentsByMode;

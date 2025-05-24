@@ -27,7 +27,7 @@ const Conflict = ({ Component, props }) => {
     };
 
     const handleCancel = () => {
-      setValue(value)
+        setMode('conflictInfo');
     };
 
     return (

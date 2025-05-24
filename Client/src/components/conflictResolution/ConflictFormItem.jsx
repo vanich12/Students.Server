@@ -14,10 +14,9 @@ const ConflictFormItem =({   identifier,
     const fieldDisplayName = name || identifier;
     const [currentSolve, setCurrentSolve] = useState('');
     const [isResultApproved, setIsResultApproved] = useState(false);
-
+// ToDo: надо сделать Debounce
  useEffect(() => {
         setCurrentSolve(valueFromForm)
-     console.log(currentSolve);
     }, [valueFromForm]);
 
     const handleCancelOrEdit = () => {
@@ -30,6 +29,7 @@ const ConflictFormItem =({   identifier,
         setIsResultApproved(true);
     };
     const handleRadioChange = (e) => {
+        console.log(e.target.value)
         setCurrentSolve(e.target.value);
     };
 
@@ -42,6 +42,7 @@ const ConflictFormItem =({   identifier,
                         value={valueFromForm} // ItemComponent получит value от Form.Item автоматически
                         onChange={onChangeFormItem} // ItemComponent получит onChange от Form.Item автоматически
                         key={identifier}
+                        name = {identifier}
                         params={params}
                         formParams={{identifier, name: fieldDisplayName, ...formParams }}
                         mode='conflictInfo'
@@ -56,7 +57,7 @@ const ConflictFormItem =({   identifier,
 
     return (
         <>
-                <>
+         {/*       <>
                 <Radio.Group style={{ width: '100%' }} onChange={handleRadioChange}>
                     <Radio value={currentValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', marginBottom: 8, padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
                         <Text strong>Текущее у персоны:</Text><br/>
@@ -75,7 +76,23 @@ const ConflictFormItem =({   identifier,
                         <Button type='primary' onClick={handleApprove}>Применить</Button>
                         <Button>Отмена</Button>
                     </Flex>
-                </>
+                </>*/}
+            <ItemComponent
+                currentValue = {currentValue}
+                value={currentValue}
+                newValue = {newValue}
+                onChange={onChangeFormItem} // ItemComponent получит onChange от Form.Item автоматически
+                handleRadioChange = {handleRadioChange}
+                key={identifier}
+                name = {identifier}
+                params={params}
+                formParams={{identifier, name: fieldDisplayName, ...formParams }}
+                mode='conflictResolve'
+            />
+            <Flex>
+                <Button type='primary' onClick={handleApprove}>Применить</Button>
+                <Button>Отмена</Button>
+            </Flex>
         </>
     );
 }

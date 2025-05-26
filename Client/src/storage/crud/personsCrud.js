@@ -41,10 +41,10 @@ const useEditOneByPRequest = () =>{
 
     useEffect(() => {
         if (isSuccess) {
-            showSuccess('Заявка успешно обновлена', 'описание уведомления');
+            showSuccess('Персона успешно обновлена', 'описание уведомления');
         }
         if (isError) {
-            showError('Ошибка! Редактирование заявки не удалось!', error);
+            showError('Ошибка! Редактирование персоны не удалось!', error);
         }
     }, [isSuccess, isError]);
 

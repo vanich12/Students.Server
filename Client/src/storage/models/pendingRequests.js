@@ -34,10 +34,6 @@ const model = {
         name: 'Опыт в IT',
         type: String,
     },
-    projects: {
-        name: 'Проекты',
-        type: String,
-    },
     birthDate: {
         name: 'Дата рождения',
         type: BirthDate,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Typography } from 'antd';
+import { Input, Radio, theme, Typography } from 'antd'
 const { Text } = Typography;
 
 const DefaultInfoComponent = ({ value }) => (
@@ -25,6 +25,33 @@ const DefaultEditComponent = ({ value, onChange, defaultValue, formParams, place
         />
     );
 };
+
+const DefaultConflictResolveForm = ({currentValue, newValue,handleRadioChange, dataById, formParams, crud})=>
+{
+    const { useGetOneByIdAsync } = crud;
+    const { data: newDataById } = useGetOneByIdAsync(newValue);
+    const { labelKey } = formParams;
+    const { token } = theme.useToken();
+
+    return (
+        <>
+            <Radio.Group style={{ width: '100%' }} onChange={handleRadioChange}>
+                {/*значение Radio - кнопки - это id элемента, а выводится дата по Id*/}
+                <Radio value={currentValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', marginBottom: 8, padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
+                    <Text strong>Текущее у персоны:</Text><br/>
+                    <Text style={{ wordBreak: 'break-all' }}>
+                        {String(currentValue === null || currentValue === undefined ? ' (пусто) ' : dataById?.[labelKey])}
+                    </Text>
+                </Radio>
+                <Radio  value={newValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
+                    <Text strong>Из заявки:</Text><br/>
+                    <Text style={{ wordBreak: 'break-all' }}>
+                        {String(newValue === null || newValue === undefined ? ' (пусто) ' : newDataById?.[labelKey])}
+                    </Text>
+                </Radio>
+            </Radio.Group>
+        </>)
+}
 
 const DefaultFormComponent = ({ value, onChange, formParams, placeholder }) => {
     const { key } = formParams;
@@ -62,7 +89,7 @@ const defaultComponentsByMode = {
     modal: DefaultModalComponent,
     conflictInfo:DefaultInfoComponent,
     conflict: DefaultEditComponent,
-    conflictResolve: DefaultEditComponent,
+    conflictResolve: DefaultConflictResolveForm,
 };
 
 export default defaultComponentsByMode;

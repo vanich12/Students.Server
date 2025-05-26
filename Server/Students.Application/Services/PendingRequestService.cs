@@ -42,20 +42,6 @@ namespace Students.Application.Services
             if (pendingReq is null)
                 throw new ArgumentException($"по pRequestId : {pRequestId} заявки не найдено");
 
-            var person = await personRepository.FindById(personId);
-            if (person is null)
-                throw new ArgumentException($"по personId : {personId} персоны не найдено");
-
-            person.Family = pendingReq.Family;
-            person.Name = pendingReq.Name;
-            person.Patron = pendingReq.Patron;
-            person.Email = pendingReq.Email;
-            person.Phone = pendingReq.Phone;
-
-            var newPerson = await personRepository.Update(personId, person);
-            if (newPerson is null)
-                throw new InvalidOperationException("Ошибка при обновлении пользователя");
-
             var newRequest =
                 await Mapper.PendingRequestToRequest(pendingReq, educationProgramRepository, statusRequestRepository);
 

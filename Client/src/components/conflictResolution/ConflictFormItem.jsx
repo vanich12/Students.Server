@@ -31,7 +31,6 @@ const ConflictFormItem =({   identifier,
         setIsResultApproved(true);
     };
     const handleRadioChange = (e) => {
-        console.log(e.target.value)
         setCurrentSolve(e.target.value);
     };
 

@@ -3,15 +3,21 @@ import { Form, Radio, Tag, Typography, Button, Divider, theme, Flex } from "antd
 import { Loading } from '../shared/layout'
 import ConflictFormItem from './ConflictFormItem'
 import { useEditOneByPRequest } from '../../storage/crud/personsCrud'
+import useNotifications from '../../notifications/useNotifications'
+import { useNavigate } from 'react-router-dom'
 const { Text, Title } = Typography;
 
 // ToDo: нужно будет сделать единый конфиг, по которому будет происходить сравнение, чтобы из конфигов не брались лишние поля
 const ConflictResolutionForm = ({ datasId, configs }) => {
 
     const [form] = Form.useForm();
+    const { token } = theme.useToken();
+    const { showSuccess, showError } = useNotifications();
+    const navigate = useNavigate();
     const { personId, pendingRequestId } = datasId
     const {personConfig,pendingRequestConfig } = configs
-    const { token } = theme.useToken();
+
+
     const { crud:personCrud, properties: personProperties} = personConfig
     const { crud: pRequestCrud, properties: pRequestProperties} = pendingRequestConfig
     const { useGetOneByIdAsync:useGetOnePersonByIdAsync,useEditOneByPRequest:useEditPersonByPRequest} = personCrud;
@@ -24,11 +30,12 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
     const { data: pRequestData, isLoading: pRequestIsLoading, isFetching:pRequestIsFetching, refetch: pRequestRefetch } = useGetOnePRequestByIdAsync(pendingRequestId);
     const isLoading = personIsLoading || pRequestIsLoading || !personData || !pRequestData;
 
-    const onSubmit = (formValues) => {
-        console.log("значения в форме")
-        console.log(formValues);
-        console.log({pendingRequestId,personId,formValues})
-        editRequest({pendingRequestId,personId,formValues})
+    const onSubmit =  async (formValues) => {
+        console.log("значения в форме", formValues);
+        console.log({ pendingRequestId, personId, formValues });
+        await editRequest({ pendingRequestId, personId, formValues });
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        navigate(-1);
     };
 
     useEffect(() => {
@@ -36,21 +43,17 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
             !pRequestIsLoading &&
             !pRequestIsFetching &&
             !personIsFetching) {
-            console.log("Перезагрузка")
             const initialValues = {};
             const newPersonData = { ...personData };
-            console.log(newPersonData);
             delete newPersonData.id;
             Object.keys(personProperties).forEach(key => {
                 if (newPersonData.hasOwnProperty(key)) {
-                    console.log(initialValues[key]);
                    /* initialValues[key] = personData[key];*/
                 }
             });
             const newPRequestData = { ...pRequestData };
             console.log(newPRequestData);
             Object.keys(pRequestProperties).forEach(key => {
-                console.log(`данные заявки:${pRequestData[key]}`);
                 if (newPRequestData.hasOwnProperty(key) && !newPRequestData.hasOwnProperty(key)) {
                     initialValues[key] = pRequestData[key];
                 }
@@ -58,7 +61,6 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
             form.setFieldsValue(initialValues);
             setResolvedFields(initialValues);
         }
-        console.log(`Загрузилась? : ${isLoading}`)
     }, [personIsLoading,
         personIsFetching,
         pRequestIsFetching, personData, pRequestData]);
@@ -89,10 +91,9 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
 
                 const hasPersonValue = personData.hasOwnProperty(fieldName);
                 const hasPRequestValue = pRequestData.hasOwnProperty(fieldName);
-                console.log(`текущее поле:${fieldName}:${currentValue}`)
                 const fieldDisplayName = personPropConfig?.name || pRequestPropConfig?.name || fieldName;
                 // Если поле есть в обоих, но значения совпадают или нет значения в заявке
-                if (!hasPRequestValue || currentValue === newValue) {
+                if (!hasPRequestValue || currentValue === newValue|| newValue === null) {
                     if (personPropConfig) {
 
                         const ItemComponent = personPropConfig.type
@@ -124,13 +125,8 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                         </Form.Item>
                     );
                 }
-
-                const handleChangeStateItem = ()=>{
-                    console.log(resolvedFields);
-                    console.log(pRequestData);
-                }
                 // если поле есть в конфигурации персоны
-                if (hasPersonValue) {
+                else if (hasPersonValue) {
                     // КОНФЛИКТ: поле есть в обоих и значения разные
                     return (
                         <Form.Item

@@ -14,6 +14,8 @@ const PendingRequestDetailsPage = () => {
     const [isChanged, setIsChanged] = useState(false);
     const [initialData, setInitialData] = useState({});
     const [isSaveInProgress, setIsSaveInProgress] = useState(false);
+    // ToDO: временное решение, надо будет сделать запрос на сервер, который будет проверят, нет ли подтвержденной заявки, с такими же атрибутами
+    const [hasConflictResolveButton,setHasConflictResolveButton] = useState(false)
     const [currentPerson, setCurrentPerson] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
@@ -24,8 +26,6 @@ const PendingRequestDetailsPage = () => {
 
     const [editRequest] = useEditOneAsync();
     const [mutationTrigger,mutationResult] = useCreateOneValidRequest()
-
-
 
     const filterString = useMemo(() => {
         if (!requestData) return '';
@@ -51,6 +51,7 @@ const PendingRequestDetailsPage = () => {
                     onClick={() => {
                         mutationTrigger({pRequestId: id, personId: currentPerson.id })
                         setShowModal(false)
+                        setHasConflictResolveButton(true)
                     }}>Подтвердить</Button>
             <Button key="close" onClick={() => setShowModal(false)}>Закрыть</Button>
         </>
@@ -61,9 +62,10 @@ const PendingRequestDetailsPage = () => {
             const newData = { ...data };
             delete newData.id;
             setRequestData(newData);
+            console.log(newData);
             setInitialData(newData);
         }
-    }, [isLoading, isFetching]);
+    }, [isLoading, isFetching,showModal]);
 
     let blocker = useBlocker(
         ({ currentLocation, nextLocation }) =>
@@ -116,9 +118,11 @@ const PendingRequestDetailsPage = () => {
                             }}>
                                 Привязать заявку к персоне
                             </Button>)}
-                            {<Button onClick={() => openConflictResolutionPage(currentPerson.id,id)}>
-                                Разрешить конфликты приязки
-                            </Button>}
+
+                            {hasConflictResolveButton && (<Button style={{ margin: '0 10px'}} onClick={() => openConflictResolutionPage(currentPerson.id,id)}>
+                                Разрешить конфликты привязки
+                            </Button>)}
+
                         </Col>
                     </Row>
                     <RoutingWarningModal

@@ -7,12 +7,11 @@ const ChangeSymbol = () => (<Text>* </Text>);
 //Обертка, окружение, которое отображается в режиме
 const ConflictInfo = ({ Component,props }) => {
     const { changed, setMode } = props;
-    console.log(props);
     return (
         <Space>
             {changed && (<ChangeSymbol />)}
             <Component {...props} />
-            {//карандашик редактирвоания
+            {//карандашик редактирования
             }
             <Button
                 color="default"

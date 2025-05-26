@@ -32,13 +32,11 @@ export const pendingRequestsApi = createApi({
             query: ({pRequestId, personId}) => ({
                 url: `/CreateRequestFromPendingRequest?pRequestId=${pRequestId}&personId=${personId}`,
                 method: 'POST',
-                invalidatesTags: ['PRequests'],
             }),
-            invalidatesTags: [{type: 'PRequests', id: 'LIST'}]
+            invalidatesTags: (result, error, { pRequestId }) => [{ type: 'PRequestById', pRequestId }],
         }),
         addPendingRequest: builder.mutation({
             query: (request) => ({
-                url: '/NewRequest',
                 method: 'POST',
                 body: request,
                 invalidatesTags: ['PRequests'],
@@ -47,13 +45,13 @@ export const pendingRequestsApi = createApi({
         }),
         editPendingRequest: builder.mutation({
             query: ({ id, item }) => {
-                // ЛОГИРОВАНИЕ АРГУМЕНТОВ
+
                 console.log('Вызван editPendingRequest с аргументами:');
                 console.log('id:', id);
                 console.log('item:', item);
 
                 return {
-                    url: `/EditPendingRequest/${id}`, // Пример URL, адаптируйте под ваш API
+                    url: `/EditPendingRequest/${id}`,
                     method: 'PUT',
                     body: item,
                 };
@@ -73,7 +71,7 @@ export const pendingRequestsApi = createApi({
 export const {
     useGetPendingRequestsQuery,
     useGetPendingRequestsPagedQuery,
-    // надо правильно называть хзуки, от этого зависят их свойства (мутации, или запрос)
+    // надо правильно называть хуки, от этого зависят их свойства (мутации, или запрос)
     useGetPendingRequestByIdQuery,
     useAddRequestFromPendingRequestMutation,
     useAddPendingRequestMutation,

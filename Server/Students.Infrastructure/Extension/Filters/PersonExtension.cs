@@ -21,9 +21,20 @@ namespace Students.Infrastructure.Extension.Filters
         public static IQueryable<Person> ApplyFilters(this IQueryable<Person> query,
             PersonFilterDTO? filters)
         {
+            // если необходимо найти ХОТЯ БЫ ОДНО совпадение
+            if (filters.MatchAnyCriterion)
+                return query.Where(p => filters.BirthDate.HasValue && p.BirthDate == filters.BirthDate ||
+                                        filters.PhoneNumber != null && p.Phone == filters.PhoneNumber ||
+                                        filters.Email !=null && p.Email == filters.Email ||
+                                        filters.Name != null && p.Name == filters.Name ||
+                                        filters.Family != null && p.Family == filters.Family ||
+                                        filters.Patron != null && p.Patron == filters.Patron
+                                        );
+            
             if (filters == null)
                 return query;
 
+            // если необходимо фильтровать по всем полям в совокупе 
             if (filters.BirthDate.HasValue)
                 query = query.Where(p => p.BirthDate == filters.BirthDate);
 
@@ -35,8 +46,10 @@ namespace Students.Infrastructure.Extension.Filters
 
             if (filters.Name is not null)
                 query = query.Where(p => p.Name == filters.Name);
+
             if (filters.Family is not null)
                 query = query.Where(p => p.Family == filters.Family);
+
             if (filters.Patron is not null)
                 query = query.Where(p => p.Patron == filters.Patron);
 

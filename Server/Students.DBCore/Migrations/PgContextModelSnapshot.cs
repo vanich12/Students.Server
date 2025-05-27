@@ -42,7 +42,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasIndex("KindDocumentRiseQualificationId");
 
-                    b.ToTable("DocumentRiseQualifications");
+                    b.ToTable("DocumentRiseQualifications", (string)null);
 
                     b.HasData(
                         new
@@ -116,7 +116,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasIndex("KindDocumentRiseQualificationId");
 
-                    b.ToTable("EducationPrograms");
+                    b.ToTable("EducationPrograms", (string)null);
 
                     b.HasData(
                         new
@@ -159,7 +159,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasIndex("EducationProgramId");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
 
                     b.HasData(
                         new
@@ -231,7 +231,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasIndex("RequestId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
 
                     b.HasData(
                         new
@@ -308,7 +308,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PendingRequests");
+                    b.ToTable("PendingRequests", (string)null);
                 });
 
             modelBuilder.Entity("Students.Models.Person", b =>
@@ -375,7 +375,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasIndex("TypeEducationId");
 
-                    b.ToTable("Persons");
+                    b.ToTable("Persons", (string)null);
 
                     b.HasData(
                         new
@@ -423,7 +423,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EducationForms");
+                    b.ToTable("EducationForms", (string)null);
 
                     b.HasData(
                         new
@@ -454,7 +454,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FEAPrograms");
+                    b.ToTable("FEAPrograms", (string)null);
 
                     b.HasData(
                         new
@@ -575,7 +575,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FinancingTypes");
+                    b.ToTable("FinancingTypes", (string)null);
 
                     b.HasData(
                         new
@@ -622,7 +622,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("KindDocumentRiseQualifications");
+                    b.ToTable("KindDocumentRiseQualifications", (string)null);
 
                     b.HasData(
                         new
@@ -648,7 +648,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("KindOrders");
+                    b.ToTable("KindOrders", (string)null);
 
                     b.HasData(
                         new
@@ -682,7 +682,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasIndex("ScopeOfActivityParentId");
 
-                    b.ToTable("ScopesOfActivity");
+                    b.ToTable("ScopesOfActivity", (string)null);
 
                     b.HasData(
                         new
@@ -833,7 +833,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StatusRequests");
+                    b.ToTable("StatusRequests", (string)null);
 
                     b.HasData(
                         new
@@ -885,7 +885,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StudentStatuses");
+                    b.ToTable("StudentStatuses", (string)null);
 
                     b.HasData(
                         new
@@ -917,7 +917,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypeEducation");
+                    b.ToTable("TypeEducation", (string)null);
 
                     b.HasData(
                         new
@@ -1004,7 +1004,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasIndex("StudentStatusId");
 
-                    b.ToTable("Requests");
+                    b.ToTable("Requests", (string)null);
 
                     b.HasData(
                         new
@@ -1084,7 +1084,7 @@ namespace Students.DBCore.Migrations
                     b.HasIndex("SNILS")
                         .IsUnique();
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
 
                     b.HasData(
                         new
@@ -1156,7 +1156,7 @@ namespace Students.DBCore.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentHistory");
+                    b.ToTable("StudentHistory", (string)null);
                 });
 
             modelBuilder.Entity("Students.Models.DocumentRiseQualification", b =>

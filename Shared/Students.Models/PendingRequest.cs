@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Students.Models
@@ -31,8 +32,8 @@ namespace Students.Models
         /// <summary>
         /// Дата рождения
         /// </summary>
+        [JsonPropertyName("birthDate")]
         public required string Birthday { get; set; }
-
 
         /// <summary>
         /// Уровень образования
@@ -40,8 +41,9 @@ namespace Students.Models
         public required string EducationLevel { get; set; }
 
         /// <summary>
-        /// Направление образования
+        /// Направление образования (программа обучения)
         /// </summary>
+        [JsonPropertyName("educationProgram")]
         public required string Education { get; set; }
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace Students.Models
         /// <summary>
         /// Согласие на обработку персональных данных
         /// </summary>
-        public required string Agreement { get; set; }
+        public required bool Agreement { get; set; }
 
         /// <summary>
         /// Id сферы деятельности(1 уровень).

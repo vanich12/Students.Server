@@ -39,9 +39,8 @@ export const pendingRequestsApi = createApi({
             query: (request) => ({
                 method: 'POST',
                 body: request,
-                invalidatesTags: ['PRequests'],
             }),
-            invalidatesTags: [{type: 'Students', id: 'LIST'}]
+            invalidatesTags: [{type: 'PRequests', id: 'LIST'}]
         }),
         editPendingRequest: builder.mutation({
             query: ({ id, item }) => {

@@ -26,10 +26,8 @@ const DefaultEditComponent = ({ value, onChange, defaultValue, formParams, place
     );
 };
 
-const DefaultConflictResolveForm = ({currentValue, newValue,handleRadioChange, dataById, formParams, crud})=>
+const DefaultConflictResolveForm = ({currentValue, newValue,handleRadioChange, formParams})=>
 {
-    const { useGetOneByIdAsync } = crud;
-    const { data: newDataById } = useGetOneByIdAsync(newValue);
     const { labelKey } = formParams;
     const { token } = theme.useToken();
 
@@ -40,13 +38,13 @@ const DefaultConflictResolveForm = ({currentValue, newValue,handleRadioChange, d
                 <Radio value={currentValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', marginBottom: 8, padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
                     <Text strong>Текущее у персоны:</Text><br/>
                     <Text style={{ wordBreak: 'break-all' }}>
-                        {String(currentValue === null || currentValue === undefined ? ' (пусто) ' : dataById?.[labelKey])}
+                        {String(currentValue === null || currentValue === undefined ? ' (пусто) ' : currentValue)}
                     </Text>
                 </Radio>
                 <Radio  value={newValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
                     <Text strong>Из заявки:</Text><br/>
                     <Text style={{ wordBreak: 'break-all' }}>
-                        {String(newValue === null || newValue === undefined ? ' (пусто) ' : newDataById?.[labelKey])}
+                        {String(newValue === null || newValue === undefined ? ' (пусто) ' : newValue)}
                     </Text>
                 </Radio>
             </Radio.Group>

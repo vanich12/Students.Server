@@ -205,13 +205,9 @@ public static class Mapper
     /// <param name = "_statusRequestRepository" > Репозиторий статусов заявок.</param>
     /// <returns>Заявка.</returns>
     public static async Task<RequestsDTO> PendingRequestToRequestDTO(PendingRequest form,
-        IGenericRepository<StatusRequest> _statusRequestRepository,
-        IGenericRepository<EducationProgram> educationProgramRepository)
+        IGenericRepository<EducationProgram> educationProgramRepository,
+        IGenericRepository<TypeEducation> typeEducationRepository)
     {
-        bool agreementValue = false; // Значение по умолчанию
-        if (!string.IsNullOrEmpty(form.Agreement))
-            bool.TryParse(form.Agreement, out agreementValue);
-
         Guid scopeActivityFirstLevelId;
         Guid.TryParse(form.ScopeOfActivityLevelOneId, out scopeActivityFirstLevelId);
 
@@ -236,7 +232,8 @@ public static class Mapper
             Email = form.Email,
             ScopeOfActivityLevelOneId = scopeActivityFirstLevelId,
             ScopeOfActivityLevelTwoId = scopeActivitySecondLevelId,
-            agreement = agreementValue,
+            TypeEducationId = (await typeEducationRepository.GetOne(x => x.Name == form.EducationLevel))?.Id,
+            agreement = form.Agreement,
             IsArchive = form.IsArchive
         };
     }
@@ -253,7 +250,7 @@ public static class Mapper
             Patron = form.patron ?? String.Empty,
             Education = form.EducationProgram ?? String.Empty,
             Address = form.Address ?? String.Empty,
-            Agreement = form.agreement.ToString() ?? String.Empty,
+            Agreement = form.agreement,
             Birthday = form.BirthDate.ToString() ?? String.Empty,
             IT_Experience = form.IT_Experience ?? String.Empty,
             EducationLevel = form.EducationLevel ?? String.Empty,

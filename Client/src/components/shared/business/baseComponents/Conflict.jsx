@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react'
 import { Form, Button, Space, Flex } from 'antd'
 
+
 const Conflict = ({ Component, props }) => {
     const { value, formParams, setValue, setMode } = props;
     console.log(props)

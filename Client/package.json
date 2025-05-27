@@ -35,6 +35,7 @@
     "react-scripts": "^5.0.1",
     "react-tooltip": "^5.28.0",
     "sass": "^1.69.5",
+    "styled-components": "^6.1.18",
     "ts": "^0.2.2",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"

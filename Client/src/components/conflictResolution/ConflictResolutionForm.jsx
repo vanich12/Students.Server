@@ -45,6 +45,8 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
             !personIsFetching) {
             const initialValues = {};
             const newPersonData = { ...personData };
+            console.log("данные персоны:")
+            console.log(newPersonData);
             delete newPersonData.id;
             Object.keys(personProperties).forEach(key => {
                 if (newPersonData.hasOwnProperty(key)) {
@@ -52,6 +54,7 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                 }
             });
             const newPRequestData = { ...pRequestData };
+            console.log("Данные заявки:")
             console.log(newPRequestData);
             Object.keys(pRequestProperties).forEach(key => {
                 if (newPRequestData.hasOwnProperty(key) && !newPRequestData.hasOwnProperty(key)) {
@@ -141,7 +144,6 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                                 </div>
                             }
                             name={fieldName}
-                            initialValue={currentValue}
                             labelCol={{span: 6}}
                             wrapperCol={{span: 18}}
                             style={{

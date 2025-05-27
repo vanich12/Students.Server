@@ -38,10 +38,9 @@ const PendingRequestDetailsPage = () => {
         if (requestData.birthDate) params.append('birthDate', requestData?.birthDate);
         if (requestData.phone) params.append('phone', requestData?.phone);
         if (requestData.email) params.append('email', requestData?.email);
-
         const queryString = params.toString();
 
-        return `&${queryString}` ;
+        return `&${queryString}&matchAny=true` ;
     }, [requestData]);
 
     // футер модалки

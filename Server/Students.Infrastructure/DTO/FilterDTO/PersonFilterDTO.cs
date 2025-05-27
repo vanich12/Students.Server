@@ -17,5 +17,8 @@ namespace Students.Infrastructure.DTO.FilterDTO
         public string? Email { get; set; }
         [FromQuery(Name = "phone")]
         public string? PhoneNumber { get; set; }
+
+        [FromQuery(Name = "matchAny")] 
+        public bool MatchAnyCriterion { get; set; } = false;
     }
 }

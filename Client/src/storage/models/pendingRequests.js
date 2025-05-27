@@ -22,13 +22,13 @@ const model = {
         name: 'Отчество',
         type: String,
     },
-    educationProgramId : {
+    educationProgram : {
         name: 'Программа',
-        type: EducationProgramSelect,
+        type: String,
     },
-    typeEducationId : {
+    educationLevel : {
         name: 'Уровень образования',
-        type: EducationTypeSelect,
+        type: String,
     },
     iT_Experience: {
         name: 'Опыт в IT',

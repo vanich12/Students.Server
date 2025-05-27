@@ -2,7 +2,35 @@
 import React, { useEffect, useState } from 'react'
 import { CheckOutlined } from '@ant-design/icons'
 import { CloseOutlined } from '@mui/icons-material'
+import styled from 'styled-components'
 const { Text, Title } = Typography;
+
+const StyledApplyButton = styled(Button)`
+    background-color: #006400;
+    border-color: #006400;    
+    color: white;              
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+
+    &:hover,
+    &:focus { 
+        background-color: white;             
+        color: #006400;                    
+        border-color: #006400;            
+    }
+`;
+
+const StyledCancelButton = styled(Button)`
+  background-color: ${props => props.token.colorError};
+  border-color: ${props => props.token.colorError};
+  transition: background-color 0.3s, border-color 0.3s;
+
+  &:hover {
+    background-color: ${props => props.token.colorErrorHover};
+    border-color: ${props => props.token.colorErrorHover};
+    color: white; 
+  }
+`;
+
 
 const ConflictFormItem =({   identifier,
                              config,
@@ -17,9 +45,10 @@ const ConflictFormItem =({   identifier,
     const [currentSolve, setCurrentSolve] = useState('');
     const [isResultApproved, setIsResultApproved] = useState(false);
 // ToDo: надо сделать Debounce
- useEffect(() => {
+/* useEffect(() => {
+        console.log("обновление current Resolve")
         setCurrentSolve(valueFromForm)
-    }, [valueFromForm]);
+    }, [valueFromForm]);*/
 
     const handleCancelOrEdit = () => {
         setIsResultApproved(false);
@@ -58,26 +87,6 @@ const ConflictFormItem =({   identifier,
 
     return (
         <>
-         {/*       <>
-                <Radio.Group style={{ width: '100%' }} onChange={handleRadioChange}>
-                    <Radio value={currentValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', marginBottom: 8, padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
-                        <Text strong>Текущее у персоны:</Text><br/>
-                        <Text style={{ wordBreak: 'break-all' }}>
-                            {String(currentValue === null || currentValue === undefined ? ' (пусто) ' : currentValue)}
-                        </Text>
-                    </Radio>
-                    <Radio  value={newValue} style={{ display: 'block', height: 'auto', whiteSpace: 'normal', padding: 8, border: `1px solid ${token.colorBorder}`, borderRadius: 4 }}>
-                        <Text strong>Из заявки:</Text><br/>
-                        <Text style={{ wordBreak: 'break-all' }}>
-                            {String(newValue === null || newValue === undefined ? ' (пусто) ' : newValue)}
-                        </Text>
-                    </Radio>
-                </Radio.Group>
-                    <Flex>
-                        <Button type='primary' onClick={handleApprove}>Применить</Button>
-                        <Button>Отмена</Button>
-                    </Flex>
-                </>*/}
             <ItemComponent
                 currentValue = {currentValue}
                 value={currentValue}
@@ -91,23 +100,20 @@ const ConflictFormItem =({   identifier,
                 mode='conflictResolve'
             />
             <Flex  style={{marginTop: '10px'}} gap="small">
-                <Button
+                <StyledApplyButton
                     icon={<CheckOutlined />}
                     onClick={handleApprove}
                     style={{
-                        backgroundColor: '#006400', // DarkGreen
-                        borderColor: '#006400',     // Цвет рамки в тот же цвет
-                        color: 'white',              // Цвет текста белый для контраста
+                        backgroundColor: '#006400',
+                        borderColor: '#006400',
+                        color: 'white',
                     }}
-                    // Чтобы при наведении цвет немного менялся, можно добавить обработчики
-                    // onMouseEnter и onMouseLeave, либо использовать CSS :hover
-                    // Для простоты здесь этого нет, но в CSS это было бы лучше.
                 >
                     Применить
-                </Button>
-                <Button danger icon={<CloseOutlined />} onClick={handleApprove}>
+                </StyledApplyButton>
+                <StyledCancelButton danger icon={<CloseOutlined />} token = {token} onClick={handleApprove}>
                     Отмена
-                </Button>
+                </StyledCancelButton>
             </Flex>
         </>
     );

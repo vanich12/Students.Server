@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Students.Application.Services.Interfaces;
+﻿using Students.Application.Services.Interfaces;
 using Students.Infrastructure.DTO;
 using Students.Infrastructure.DTO.FilterDTO;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
-using Students.Infrastructure.Storages;
 using Students.Models;
 using Students.Models.ReferenceModels;
 
@@ -17,16 +11,17 @@ namespace Students.Application.Services
     public class PendingRequestService(
         IRequestRepository requestRepository,
         IGenericRepository<PendingRequest> repository,
+        IGenericRepository<TypeEducation> typeEducationRepository,
         IGenericRepository<StatusRequest> statusRequestRepository,
         IGenericRepository<EducationProgram> educationProgramRepository,
-        IPersonRepository personRepository,
         IPendingRequestRepository pendingRequestRepository)
         : GenericService<PendingRequest>(repository), IPendingRequestService
     {
         public async Task<PagedPage<RequestsDTO>> GetPendingRequestsDTOByPage(int page, int pageSize,
             PendingRequestFilterDTO filters)
         {
-            return await pendingRequestRepository.GetRequestPendingByPage(page, pageSize, filters);
+            var items = await pendingRequestRepository.GetRequestPendingByPage(page, pageSize, filters);
+            return items;
         }
 
         /// <summary>
@@ -64,7 +59,7 @@ namespace Students.Application.Services
                 throw new InvalidOperationException($"Ошибка, по Id: {id} не найдено заявки, ожидающей пожтверждения");
 
             return await Mapper.PendingRequestToRequestDTO(pendingRequest,
-                statusRequestRepository, educationProgramRepository);
+                 educationProgramRepository, typeEducationRepository);
         }
 
         public async Task<PendingRequest> UpdatePendingRequestData(Guid id, RequestsDTO form)

@@ -17,7 +17,7 @@ namespace Students.Infrastructure.Storages
     public class PendingRequestRepository : GenericRepository<PendingRequest>, IPendingRequestRepository
     {
         private readonly StudentContext _ctx;
-        private readonly IGenericRepository<StatusRequest> _statusRequestRepository;
+        private readonly IGenericRepository<TypeEducation> _typeEducationRepository;
 
         private readonly IGenericRepository<EducationProgram> _educationProgramRepository;
 
@@ -33,8 +33,8 @@ namespace Students.Infrastructure.Storages
             foreach (var item in pagedData.Data)
             {
                 var dtoItem =
-                    await Mapper.PendingRequestToRequestDTO(item, _statusRequestRepository,
-                        _educationProgramRepository);
+                    await Mapper.PendingRequestToRequestDTO(item,
+                        _educationProgramRepository, _typeEducationRepository);
                 dtoList.Add(dtoItem);
             }
 
@@ -54,11 +54,11 @@ namespace Students.Infrastructure.Storages
         }
 
         public PendingRequestRepository(StudentContext context,
-            IGenericRepository<StatusRequest> statusRequestRepository,
+            IGenericRepository<TypeEducation> typeEducationRepository,
             IGenericRepository<EducationProgram> educationProgramRepository) : base(context)
         {
             this._ctx = context;
-            this._statusRequestRepository = statusRequestRepository;
+            this._typeEducationRepository = typeEducationRepository;
             this._educationProgramRepository = educationProgramRepository;
         }
     }

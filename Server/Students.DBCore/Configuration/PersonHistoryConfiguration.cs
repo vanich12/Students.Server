@@ -1,18 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Students.Models.ReferenceModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Students.Models;
 
 namespace Students.DBCore.Configuration
 {
-    internal class StudentHistoryConfiguration: IEntityTypeConfiguration<StudentHistory>
+    internal class PersonHistoryConfiguration: IEntityTypeConfiguration<PersonHistory>
     {
-        public void Configure(EntityTypeBuilder<StudentHistory> builder)
+        public void Configure(EntityTypeBuilder<PersonHistory> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -21,7 +15,9 @@ namespace Students.DBCore.Configuration
                 .ValueGeneratedOnAdd();
 
             builder.Property(x => x.ChangeDate).IsRequired();
-            builder.HasOne(x => x.Student);
+            builder.HasOne(x => x.Person)
+                .WithMany()
+                .HasForeignKey(x=>x.PersonId);
         }
     }
 }

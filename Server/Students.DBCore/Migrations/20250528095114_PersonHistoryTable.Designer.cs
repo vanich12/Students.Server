@@ -12,8 +12,8 @@ using Students.DBCore.Contexts;
 namespace Students.DBCore.Migrations
 {
     [DbContext(typeof(PgContext))]
-    [Migration("20250517135255_AddCreatedAtInPendingReq")]
-    partial class AddCreatedAtInPendingReq
+    [Migration("20250528095114_PersonHistoryTable")]
+    partial class PersonHistoryTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,20 +257,21 @@ namespace Students.DBCore.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Agreement")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("Agreement")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Birthday")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "birthDate");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Education")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "educationProgram");
 
                     b.Property<string>("EducationLevel")
                         .IsRequired()
@@ -287,6 +288,9 @@ namespace Students.DBCore.Migrations
                     b.Property<string>("IT_Experience")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool?>("IsArchive")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -410,6 +414,50 @@ namespace Students.DBCore.Migrations
                             Sex = 0,
                             TypeEducationId = new Guid("f87eaad5-5d84-45ce-b862-8da5c45ead5b")
                         });
+                });
+
+            modelBuilder.Entity("Students.Models.PersonHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("ChangeDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("ChangeType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("LastChangedUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("NewFamily")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NewName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NewPatron")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldFamily")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldPatron")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("PersonId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("StudentHistory");
                 });
 
             modelBuilder.Entity("Students.Models.ReferenceModels.EducationForm", b =>
@@ -1109,56 +1157,6 @@ namespace Students.DBCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Students.Models.StudentHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateOnly>("ChangeDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("ChangeType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("LastChangedUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("NewFamily")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("NewName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("NewPatron")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OldFamily")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OldName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OldPatron")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentHistory");
-                });
-
             modelBuilder.Entity("Students.Models.DocumentRiseQualification", b =>
                 {
                     b.HasOne("Students.Models.ReferenceModels.KindDocumentRiseQualification", "KindDocumentRiseQualification")
@@ -1283,6 +1281,15 @@ namespace Students.DBCore.Migrations
                     b.Navigation("TypeEducation");
                 });
 
+            modelBuilder.Entity("Students.Models.PersonHistory", b =>
+                {
+                    b.HasOne("Students.Models.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId");
+
+                    b.Navigation("Person");
+                });
+
             modelBuilder.Entity("Students.Models.ReferenceModels.ScopeOfActivity", b =>
                 {
                     b.HasOne("Students.Models.ReferenceModels.ScopeOfActivity", "ScopeOfActivityParent")
@@ -1340,15 +1347,6 @@ namespace Students.DBCore.Migrations
                         .IsRequired();
 
                     b.Navigation("Person");
-                });
-
-            modelBuilder.Entity("Students.Models.StudentHistory", b =>
-                {
-                    b.HasOne("Students.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Students.Models.EducationProgram", b =>

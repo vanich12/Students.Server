@@ -35,7 +35,7 @@ namespace Students.Application.Services
         /// <exception cref="StudentNotFoundException"></exception>
         public async Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId)
         {
-            var student = await studentRepository.GetStudentWithInitPerson(studentId);
+            var student = await studentRepository.FindById(studentId);
             if (student is null) throw new StudentNotFoundException(studentId);
 
             var requestsEntities = await requestRepository.Get(p => p.Id == studentId);

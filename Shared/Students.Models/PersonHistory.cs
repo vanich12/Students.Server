@@ -9,7 +9,7 @@ namespace Students.Models
     /// <summary>
     /// Изменение записи студента
     /// </summary>
-    public class StudentHistory
+    public class PersonHistory
     {
         /// <summary>
         /// Id изменения
@@ -19,27 +19,27 @@ namespace Students.Models
         /// <summary>
         /// Старая фамилия
         /// </summary>
-        public string OldFamily { get; set; }
+        public string? OldFamily { get; set; }
         /// <summary>
         /// Новая фамилия
         /// </summary>
-        public string NewFamily { get; set; }
+        public string? NewFamily { get; set; }
         /// <summary>
         /// Старое имя
         /// </summary>
-        public string OldName { get; set; }
+        public string? OldName { get; set; }
         /// <summary>
         /// Новое имя
         /// </summary>
-        public string NewName { get; set; }
+        public string? NewName { get; set; }
         /// <summary>
         /// Старое Отчество
         /// </summary>
-        public string OldPatron { get; set; }
+        public string? OldPatron { get; set; }
         /// <summary>
         /// Новое Отчество
         /// </summary>
-        public string NewPatron { get; set; }
+        public string? NewPatron { get; set; }
         /// <summary>
         /// Дата изменения
         /// </summary>
@@ -52,12 +52,14 @@ namespace Students.Models
         /// <summary>
         /// Последний, изменивший данные пользователь системы
         /// </summary>
-        public Guid LastChangedUserId { get; set; }
+        public Guid? LastChangedUserId { get; set; }
+
+        public Guid? PersonId { get; set; }
 
         /// <summary>
         /// Студент, чьи изменения зафиксированы
         /// </summary>
-        public virtual Student? Student { get; set; }
+        public virtual Person? Person { get; set; }
 
 
     }

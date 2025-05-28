@@ -96,7 +96,7 @@ export const studentsApi = createApi({
         console.log('DATA перед отправкой:', data);
 
         const config = {
-          url: `/${id}`, // Убедитесь, что URL правильный
+          url: `EditStudent/${id}`, // Убедитесь, что URL правильный
           method: 'PUT',
           body: data, // Проблема здесь: почему 'data' не уходит в тело?
         };

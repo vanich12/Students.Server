@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Students.DBCore.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrateData : Migration
+    public partial class PersonHistoryTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -71,6 +71,32 @@ namespace Students.DBCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_KindOrders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PendingRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Family = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Patron = table.Column<string>(type: "text", nullable: false),
+                    Birthday = table.Column<string>(type: "text", nullable: false),
+                    EducationLevel = table.Column<string>(type: "text", nullable: false),
+                    Education = table.Column<string>(type: "text", nullable: false),
+                    IT_Experience = table.Column<string>(type: "text", nullable: false),
+                    Address = table.Column<string>(type: "text", nullable: false),
+                    Phone = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Agreement = table.Column<bool>(type: "boolean", nullable: false),
+                    ScopeOfActivityLevelOneId = table.Column<string>(type: "text", nullable: true),
+                    ScopeOfActivityLevelTwoId = table.Column<string>(type: "text", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsArchive = table.Column<bool>(type: "boolean", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PendingRequests", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -257,6 +283,32 @@ namespace Students.DBCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StudentHistory",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OldFamily = table.Column<string>(type: "text", nullable: true),
+                    NewFamily = table.Column<string>(type: "text", nullable: true),
+                    OldName = table.Column<string>(type: "text", nullable: true),
+                    NewName = table.Column<string>(type: "text", nullable: true),
+                    OldPatron = table.Column<string>(type: "text", nullable: true),
+                    NewPatron = table.Column<string>(type: "text", nullable: true),
+                    ChangeDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ChangeType = table.Column<string>(type: "text", nullable: false),
+                    LastChangedUserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    PersonId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentHistory_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
@@ -332,32 +384,6 @@ namespace Students.DBCore.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Requests_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StudentHistory",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OldFamily = table.Column<string>(type: "text", nullable: false),
-                    NewFamily = table.Column<string>(type: "text", nullable: false),
-                    OldName = table.Column<string>(type: "text", nullable: false),
-                    NewName = table.Column<string>(type: "text", nullable: false),
-                    OldPatron = table.Column<string>(type: "text", nullable: false),
-                    NewPatron = table.Column<string>(type: "text", nullable: false),
-                    ChangeDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    ChangeType = table.Column<string>(type: "text", nullable: false),
-                    LastChangedUserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudentHistory", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StudentHistory_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id");
@@ -738,9 +764,9 @@ namespace Students.DBCore.Migrations
                 column: "ScopeOfActivityParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentHistory_StudentId",
+                name: "IX_StudentHistory_PersonId",
                 table: "StudentHistory",
-                column: "StudentId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_PersonId",
@@ -763,6 +789,9 @@ namespace Students.DBCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "PendingRequests");
 
             migrationBuilder.DropTable(
                 name: "StudentHistory");

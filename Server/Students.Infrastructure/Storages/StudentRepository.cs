@@ -51,7 +51,15 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
         var dtoQuery = studentQuery.Select(x => Mapper.StudentToStudentDTO(x).Result);
 
         // 4. Пагинация
-        return await PagedPage<StudentDTO>.ToPagedPage(dtoQuery, page, pageSize, x => x.StudentFullName);
+        return await PagedPage<StudentDTO>.ToPagedPage(dtoQuery, page, pageSize, x => x.FullName);
+    }
+
+    public override async Task<Student?> FindById(Guid id)
+    {
+        var student = await this._ctx.Students
+            .Include(s => s.Person) 
+            .FirstOrDefaultAsync(s => s.Id == id);
+        return student;
     }
 
     /// <summary>
@@ -68,16 +76,6 @@ public class StudentRepository : GenericRepository<Student>, IStudentRepository
         await this._ctx.Entry(student).Collection(s => s.Groups!).LoadAsync();
         await this._ctx.Entry(student).Collection(s => s.Requests!).LoadAsync();
 
-        return student;
-    }
-
-    public async Task<Student?> GetStudentWithInitPerson(Guid studentId)
-    {
-        var student = await this.FindById(studentId);
-        if (student is null)
-            return null;
-
-        await this._ctx.Entry(student).Reference(p => p.Person).LoadAsync();
         return student;
     }
 

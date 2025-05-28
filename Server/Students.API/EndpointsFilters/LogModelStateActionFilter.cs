@@ -6,6 +6,7 @@ namespace Students.API.EndpointsFilters
     /// <summary>
     /// Логирование данных запроса, в случае ошибки при отправке Json
     /// </summary>
+    // TODO: надо доделать
     public class LogModelStateActionFilter : IAsyncActionFilter
     {
         private readonly ILogger<LogModelStateActionFilter> _logger;

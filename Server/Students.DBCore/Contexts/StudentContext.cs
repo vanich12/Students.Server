@@ -3,6 +3,7 @@ using Students.DBCore.Configuration;
 using Students.DBCore.Migrations;
 using Students.Models;
 using Students.Models.ReferenceModels;
+using PersonHistory = Students.Models.PersonHistory;
 
 namespace Students.DBCore.Contexts;
 
@@ -10,7 +11,7 @@ public abstract class StudentContext : DbContext
 {
     public DbSet<EducationForm> EducationForms { get; set; }
 
-    public DbSet<StudentHistory> StudentHistory { get; set; }
+    public DbSet<PersonHistory> PersonHistory { get; set; }
 
     public DbSet<EducationProgram> EducationPrograms { get; set; }
 

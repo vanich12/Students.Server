@@ -27,7 +27,7 @@ export default {
     columns: [
         {
             title: 'Ф.И.О. обучающегося',
-            dataIndex: 'studentFullName',
+            dataIndex: 'fullName',
             key: 'fullName',
         },
         {

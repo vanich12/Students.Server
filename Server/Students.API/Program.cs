@@ -5,6 +5,8 @@ using Students.Models;
 using ClosedXML.Excel;
 using Studens.Application.Report;
 using Studens.Application.Report.Interfaces;
+using Students.API.EndpointsFilters;
+using Students.API.Middlewares;
 using Students.Application.Services;
 using Students.Application.Services.Interfaces;
 using Students.Infrastructure.Extension;
@@ -33,6 +35,7 @@ builder.Services.AddDbContext<StudentContext, PgContext>();
 //builder.Services.AddScoped<InMemoryContext>();
 //builder.Services.AddScoped<StudentContext>();
 builder.Services.AddScoped<PgContext>();
+builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupStudentRepository, GroupStudentRepository>();
@@ -93,8 +96,11 @@ builder.Services.AddApiVersioning(options =>
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
 });
-builder.Services.AddControllers().AddJsonOptions(x =>
-    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddScoped<LogModelStateActionFilter>();
+builder.Services.AddControllers(options =>
+        options.Filters.Add<LogModelStateActionFilter>())
+    .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
 
@@ -108,6 +114,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors("CorsPolicy");
 app.UseAuthorization();

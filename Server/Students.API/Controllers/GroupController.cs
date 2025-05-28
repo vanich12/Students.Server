@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Students.API.EndpointsFilters;
 using Students.Infrastructure.Interfaces;
 using Students.Models;
 
@@ -9,6 +10,7 @@ namespace Students.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("[controller]")]
+[ServiceFilter(typeof(LogModelStateActionFilter))]
 [ApiVersion("1.0")]
 public class GroupController : GenericAPiController<Group>
 {

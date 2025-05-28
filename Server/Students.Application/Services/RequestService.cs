@@ -1,4 +1,5 @@
-﻿using Students.Application.Exceptions;
+﻿using Microsoft.Extensions.Logging;
+using Students.Application.Exceptions;
 using Students.Application.Services.Interfaces;
 using Students.Infrastructure.DTO;
 using Students.Infrastructure.DTO.FilterDTO;
@@ -9,7 +10,6 @@ using Students.Models.ReferenceModels;
 
 namespace Students.Application.Services
 {
-    // TODO: разделить этот сервис на два сервиса: 1 - сервис подтвержденнх заявок, 2 - сервис неподтвержденных заявок
     /// <summary>
     /// Сервис обработки заявок
     /// </summary>
@@ -24,8 +24,8 @@ namespace Students.Application.Services
         IGenericRepository<StatusRequest> statusRequestRepository,
         IGenericRepository<EducationProgram> educationProgramRepository,
         IPendingRequestRepository pendingRequestRepository,
-        IPersonRepository personRepository)
-        : GenericService<Request>(requestRepository), IRequestService
+        IPersonRepository personRepository, ILogger<Request> logger)
+        : GenericService<Request>(requestRepository, logger), IRequestService
     {
         /// <summary>
         /// Получение заявок, которые есть у студента
@@ -75,27 +75,47 @@ namespace Students.Application.Services
         /// <exception cref="ArgumentException"></exception>
         public async Task<Request> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId)
         {
-            var pendingReq = await pendingRequestRepository.FindById(pRequestId);
-            if (pendingReq is null)
-                throw new ArgumentException($"по pendingRequest : {pRequestId} ничего не найдено");
+            try
+            {
+                var pendingReq = await pendingRequestRepository.FindById(pRequestId);
+                if (pendingReq is null)
+                    throw new ArgumentException($"по pendingRequest : {pRequestId} ничего не найдено");
 
-            var person = await personRepository.FindById(personId);
-            person.Family = pendingReq.Family;
-            person.Name = pendingReq.Name;
-            person.Patron = pendingReq.Patron;
-            person.Email = pendingReq.Email;
-            person.Phone = pendingReq.Phone;
+                var person = await personRepository.FindById(personId);
+                person.Family = pendingReq.Family;
+                person.Name = pendingReq.Name;
+                person.Patron = pendingReq.Patron;
+                person.Email = pendingReq.Email;
+                person.Phone = pendingReq.Phone;
 
-            var newPerson = await personRepository.Update(personId, person);
-            if (newPerson is null)
-                throw new InvalidOperationException("Ошибка при обновлении пользователя");
+                var newPerson = await personRepository.Update(personId, person);
+                if (newPerson is null)
+                    throw new InvalidOperationException("Ошибка при обновлении пользователя");
 
-            var newRequest =
-                await Mapper.PendingRequestToRequest(pendingReq, educationProgramRepository, statusRequestRepository);
+                var newRequest =
+                    await Mapper.PendingRequestToRequest(pendingReq, educationProgramRepository,
+                        statusRequestRepository);
 
-            newRequest.PersonId = personId;
+                newRequest.PersonId = personId;
 
-            return await requestRepository.Create(newRequest);
+                return await requestRepository.Create(newRequest);
+            }
+            catch (InvalidOperationException ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message);
+                throw;
+            }
+
         }
 
 
@@ -152,12 +172,12 @@ namespace Students.Application.Services
             }
             catch (StudentNotFoundException ex)
             {
-                Console.WriteLine(ex);
+                logger.LogError(ex.Message);
                 throw;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.LogError(e.Message);
                 throw;
             }
         }
@@ -215,9 +235,14 @@ namespace Students.Application.Services
 
                 await requestRepository.Update(id, resultOld);
             }
+            catch (RequestNotFoundExceptions ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.LogError(e.Message);
                 throw;
             }
         }

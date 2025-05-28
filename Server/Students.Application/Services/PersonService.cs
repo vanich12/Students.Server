@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Students.Application.Services.Interfaces;
 using Students.Infrastructure.DTO;
 using Students.Infrastructure.Extension.Pagination;
@@ -12,8 +13,7 @@ using Students.Models;
 namespace Students.Application.Services
 {
     public class PersonService(
-        IPersonRepository personRepository,
-        IPendingRequestRepository pendingRequestRepository) : GenericService<Person>(personRepository), IPersonService
+        IPersonRepository personRepository, ILogger<Person> logger) : GenericService<Person>(personRepository, logger), IPersonService
     {
         /// <summary>
         /// Обновление данных персоны через заявку(вебхук)
@@ -23,19 +23,32 @@ namespace Students.Application.Services
         /// <param name="form">DTO Персоны</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        // TODO: доделать логику
         public async Task<Person> UpdatePersonFromPendingRequestData(Guid pendingRequestId, Guid personId,
             NewPersonDTO form)
         {
-            var oldPerson = await personRepository.FindById(personId);
-            if (oldPerson is null)
-                throw new ArgumentException($"персона по: {personId} не найдена");
+            try
+            {
+                var oldPerson = await personRepository.FindById(personId);
+                if (oldPerson is null)
+                    throw new ArgumentException($"персона по: {personId} не найдена");
 
-            var middlewarePerson = await Mapper.NewPersonDTOToPerson(form);
+                var middlewarePerson = await Mapper.NewPersonDTOToPerson(form);
 
-            var newPerson = await personRepository.Update(personId, middlewarePerson);
+                var newPerson = await personRepository.Update(personId, middlewarePerson);
 
-            return newPerson;
+                return newPerson;
+            }
+            catch (ArgumentException ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message);
+                throw;
+            }
+
         }
 
         /// <summary>
@@ -47,15 +60,29 @@ namespace Students.Application.Services
         /// <exception cref="ArgumentException"></exception>
         public async Task<Person> CreatePersonFromPendingRequest(Guid pendingRequestId, NewPersonDTO form)
         {
-            var person = await Mapper.NewPersonDTOToPerson(form);
-            if (person is null)
-                throw new ArgumentException($"не удалось создать персону по DTO");
+            try
+            {
+                var person = await Mapper.NewPersonDTOToPerson(form);
+                if (person is null)
+                    throw new ArgumentException($"не удалось создать персону по DTO");
 
-            var newPerson = await personRepository.Create(person);
-            if (newPerson is null)
-                throw new ArgumentException("Не удалось создать персоны");
+                var newPerson = await personRepository.Create(person);
+                if (newPerson is null)
+                    throw new ArgumentException("Не удалось создать персоны");
 
-            return newPerson;
+                return newPerson;
+            }
+
+            catch (ArgumentException ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message);
+                throw;
+            }
         }
     }
 }

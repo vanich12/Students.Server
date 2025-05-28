@@ -33,8 +33,8 @@ namespace Students.API.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                this._logger.LogError(e.Message, "Error while tried get list of items");
+                return this.Exception();
             }
         }
 

@@ -48,7 +48,6 @@ namespace Students.Application.Services
                 logger.LogError(e.Message);
                 throw;
             }
-
         }
 
         /// <summary>
@@ -84,5 +83,10 @@ namespace Students.Application.Services
                 throw;
             }
         }
+
+        //public async Task<Person> UpdatePersonFromClient(Guid personId, PersonDTO form)
+        //{
+        //    var person = Mapper.PersonDt
+        //}
     }
 }

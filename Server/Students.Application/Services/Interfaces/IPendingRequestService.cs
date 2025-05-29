@@ -26,7 +26,13 @@ namespace Students.Application.Services.Interfaces
         /// <param name="pRequestId"> id неподтвержденной заявки</param>
         /// <param name="personId">id персоны</param>
         /// <returns></returns>
-        Task<Request> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId);
+        Task<Request> CreateRequestFromPendingRequestAndPerson(Guid pRequestId, Guid personId);
+        /// <summary>
+        /// Создание  отвалидированной заявки на основе "сырой", также создание персоны на основе сырой заявки
+        /// </summary>
+        /// <param name="pRequestId">id неподтвержденной заявки</param>
+        /// <returns></returns>
+        Task<Request> CreateRequestFromPendingRequest(Guid pRequestId);
         /// <summary>
         /// Получение неподтвержденной заявки по Id
         /// </summary>

@@ -2,7 +2,7 @@
 import apiUrl from './apiUrl.js';
 
 export const personApi = createApi({
-    reducerPath: 'person',
+    reducerPath: 'persons',
     keepUnusedDataFor: 30,
     baseQuery: fetchBaseQuery(
         { baseUrl: `${apiUrl}/person` }),
@@ -59,17 +59,19 @@ export const personApi = createApi({
         }),
 
         editPerson: builder.mutation({
-            query: ({id, item}) => ({
-                url: id,
-                method: 'PUT',
-                body: item,
-            }),
-
-            invalidatesTags: (result,error, id) =>[
+            query: ({id,data}) => { // Добавляем фигурные скобки для тела функции
+                console.log('Отправляемый item (внутри query):', data); // Выводим item в консоль
+                return { // Явно возвращаем объект конфигурации запроса
+                    url: id,
+                    method: 'PUT',
+                    body: data,
+                };
+            },
+            invalidatesTags: (result, error, { id }) => [ // Обратите внимание: здесь {id} деструктурируется из третьего аргумента (arg)
                 {type: 'Person', id: id},
-                {type:'Persons', id: 'LIST' }],
+                {type:'Persons', id: 'LIST' }
+            ],
         }),
-
         UpdatePersonBasedOnPRequest: builder.mutation({
             query: ({ pendingRequestId, personId, formValues }) => { // Изменяем на блочную функцию
                 // Логируем объект form

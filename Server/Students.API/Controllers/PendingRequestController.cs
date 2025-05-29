@@ -59,12 +59,12 @@ namespace Students.API.Controllers
             }
         }
 
-        [HttpPost("CreateRequestFromPendingRequest")]
-        public async Task<IActionResult> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId)
+        [HttpPost("CreateRequestFromPendingRequestAndPerson")]
+        public async Task<IActionResult> CreateRequestFromPendingRequestAndPerson(Guid pRequestId, Guid personId)
         {
             try
             {
-                var request = await _pendingRequestService.CreateRequestFromPendingRequest(pRequestId, personId);
+                var request = await _pendingRequestService.CreateRequestFromPendingRequestAndPerson(pRequestId, personId);
                 return this.Ok(request);
             }
             catch (ArgumentException ex)
@@ -84,7 +84,36 @@ namespace Students.API.Controllers
                 return this.Exception();
             }
         }
-
+        /// <summary>
+        /// Создание отвалидированной заявки на основе "сырой"
+        /// </summary>
+        /// <param name="pRequestId"></param>
+        /// <returns></returns>
+        [HttpPost("CreateRequestFromPendingRequest")]
+        public async Task<IActionResult> CreateRequestFromPendingRequest(Guid pRequestId)
+        {
+            try
+            {
+                var request = await _pendingRequestService.CreateRequestFromPendingRequest(pRequestId);
+                return this.Ok(request);
+            }
+            catch (ArgumentException ex)
+            {
+                this._logger.LogError(ex.Message, "Error while getting Item by Id");
+                return this.Exception();
+            }
+            catch (InvalidOperationException ex)
+            {
+                this._logger.LogError(ex.Message, "Error while trying Update Person");
+                return this.Exception();
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message,
+                    $"Error while trying create Request by PendingRequest with pendingRequestId:{pRequestId} ");
+                return this.Exception();
+            }
+        }
 
         /// <summary>
         /// Обновить объект.

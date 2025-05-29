@@ -28,9 +28,16 @@ export const pendingRequestsApi = createApi({
             query: (id) => id,
             providesTags: ['PRequestById'],
         }),
-        addRequestFromPendingRequest: builder.mutation({
+        addRequestFromPendingRequestAndPerson: builder.mutation({
             query: ({pRequestId, personId}) => ({
-                url: `/CreateRequestFromPendingRequest?pRequestId=${pRequestId}&personId=${personId}`,
+                url: `/CreateRequestFromPendingRequestAndPerson?pRequestId=${pRequestId}&personId=${personId}`,
+                method: 'POST',
+            }),
+            invalidatesTags: (result, error, { pRequestId }) => [{ type: 'PRequestById', pRequestId }],
+        }),
+        addRequestFromPendingRequest: builder.mutation({
+            query: ({pRequestId}) => ({
+                url: `/CreateRequestFromPendingRequest?pRequestId=${pRequestId}`,
                 method: 'POST',
             }),
             invalidatesTags: (result, error, { pRequestId }) => [{ type: 'PRequestById', pRequestId }],
@@ -72,6 +79,7 @@ export const {
     useGetPendingRequestsPagedQuery,
     // надо правильно называть хуки, от этого зависят их свойства (мутации, или запрос)
     useGetPendingRequestByIdQuery,
+    useAddRequestFromPendingRequestAndPersonMutation,
     useAddRequestFromPendingRequestMutation,
     useAddPendingRequestMutation,
     useEditPendingRequestMutation,

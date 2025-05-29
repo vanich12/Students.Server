@@ -64,6 +64,28 @@ namespace Students.API.Controllers
                 return this.Exception();
             }
         }
+
+        ///// <summary>
+        ///// Обновление студента
+        ///// </summary>
+        ///// <param name="id">Id студнта</param>
+        ///// <param name="form"></param>
+        ///// <returns></returns>
+        //[HttpPut("EditStudent/{studentId}")]
+        //public async Task<IActionResult> Put(Guid personId, [FromBody] PersonDTO form)
+        //{
+        //    try
+        //    {
+        //        var student = await this._personService.UpdateStudent(studentId, form);
+        //        return student is null ? this.NotFoundException() : this.Ok(student);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        this._logger.LogError(e.Message, "Error while trying update student by id");
+        //        throw;
+        //    }
+        //}
+
         /// <summary>
         /// Обновление персоны на основе заявки (вебхука)
         /// </summary>

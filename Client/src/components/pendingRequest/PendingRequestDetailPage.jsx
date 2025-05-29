@@ -5,6 +5,7 @@ import { Row, Col, Button } from 'antd'
 import config from '../../storage/catalogConfigs/pendingRequests';
 import personConfig from '../../storage/catalogConfigs/person';
 import SelectModalItemsForm from '../shared/catalogProvider/forms/SelectModalItemsForm'
+import { useCreateOneValidRequest, useCreateOneValidRequestByPerson } from '../../storage/crud/pendingRequestsCrud'
 
 
 const PendingRequestDetailsPage = () => {
@@ -21,11 +22,12 @@ const PendingRequestDetailsPage = () => {
 
     const { properties, crud } = config;
 
-    const { useGetOneByIdAsync, useEditOneAsync, useCreateOneValidRequest} = crud;
+    const { useGetOneByIdAsync, useEditOneAsync, useCreateOneValidRequestByPerson,useCreateOneValidRequest} = crud;
     const { data, isLoading, isFetching, refetch } = useGetOneByIdAsync(id);
 
     const [editRequest] = useEditOneAsync();
-    const [mutationTrigger,mutationResult] = useCreateOneValidRequest()
+    const [mutationTrigger,mutationResult] = useCreateOneValidRequestByPerson()
+    const [createReqTrigger, triggerResult] = useCreateOneValidRequest()
 
     const filterString = useMemo(() => {
         if (!requestData) return '';
@@ -117,6 +119,10 @@ const PendingRequestDetailsPage = () => {
                             }}>
                                 Привязать заявку к персоне
                             </Button>)}
+
+                            <Button type="primary" onClick={() => createReqTrigger({pRequestId: id})}>
+                                Подтвердить заявку
+                            </Button>
 
                             {hasConflictResolveButton && (<Button style={{ margin: '0 10px'}} onClick={() => openConflictResolutionPage(currentPerson.id,id)}>
                                 Разрешить конфликты привязки

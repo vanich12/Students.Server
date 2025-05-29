@@ -42,7 +42,12 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
 
         return bagRequestsIds;
     }
-
+    /// <summary>
+    /// Удаление студентпа из группы
+    /// </summary>
+    /// <param name="studentId"></param>
+    /// <param name="groupId"></param>
+    /// <returns></returns>
     public async Task<Guid?> RemoveStudentFromGroupByRequest(Guid studentId, Guid groupId)
     {
         var group = await base.FindById(groupId);

@@ -40,6 +40,11 @@ const useMenuConfig = () => {
         },
         { type: 'divider' },
         {
+            key: '/persons',
+            label: 'Подававшие заявки',
+            onClick: () => {navigate('/persons')},
+        },
+        {
             key: '/students',
             label: 'Обучающиеся',
             onClick: () => {navigate('/students')},

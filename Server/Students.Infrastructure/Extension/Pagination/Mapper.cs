@@ -184,6 +184,24 @@ public static class Mapper
         };
     }
 
+    public static async Task<Person> PendingRequestToPerson(PendingRequest form)
+    {
+        return new Person()
+        {
+            Phone = form.Phone ?? String.Empty,
+            Email = form.Email ?? String.Empty,
+            BirthDate = DateOnly.Parse(form.Birthday),
+            Family = form.Family ?? String.Empty,
+            Name = form.Name ?? String.Empty,
+            Patron = form.Patron,
+            Sex = form.Sex,
+            IT_Experience = form.IT_Experience,
+            Address = form.Address,
+            ScopeOfActivityLevelOneId = Guid.Parse(form.ScopeOfActivityLevelOneId),
+            ScopeOfActivityLevelTwoId = Guid.Parse(form.ScopeOfActivityLevelTwoId),
+        };
+    }
+
     /// <summary>
     /// Преобразование NewRequestDTO в заявку.
     /// </summary>

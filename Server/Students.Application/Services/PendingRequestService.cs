@@ -16,6 +16,7 @@ namespace Students.Application.Services
         IGenericRepository<StatusRequest> statusRequestRepository,
         IGenericRepository<EducationProgram> educationProgramRepository,
         IPendingRequestRepository pendingRequestRepository,
+        IPersonRepository personRepository,
         ILogger<PendingRequest> logger)
         : GenericService<PendingRequest>(repository, logger), IPendingRequestService
     {
@@ -27,13 +28,13 @@ namespace Students.Application.Services
         }
 
         /// <summary>
-        /// Создание и привязка отвалидированной заявки на основе "сырой"
+        /// Создание и привязка отвалидированной заявки на основе "сырой" если персона повторно подает заявку
         /// </summary>
         /// <param name="pRequestId">Id "сырой заявк"</param>
         /// <param name="personId">Id персоны</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<Request> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId)
+        public async Task<Request> CreateRequestFromPendingRequestAndPerson(Guid pRequestId, Guid personId)
         {
             try
             {
@@ -55,6 +56,54 @@ namespace Students.Application.Services
                         $"Ошибка при обновлении статуса неподтвержденной заявки по id:{pRequestId}");
 
                 return await requestRepository.Create(newRequest);
+            }
+            catch (ArgumentException ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Создание отвалидированной заявки и персоны на основе "сырой" если, раньше персоной не подавалась заявка
+        /// </summary>
+        /// <param name="pRequestId"></param>
+        /// <returns></returns>
+        public async Task<Request> CreateRequestFromPendingRequest(Guid pRequestId)
+        {
+            try
+            {
+                var pendingReq = await pendingRequestRepository.FindById(pRequestId);
+                if (pendingReq is null)
+                    throw new ArgumentException($"по pRequestId : {pRequestId} заявки не найдено");
+
+                var newRequest =
+                    await Mapper.PendingRequestToRequest(pendingReq, educationProgramRepository,
+                        statusRequestRepository);
+
+                var newPerson = await Mapper.PendingRequestToPerson(pendingReq);
+
+                var person = await personRepository.Create(newPerson);
+                newRequest.PersonId = person.Id;
+
+                var request = await requestRepository.Create(newRequest);
+
+                return request;
+            }
+            catch (ArgumentException ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
             }
             catch (InvalidOperationException ex)
             {
@@ -90,7 +139,6 @@ namespace Students.Application.Services
                 logger.LogError(e.Message);
                 throw;
             }
-
         }
 
         public async Task<PendingRequest> UpdatePendingRequestData(Guid id, RequestsDTO form)
@@ -146,7 +194,6 @@ namespace Students.Application.Services
                 logger.LogError(e.Message);
                 throw;
             }
-
         }
     }
 }

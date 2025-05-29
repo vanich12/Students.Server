@@ -3,6 +3,7 @@ import {
     useGetPendingRequestsQuery,
     useGetPendingRequestsPagedQuery,
     useGetPendingRequestByIdQuery,
+    useAddRequestFromPendingRequestAndPersonMutation,
     useAddRequestFromPendingRequestMutation,
     useAddPendingRequestMutation,
     useEditPendingRequestMutation,
@@ -26,10 +27,15 @@ const useGetAllPagedAsync = ({ pageNumber, pageSize, filterDataReq: queryString 
     return { data, isError, isSuccess, error, isLoading, isFetching, refetch };
 };
 
-const useCreateOneValidRequest = () =>{
-    const [mutationTrigger, mutationResult] = useAddRequestFromPendingRequestMutation();
+const useCreateOneValidRequestByPerson = () =>{
+    const [mutationTrigger, mutationResult] = useAddRequestFromPendingRequestAndPersonMutation();
     const {data, error, isUninitialized, isLoading, isSuccess, isError, reset} = mutationResult;
     return [mutationTrigger, mutationResult]
+};
+const useCreateOneValidRequest = () =>{
+    const [createReqTrigger, triggerResult] = useAddRequestFromPendingRequestMutation();
+    const {data, error, isUninitialized, isLoading, isSuccess, isError, reset} = triggerResult;
+    return [createReqTrigger, triggerResult]
 };
 
 const useRemoveOneAsync = () => {
@@ -64,6 +70,7 @@ export {
     useGetAllAsync,
     useGetAllPagedAsync,
     useGetPendingRequestByIdQuery as useGetOneByIdAsync,
+    useCreateOneValidRequestByPerson,
     useCreateOneValidRequest,
     useAddPendingRequestMutation as useAddOneAsync,
     useEditOneAsync,

@@ -27,6 +27,8 @@ import PendingRequestPage from './pendingRequest/PendingRequestsPage'
 import PendingRequestDetailPage from './pendingRequest/PendingRequestDetailPage'
 import PendingRequestsPage from './pendingRequest/PendingRequestsPage'
 import ConflictResolutionPage from './conflictResolution/ConflictResolutionPage'
+import PersonsPage from './person/PersonsPage'
+import PersonDetailsPage from './person/PersonDetailPage'
 
 const App = () => {
   return (
@@ -63,6 +65,18 @@ const App = () => {
                   <RequestDetailPage />
                 </PrivateRoute>
               )}
+            />
+            <Route path="/persons" element={(
+                <PrivateRoute>
+                    <PersonsPage />
+                </PrivateRoute>
+            )}
+            />
+            <Route path="/person/:id" element={(
+                <PrivateRoute>
+                    <PersonDetailsPage />
+                </PrivateRoute>
+            )}
             />
             <Route path="/students" element={(
                 <PrivateRoute>

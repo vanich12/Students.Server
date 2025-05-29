@@ -5,13 +5,13 @@ import DateFilter from '../shared/filters/DateFilter.tsx'
 import { Flex } from 'antd'
 
 
-const PersonPage = () => {
+const PersonsPage = () => {
 
     return (
-        <Layout title="Студенты">
+        <Layout title="Подававшие заявки">
             <EntityTable config={config} />
         </Layout>
     );
 };
 
-export default PersonPage;
+export default PersonsPage;

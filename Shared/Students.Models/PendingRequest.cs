@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Students.Models.Enums;
 
 namespace Students.Models
 {
@@ -65,6 +66,8 @@ namespace Students.Models
         /// Email
         /// </summary>
         public required string Email { get; set; }
+
+        public SexHuman Sex { get; set; }
 
         /// <summary>
         /// Согласие на обработку персональных данных

@@ -3,13 +3,18 @@ import { Layout, Loading, DetailsPageData, RoutingWarningModal } from '../shared
 import { useParams, useBlocker } from 'react-router-dom';
 import { Row, Col, Space, Button } from 'antd';
 import config from '../../storage/catalogConfigs/students.js'
+import SelectModalItemsForm from '../shared/catalogProvider/forms/SelectModalItemsForm'
+import studentHistoryConfig from '../../storage/catalogConfigs/studentHistory.js';
+
 
 const StudentDetailsPage = () => {
     const { id } = useParams();
     const [studentData, setStudentData] = useState({});
     const [initialData, setInitialData] = useState({});
+
     const [isChanged, setIsChanged] = useState(false);
     const [isSaveInProgress, setIsSaveInProgress] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     const { properties, crud } = config;
     const { useGetOneByIdAsync, useEditOneAsync } = crud;
@@ -43,9 +48,19 @@ const StudentDetailsPage = () => {
         setIsChanged(false);
     }, [initialData]);
 
+    const modalFooter =()=>(
+        <>
+            <Button key="confirm" type="primary"
+                    onClick={() => {
+                        setShowModal(false)
+                    }}>Подтвердить</Button>
+            <Button key="close" onClick={() => setShowModal(false)}>Закрыть</Button>
+        </>
+    );
     return isLoading || isFetching
     ? (<Loading />)
     : (
+        <>
         <Layout title="Персональные данные студента">
             <h2>{studentData.family} {studentData?.name} {studentData?.patron}</h2>
             <DetailsPageData
@@ -62,12 +77,28 @@ const StudentDetailsPage = () => {
                 <Col>
                     <Button onClick={onCancel} disabled={isSaveInProgress}>Отмена</Button>
                 </Col>
+                <Col>
+                    <Button disabled={isSaveInProgress} onClick={()=>setShowModal(true)} style={{ marginLeft: '10px' }} type="primary">История обучения</Button>
+                </Col>
             </Row>
             <RoutingWarningModal
                 show={blocker.state === "blocked"}
                 blocker={blocker} 
             />
         </Layout>
+            <SelectModalItemsForm
+                useDataHook={studentHistoryConfig.crud.useGetReqByStudentId}
+                dataHookArgs={id}
+                config={studentHistoryConfig}
+                modalTitle = {"История обучений студента"}
+                modalFooter={modalFooter}
+                control={{
+                    showForm: showModal,
+                    setShowForm: setShowModal,
+                }}
+                filterString={""}
+            />
+        </>
   );
 };
 

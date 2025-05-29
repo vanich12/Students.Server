@@ -13,7 +13,7 @@ export const personApi = createApi({
             providesTags: (result) => result ? [
                 ...result.map(({ id }) => ({ type: 'Persons', id })),
                 { type: 'Persons', id: 'LIST' },
-            ]: { type: 'Persons', id: 'LIST' },
+            ]: [{ type: 'Persons', id: 'LIST' }],
         }),
 
         getPersonsPaged: builder.query({
@@ -30,7 +30,7 @@ export const personApi = createApi({
             providesTags: (result) => result ? [
                 ...result.data.map(({ id }) => ({ type: 'Person', id })),
                 { type: 'Persons', id: 'LIST' },
-            ]: { type: 'Persons', id: 'LIST' },
+            ]: [{ type: 'Persons', id: 'LIST' }],
         }),
 
         getPersonById: builder.query({

@@ -32,14 +32,23 @@ const useGetAllPagedAsync = ({ pageNumber, pageSize, filterDataReq: queryString 
 };*/
 
 
-const useGetReqByStudentId = () => {
-    // 1. Вызываем оригинальный хук БЕЗ аргументов данных
+const useGetReqByStudentId = (studentId, options) => { // (1) Принимаем studentId и options
     const [trigger, result] = useLazyGetPersonRequestsOfStudentQuery();
 
-    // 2. Возвращаем полученный массив [функцияЗапуска, объектРезультата]
-    // Теперь компонент, использующий useAddSubjectRangeAsync, получит то же самое,
-    // как если бы он использовал useAddStudentInGroupMutation напрямую.
-    return [trigger, result];
+    useEffect(() => {
+        if (studentId !== undefined && studentId !== null && (!options || !options.skip)) {
+            trigger(studentId);
+        }
+    }, [studentId, trigger, options]);
+
+    return {
+        data: result.data, // или result.currentData, в зависимости от того, что вам нужно
+        isLoading: result.isLoading,
+        isFetching: result.isFetching,
+        error: result.error,
+        isSuccess: result.isSuccess,
+        isUninitialized: result.isUninitialized,
+    };
 };
 
 const useEditBinding = () => {

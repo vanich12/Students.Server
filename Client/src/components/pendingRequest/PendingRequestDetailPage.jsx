@@ -5,8 +5,6 @@ import { Row, Col, Button } from 'antd'
 import config from '../../storage/catalogConfigs/pendingRequests';
 import personConfig from '../../storage/catalogConfigs/person';
 import SelectModalItemsForm from '../shared/catalogProvider/forms/SelectModalItemsForm'
-import { useCreateOneValidRequest, useCreateOneValidRequestByPerson } from '../../storage/crud/pendingRequestsCrud'
-
 
 const PendingRequestDetailsPage = () => {
     const { id } = useParams();
@@ -42,8 +40,9 @@ const PendingRequestDetailsPage = () => {
         if (requestData.email) params.append('email', requestData?.email);
         const queryString = params.toString();
 
-        return `&${queryString}&matchAny=true` ;
+        return `&${queryString}&matchAny=true`;
     }, [requestData]);
+
 
     // футер модалки
     const modalFooter =()=>(

@@ -91,6 +91,7 @@ const EntityTable = ({ config }) => {
     };
 
     const openDetailsInfo = useCallback((item) => {
+        console.log(detailsLink)
         navigate(`/${detailsLink}/${item.id}`);
     });
 

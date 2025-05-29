@@ -1,11 +1,7 @@
 ﻿import {
-    useGetAllAsync,
     useGetAllPagedAsync,
-    useGetOneByIdAsync,
-    useAddOneAsync,
-    useEditOneAsync,
-    useRemoveOneAsync,
-} from '../crud/studentsCrud.js';
+    useGetReqByStudentId,
+} from '../crud/personRequestsCrud.js';
 import { studentsModel } from '../models/index.js';
 import BirthDate from '../../components/shared/business/BirthDate.jsx';
 import EducationProgramSelect from '../../components/shared/business/selects/EducationProgramSelect'
@@ -17,18 +13,15 @@ export default {
     serverPaged: true,
     properties: studentsModel,
     crud: {
-        useGetAllAsync,
         useGetAllPagedAsync,
-        useGetOneByIdAsync,
-        useAddOneAsync,
-        useEditOneAsync,
-        useRemoveOneAsync,
+        useGetReqByStudentId,
     },
+    // ToDo: написать правильные dataIndex и в DTO то же
     columns: [
         {
             title: 'Программа обучения',
-            dataIndex: 'programName',
-            key: 'programName',
+            dataIndex: 'educationProgram',
+            key: 'educationProgram',
         },
         {
             title: 'Группа',

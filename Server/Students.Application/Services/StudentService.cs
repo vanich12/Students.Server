@@ -11,6 +11,12 @@ namespace Students.Application.Services
         IPersonRepository personRepository,
         ILogger<Student> logger) : GenericService<Student>(studentRepository, logger), IStudentService
     {
+        /// <summary>
+        /// Обновление студента в базе
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <param name="form"></param>
+        /// <returns></returns>
         public async Task<Student> UpdateStudent(Guid studentId, StudentDTO form)
         {
             try
@@ -27,6 +33,7 @@ namespace Students.Application.Services
                 person.Email = form.Email;
                 person.BirthDate = form.BirthDate.Value;
                 person.IT_Experience = form.IT_Experience;
+                person.Sex = form.Sex.Value;
 
                 if (person is null)
                     throw new ArgumentException("Error while trying find person by Id for update");
@@ -47,5 +54,6 @@ namespace Students.Application.Services
                 throw;
             }
         }
+
     }
 }

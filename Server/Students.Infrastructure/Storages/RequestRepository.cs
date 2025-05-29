@@ -50,9 +50,13 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     public async Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId)
     {
         var student = await this._ctx.FindAsync<Student>(studentId);
+        _ctx.Entry(student).Reference(p => p.Person);
+
         if (student is null) return null;
         // TODO: надо подтянуть данные о студенте
-        var request = await this._ctx.Requests.Where(s => s.StudentId == studentId)
+        var request = await this._ctx.Requests.Where(s => s.StudentId == studentId).Include(x => x.Student)
+            .Include(x => x.Person)
+            .Include(x=>x.EducationProgram)
             .Select(x => Mapper.RequestToRequestDTO(x).Result).ToListAsync();
 
         if (student is null)

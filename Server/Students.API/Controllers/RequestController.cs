@@ -27,7 +27,45 @@ public class RequestController : GenericAPiController<Request>
     #endregion
 
     #region Методы
+    /// <summary>
+    /// Список с заявками, которые подавал студент.
+    /// </summary>
+    /// <param name="studentId">Идентификатор студента.</param>
+    /// <returns>Список заявок.</returns>
+    [HttpGet("GetListRequestsOfStudentExists")]
+    public async Task<IActionResult> GetListRequestsOfStudentExists(Guid studentId)
+    {
+        try
+        {
+            var requests = await this._requestRepository.GetListRequestsOfStudentExists(studentId);
+            return requests is null ? this.NotFoundException() : this.Ok(requests);
+        }
+        catch (Exception e)
+        {
+            this._logger.LogError(e, "Error while getting Entities");
+            return this.Exception();
+        }
+    }
 
+    /// <summary>
+    /// Список заявок с разделением по страницам.
+    /// </summary>
+    /// <returns>Состояние запроса + список заявок с разделением по страницам.</returns>
+    [HttpGet("paged")]
+    public async Task<IActionResult> ListAllPagedDTO([FromQuery] Pageable pageable, RequestFilterDTO filters)
+    {
+        try
+        {
+            var items = await this._requestRepository.GetRequestsDTOByPage(pageable.PageNumber, pageable.PageSize,
+                filters);
+            return this.Ok(items);
+        }
+        catch (Exception e)
+        {
+            this._logger.LogError(e, "Error while getting Entities");
+            return this.Exception();
+        }
+    }
     /// <summary>
     /// Получение заявки по идентификатору.
     /// </summary>
@@ -166,45 +204,6 @@ public class RequestController : GenericAPiController<Request>
         }
     }
 
-    /// <summary>
-    /// Список с заявками, которые подавал студент.
-    /// </summary>
-    /// <param name="studentId">Идентификатор студента.</param>
-    /// <returns>Список заявок.</returns>
-    [HttpGet("GetListRequestsOfStudentExists")]
-    public async Task<IActionResult> GetListRequestsOfStudentExists(Guid studentId)
-    {
-        try
-        {
-            var requests = await this._requestRepository.GetListRequestsOfStudentExists(studentId);
-            return requests is null ? this.NotFoundException() : this.Ok(requests);
-        }
-        catch (Exception e)
-        {
-            this._logger.LogError(e, "Error while getting Entities");
-            return this.Exception();
-        }
-    }
-
-    /// <summary>
-    /// Список заявок с разделением по страницам.
-    /// </summary>
-    /// <returns>Состояние запроса + список заявок с разделением по страницам.</returns>
-    [HttpGet("paged")]
-    public async Task<IActionResult> ListAllPagedDTO([FromQuery] Pageable pageable, RequestFilterDTO filters)
-    {
-        try
-        {
-            var items = await this._requestRepository.GetRequestsDTOByPage(pageable.PageNumber, pageable.PageSize,
-                filters);
-            return this.Ok(items);
-        }
-        catch (Exception e)
-        {
-            this._logger.LogError(e, "Error while getting Entities");
-            return this.Exception();
-        }
-    }
 
     #endregion
 

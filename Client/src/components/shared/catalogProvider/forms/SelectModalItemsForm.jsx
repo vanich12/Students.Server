@@ -1,11 +1,9 @@
 ﻿import React, { useEffect, useState, useMemo, useCallback } from 'react'
-import { Modal, Form, Table, Alert, Spin, Button } from "antd"
-import DropdownMenu from '../../business/baseComponents/DropdownMenu'
-import { request } from 'axios'
+import { Modal, Table, Alert } from "antd"
 
-// модальое окно для отображения в нем чьих либо данных
-
-const SelectModalItemsForm = ({ control, config, filterString,request,modalFooter, modalTitle}) => {
+// модальное окно для отображения в нем чьих либо данных
+const SelectModalItemsForm = ({ control, config, filterString,request,modalFooter, modalTitle, data, useDataHook,
+    dataHookArgs}) => {
     const {detailsLink, crud , columns , dataConverter , serverPaged } = config;
     const { useGetAllPagedAsync} = crud;
 
@@ -22,30 +20,35 @@ const SelectModalItemsForm = ({ control, config, filterString,request,modalFoote
             total: 0,
         },
     });
-    const shouldSkipQuery = !showForm || !filterString;
-    console.log(!showForm || !filterString)
+
+    // Выбираем, какой хук использовать: переданный или из config
+    const actualUseDataHook = useDataHook || useGetAllPagedAsync;
+
+    // Формируем аргументы для хука
+    const queryArgs = dataHookArgs !== undefined ? dataHookArgs : {
+        pageNumber: tableParams.pagination.current,
+        pageSize: tableParams.pagination.pageSize,
+        filterDataReq: filterString,
+    };
 
     const {
-        data: dataFromServer,
+        data: dataFromServerResponse,
         isLoading: isQueryLoading,
         isFetching: isQueryFetching,
         error: queryError,
+    } = actualUseDataHook(
+        queryArgs,
 
-    } = useGetAllPagedAsync(
-        {
-            pageNumber: tableParams.pagination.current,
-            pageSize: tableParams.pagination.pageSize,
-            filterDataReq: filterString,
-        },
-        {
-            skip: shouldSkipQuery,
-        }
     );
+
+    const dataItems = dataFromServerResponse?.data || dataFromServerResponse || [];
+    const totalItems = dataFromServerResponse?.totalCount || dataFromServerResponse?.total || dataItems.length;
+
+
     const processedEntityData = useMemo(() => {
-        console.log("[SelectModalItemsForm] Recalculating processedEntityData. Input:", dataFromServer);
-        const normalizedData = dataFromServer ? dataFromServer?.data : dataFromServer;
-        return dataConverter(normalizedData || []);
-    }, [dataFromServer, serverPaged, dataConverter]);
+        console.log("[SelectModalItemsForm] Recalculating processedEntityData. Input:", dataItems);
+        return dataConverter(dataItems || []);
+    }, [dataItems, dataConverter]);
 
     useEffect(() => {
         if (!setShowForm) {
@@ -78,8 +81,8 @@ const SelectModalItemsForm = ({ control, config, filterString,request,modalFoote
     };
 
     const rowSelectionConfig = {
-        type: 'radio', // Позволяет выбрать только одну строку
-        selectedRowKeys: selectedRowKey ? [selectedRowKey] : [], // Передаем ID текущей выбранной строки
+        type: 'radio',
+        selectedRowKeys: selectedRowKey ? [selectedRowKey] : [],
         onChange: handleRowSelectChange,
     };
     const handleTableChange = (pagination, filters, sorter) => {
@@ -140,12 +143,6 @@ const SelectModalItemsForm = ({ control, config, filterString,request,modalFoote
                         }
                         onChange={handleTableChange}
                     />
-                {/*    <DropdownMenu
-                        open={menuVisible}
-                        menuPosition={menuPosition}
-                        items={menuItems}
-                        menuClose={handleMenuClose}
-                    />*/}
                 </>
             </Modal>
         </>

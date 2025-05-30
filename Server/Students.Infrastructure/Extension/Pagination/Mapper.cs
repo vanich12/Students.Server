@@ -112,6 +112,23 @@ public static class Mapper
         };
     }
 
+    public static async Task<LearningHistoryDTO> RequestToLearningHistoryDTO(Request form)
+    {
+        var groupStudent = form.GroupStudent;
+        return new LearningHistoryDTO()
+        {
+            Id = Guid.NewGuid(),
+            EducationProgram = form.EducationProgram?.Name,
+            EducationProgramId = form.EducationProgramId,
+            StatusRequest = form.Status?.Name,
+            StatusRequestId = form.StatusRequestId,
+            GroupId = groupStudent?.Group?.Id,
+            GroupName = groupStudent?.Group?.Name,
+            GroupStartDate = groupStudent?.Group?.StartDate,
+            GroupEndDate = groupStudent?.Group?.EndDate
+        };
+    }
+
     /// <summary>
     /// Преобразование Student в DTO.
     /// </summary>

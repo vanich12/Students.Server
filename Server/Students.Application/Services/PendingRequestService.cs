@@ -116,7 +116,11 @@ namespace Students.Application.Services
                 throw;
             }
         }
-
+        /// <summary>
+        /// Поиск заявки по id
+        /// </summary>
+        /// <param name="id">id неподтвержденной заявки</param>
+        /// <returns></returns>
         public async Task<RequestsDTO?> FindById(Guid id)
         {
             try
@@ -140,7 +144,12 @@ namespace Students.Application.Services
                 throw;
             }
         }
-
+        /// <summary>
+        /// Обновление заявки
+        /// </summary>
+        /// <param name="id">id неподтвержденной заявки</param>
+        /// <param name="form"> данные с клиента</param>
+        /// <returns></returns>
         public async Task<PendingRequest> UpdatePendingRequestData(Guid id, RequestsDTO form)
         {
             try
@@ -171,7 +180,12 @@ namespace Students.Application.Services
                 throw;
             }
         }
-
+        /// <summary>
+        /// Привязка заявки к персонге
+        /// </summary>
+        /// <param name="requestId">id заявки</param>
+        /// <param name="personId">id персоны</param>
+        /// <returns></returns>
         public async Task BindRequestToPerson(Guid requestId, Guid personId)
         {
             try

@@ -27,17 +27,18 @@ public class RequestController : GenericAPiController<Request>
     #endregion
 
     #region Методы
+
     /// <summary>
     /// Список с заявками, которые подавал студент.
     /// </summary>
     /// <param name="studentId">Идентификатор студента.</param>
     /// <returns>Список заявок.</returns>
     [HttpGet("GetListRequestsOfStudentExists")]
-    public async Task<IActionResult> GetListRequestsOfStudentExists(Guid studentId)
+    public async Task<IActionResult> GetListRequestsOfStudentExists(Guid studentId, RequestFilterDTO? filters)
     {
         try
         {
-            var requests = await this._requestRepository.GetListRequestsOfStudentExists(studentId);
+            var requests = await this._requestRepository.GetListRequestsOfStudentExists(studentId, filters);
             return requests is null ? this.NotFoundException() : this.Ok(requests);
         }
         catch (Exception e)
@@ -66,6 +67,7 @@ public class RequestController : GenericAPiController<Request>
             return this.Exception();
         }
     }
+
     /// <summary>
     /// Получение заявки по идентификатору.
     /// </summary>
@@ -113,6 +115,12 @@ public class RequestController : GenericAPiController<Request>
         }
     }
 
+    /// <summary>
+    /// Создание подтверденной заявки на основе не подтвержденной
+    /// </summary>
+    /// <param name="pRequestId"></param>
+    /// <param name="personId"></param>
+    /// <returns></returns>
     [HttpPost("CreateRequestFromPendingRequest")]
     public async Task<IActionResult> CreateRequestFromPendingRequest(Guid pRequestId, Guid personId)
     {
@@ -203,7 +211,6 @@ public class RequestController : GenericAPiController<Request>
             return this.Exception();
         }
     }
-
 
     #endregion
 

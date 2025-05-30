@@ -24,7 +24,7 @@ export const studentsApi = createApi({
   reducerPath: 'students',
   keepUnusedDataFor: 5,
   baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/student` }),
-  tagTypes: ['Students', 'Student', 'GroupStudentList'], // 1. Определяем типы тегов
+  tagTypes: ['Students', 'Student', 'GroupStudentList','LearningHistory'], // 1. Определяем типы тегов
   endpoints: (builder) => ({
     getStudents: builder.query<StudentDTO[], void>({
       query: () => '',
@@ -72,6 +72,18 @@ export const studentsApi = createApi({
       query: (id) => id,
       providesTags: (result, error, id) => [{ type: 'Student', id }],
     }),
+      getLearningHistoryOfStudent: builder.query({
+          query: ({studentId,hasGroup}) => {
+              const groupRelation = hasGroup ? `&hasGroup=${hasGroup}` : "";
+              const relativeUrlString = `GetLearningHistoryOfStudent?studentId=${studentId}${groupRelation}`;
+              const requestConfig ={
+                  url: relativeUrlString,
+                  method: 'GET'
+              };
+              return requestConfig;
+          },
+          providesTags:[{type: 'LearningHistory', id:'LIST'}],
+      }),
     addStudent: builder.mutation<StudentDTO, Partial<StudentDTO>>({
       query: (student) => {
 
@@ -127,6 +139,7 @@ export const {
   useGetStudentsQuery,
   useGetStudentsPagedQuery,
   useGetStudentByIdQuery,
+    useGetLearningHistoryOfStudentQuery,
   useAddStudentMutation,
   useEditStudentMutation,
   useRemoveStudentMutation,

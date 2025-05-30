@@ -21,8 +21,9 @@ export const requestsApi = createApi({
       },
     }),
     getPersonRequestsOfStudent: builder.query({
-      query: (studentId) => {
-       const relativeUrlString = `GetListRequestsOfStudentExists?studentId=${studentId}`;
+      query: ({studentId,hasGroup}) => {
+        const groupRelation = hasGroup ? `&hasGroup=${hasGroup}` : "";
+       const relativeUrlString = `GetListRequestsOfStudentExists?studentId=${studentId}${groupRelation}`;
        const requestConfig ={
          url: relativeUrlString,
          method: 'GET'

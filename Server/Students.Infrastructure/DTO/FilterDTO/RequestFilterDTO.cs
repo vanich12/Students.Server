@@ -9,5 +9,7 @@ namespace Students.Infrastructure.DTO.FilterDTO
 
         [FromQuery(Name = "withoutGroups")]
         public bool WithoutGroups { get; set; }
+
+        [FromQuery(Name = "hasGroup")] public bool HasGroup { get; set; }
     }
 }

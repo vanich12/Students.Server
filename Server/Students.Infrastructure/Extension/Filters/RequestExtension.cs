@@ -20,7 +20,10 @@ namespace Students.Infrastructure.Extension.Filters
 
             if (filters.WithoutGroups)
                 query = query.AsNoTracking().Where(x => x.GroupStudent == null);
-   
+
+            if (filters.HasGroup)
+                query = query.AsNoTracking().Where(x => x.GroupStudent != null);
+            
 
             return query;
         }

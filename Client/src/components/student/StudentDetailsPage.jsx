@@ -87,8 +87,8 @@ const StudentDetailsPage = () => {
             />
         </Layout>
             <SelectModalItemsForm
-                useDataHook={studentHistoryConfig.crud.useGetReqByStudentId}
-                dataHookArgs={id}
+                useDataHook={config.crud.useGetLearningHistoryOfStudent}
+                dataHookArgs={{ studentId: id, hasGroup: true }}
                 config={studentHistoryConfig}
                 modalTitle = {"История обучений студента"}
                 modalFooter={modalFooter}

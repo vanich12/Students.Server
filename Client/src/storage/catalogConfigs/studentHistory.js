@@ -34,9 +34,9 @@ export default {
             key: 'groupEndDate',
         },
         {
-            title: 'Статус заявки',
-            dataIndex: 'statusRequestName',
-            key: 'statusRequestName',
+            title: 'Статус Обучения',
+            dataIndex: 'statusRequest',
+            key: 'statusRequest',
         },
     ],
     filters: [

@@ -43,28 +43,32 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     }
 
     /// <summary>
-    /// Список заявок, в которые подавал студент.
+    ///  Список заявок, в которые подавал студент.
     /// </summary>
-    /// <param name="studentId">Идентификатор студента.</param>
-    /// <returns>Список заявок.</returns>
-    public async Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId)
+    /// <param name="studentId">id студента</param>
+    /// <param name="filters">фильтры</param>
+    /// <returns></returns>
+    public async Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId,
+        RequestFilterDTO filters)
     {
         var student = await this._ctx.FindAsync<Student>(studentId);
+
         _ctx.Entry(student).Reference(p => p.Person);
 
         if (student is null) return null;
-        // TODO: надо подтянуть данные о студенте
-        var request = await this._ctx.Requests.Where(s => s.StudentId == studentId).Include(x => x.Student)
+
+        var queryableRequest = this._ctx.Requests.Where(s => s.StudentId == studentId)
+            .Include(x => x.Student)
             .Include(x => x.Person)
-            .Include(x=>x.EducationProgram)
-            .Select(x => Mapper.RequestToRequestDTO(x).Result).ToListAsync();
+            .Include(x => x.EducationProgram)
+            .Include(x => x.Status)
+            .Include(x => x.GroupStudent)
+            .ThenInclude(x => x.Group
+            ).ApplyFilters(filters);
 
-        if (student is null)
-            return null;
+        var requestDto = await queryableRequest.Select(x => Mapper.RequestToRequestDTO(x).Result).ToListAsync();
 
-        await this._ctx.Entry(student).Collection(s => s.Requests!).LoadAsync();
-
-        return request;
+        return requestDto;
     }
 
     /// <summary>
@@ -90,6 +94,33 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
         return await PagedPage<RequestsDTO>.ToPagedPage<string>(dtoQuery, page, pageSize, x => x.StudentFullName);
     }
 
+ 
+    // возможно стоит поменять на Expression для отправки предиката через IQueryable
+    public override async Task<IEnumerable<Request>> Get(Predicate<Request> predicate)
+    {
+        var itemsQuery = this._ctx.Requests.AsNoTracking();
+        itemsQuery = IncludeDetails(itemsQuery);
+        var validItems = new List<Request>();
+
+        await foreach (var item in itemsQuery.AsAsyncEnumerable())
+        {
+            if (predicate(item))
+                validItems.Add(item);
+        }
+
+        return validItems;
+    }
+    private IQueryable<Request> IncludeDetails(IQueryable<Request> query)
+    {
+        return query
+            .Include(x => x.Student)
+            .Include(x => x.Person)
+            .ThenInclude(p => p.TypeEducation) // Добавим это, т.к. часто нужно
+            .Include(x => x.EducationProgram)
+            .Include(x => x.Status)
+            .Include(x => x.GroupStudent)
+            .ThenInclude(gs => gs.Group);
+    }
     /// <summary>
     /// Поиск сущности по идентификатору.
     /// </summary>
@@ -97,13 +128,10 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     /// <returns>Сущность.</returns>
     public override async Task<Request?> FindById(Guid id)
     {
-        return await this._ctx.Requests.AsNoTracking()
-            .Include(x => x.Student)
-            .Include(p => p.Person)
-            .ThenInclude(y => y.TypeEducation)
-            .Include(x => x.EducationProgram)
-            .Include(x => x.Status)
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var query = this._ctx.Requests.AsNoTracking();
+        query = IncludeDetails(query); 
+
+        return await query.FirstOrDefaultAsync(x => x.Id == id);
     }
 
     #endregion

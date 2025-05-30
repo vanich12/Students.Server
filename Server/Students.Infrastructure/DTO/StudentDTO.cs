@@ -46,33 +46,55 @@ namespace Students.Infrastructure.DTO
     /// МестоПроживания. Адрес, по хорошему нужен либо справочник, либо формат стандарта ГОСТа Р 6.30-2003
     /// экспорт из заявки
     /// </summary>
-
     public  string? Address { get; set; }
-
+        /// <summary>
+        /// Пол
+        /// </summary>
     public SexHuman? Sex { get; set; }
-
+    /// <summary>
+    /// Возраст
+    /// </summary>
     public int? Age { get; set; }
-
+    /// <summary>
+    /// Номер телефона
+    /// </summary>
     public string? Phone { get; set; }
-
+    /// <summary>
+    /// Email
+    /// </summary>
     public string? Email { get; set; }
-
+        /// <summary>
+        /// СНИЛС
+        /// </summary>
     public string? SNILS { get; set; }
-
+        /// <summary>
+        /// Гражданство
+        /// </summary>
     public string? Nationality { get; set;}
-
+    /// <summary>
+    /// Вид образования
+    /// </summary>
     public Guid? TypeEducationId { get; set; }
-
+    /// <summary>
+    /// Специальность
+    /// </summary>
     public string? Speciality { get; set; }
-
+        /// <summary>
+        /// Опыт в It
+        /// </summary>
     public string? IT_Experience { get; set; }
 
     /// <summary>
     /// Id заявки
     /// </summary>
     public Guid? RequestId { get; set; }
-
+    /// <summary>
+    /// Сфера деятельности ур.1
+    /// </summary>
     public Guid? ScopeOfActivityLevelOneId { get; set; }
+    /// <summary>
+    /// Сфера деятельности ур.2
+    /// </summary>
     public Guid? ScopeOfActivityLevelTwoId { get; set; }
 
     /// <summary>

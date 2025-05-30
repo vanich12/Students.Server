@@ -18,12 +18,12 @@ public interface IRequestRepository : IGenericRepository<Request>
   /// <returns>Идентификатор заявки.</returns>
   Task<Guid?> AddOrderToRequest(Guid requestId, Order order);
 
-    /// <summary>
-    /// Список заявок, в которые подавал студент.
-    /// </summary>
-    /// <param name="studentId">Идентификатор студента.</param>
-    /// <returns>Список заявок.</returns>
-    Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId);
+  /// <summary>
+  /// Список заявок, в которые подавал студент.
+  /// </summary>
+  /// <param name="studentId">Идентификатор студента.</param>
+  /// <returns>Список заявок.</returns>
+  Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId, RequestFilterDTO filters);
 
   /// <summary>
   /// Пагинация заявок.

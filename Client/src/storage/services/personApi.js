@@ -72,7 +72,7 @@ export const personApi = createApi({
                 {type:'Persons', id: 'LIST' }
             ],
         }),
-        UpdatePersonBasedOnPRequest: builder.mutation({
+        updatePersonBasedOnPRequest: builder.mutation({
             query: ({ pendingRequestId, personId, formValues }) => { // Изменяем на блочную функцию
                 // Логируем объект form
                 console.log('[RTK Query] UpdatePersonBasedOnPRequest - Input form:', formValues);

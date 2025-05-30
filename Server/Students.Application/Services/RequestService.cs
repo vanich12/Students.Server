@@ -24,7 +24,8 @@ namespace Students.Application.Services
         IGenericRepository<StatusRequest> statusRequestRepository,
         IGenericRepository<EducationProgram> educationProgramRepository,
         IPendingRequestRepository pendingRequestRepository,
-        IPersonRepository personRepository, ILogger<Request> logger)
+        IPersonRepository personRepository,
+        ILogger<Request> logger)
         : GenericService<Request>(requestRepository, logger), IRequestService
     {
         /// <summary>
@@ -33,24 +34,40 @@ namespace Students.Application.Services
         /// <param name="studentId">Id студента</param>
         /// <returns></returns>
         /// <exception cref="StudentNotFoundException"></exception>
-        public async Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId)
+        public async Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId,
+            RequestFilterDTO? filter)
         {
-            var student = await studentRepository.FindById(studentId);
-            if (student is null) throw new StudentNotFoundException(studentId);
+            try
+            {
+                var student = await studentRepository.FindById(studentId);
+                if (student is null) throw new StudentNotFoundException(studentId);
 
-            var requestsEntities = await requestRepository.Get(p => p.Id == studentId);
-            if (requestsEntities == null || !requestsEntities.Any())
-                return Enumerable.Empty<RequestsDTO>();
+                var requestsEntities = await requestRepository.Get(p => p.StudentId == studentId);
+                if (requestsEntities == null || !requestsEntities.Any())
+                    return Enumerable.Empty<RequestsDTO>();
 
-            return requestsEntities.Select(entity => Mapper.RequestToRequestDTO(entity).Result).ToList();
+                return requestsEntities.Select(entity => Mapper.RequestToRequestDTO(entity).Result).ToList();
+            }
+            catch (StudentNotFoundException ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message);
+                throw;
+            }
+
         }
 
-
-        public Task BindRequestToPerson(Guid requestId, Guid personId)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Пагинация заявок для клиента
+        /// </summary>
+        /// <param name="page">номер страницы</param>
+        /// <param name="pageSize">размер страницы</param>
+        /// <param name="filters">фильтры</param>
+        /// <returns></returns>
         public async Task<PagedPage<RequestsDTO>> GetRequestsDTOByPage(int page, int pageSize, RequestFilterDTO filters)
         {
             return await requestRepository.GetRequestsDTOByPage(page, pageSize, filters);
@@ -115,7 +132,6 @@ namespace Students.Application.Services
                 logger.LogError(e.Message);
                 throw;
             }
-
         }
 
 
@@ -182,6 +198,12 @@ namespace Students.Application.Services
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="form"></param>
+        /// <returns></returns>
         public async Task UpdateRequestData(Guid id, RequestsDTO form)
         {
             try

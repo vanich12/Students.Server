@@ -46,6 +46,27 @@ public class StudentController : GenericAPiController<Student>
     }
 
     /// <summary>
+    /// Список истории обучений студента
+    /// </summary>
+    /// <param name="studentId"></param>
+    /// <param name="filters"></param>
+    /// <returns></returns>
+    [HttpGet("GetLearningHistoryOfStudent")]
+    public async Task<IActionResult> GetLearningHistoryOfStudent(Guid studentId, RequestFilterDTO? filters)
+    {
+        try
+        {
+            var items = await this._studentService.GetLearningHistoryOfStudent(studentId, filters);
+            return items is null ? this.NotFoundException() : this.Ok(items);
+        }
+        catch (Exception e)
+        {
+            this._logger.LogError(e, "Error while getting Learning history");
+            return this.Exception();
+        }
+    }
+
+    /// <summary>
     /// Получение студента по идентификатору
     /// </summary>
     /// <param name="id">Id студента</param>

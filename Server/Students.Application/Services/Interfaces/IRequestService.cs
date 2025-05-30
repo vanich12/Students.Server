@@ -25,7 +25,7 @@ namespace Students.Application.Services.Interfaces
         /// </summary>
         /// <param name="studentId">Идентификатор студента</param>
         /// <returns>Список заявок</returns>
-        Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId);
+        Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId, RequestFilterDTO? filter);
 
         /// <summary>
         /// Создание заявки 

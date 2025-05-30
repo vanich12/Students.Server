@@ -1,19 +1,31 @@
 ﻿import React from 'react';
 import { Modal, Form } from "antd";
-
-const StandartForm = ({ control, properties, crud, mutationHook, hookArgs, title}) => {
+// что-то типо формы под разные хуки мутаций
+const StandartSubmitForm = ({ control, properties, crud, mutationHook, initialHookArgs, formDataKey, title}) => {
     const { useAddOneAsync } = crud;
     const { showAddOneForm, setShowAddOneForm } = control;
-    const [ addOne, { error, isLoading } ] = useAddOneAsync();
     const [form] = Form.useForm();
 
-    const currentHook = (hook == null || undefined) ? addOne : hook;
-    const onSubmit = (formValues) => {
-        hookArgs = {id: hookArgs.id, formValues};
-        console.log(formValues);
-        currentHook(formValues);
-        setShowAddOneForm(false);
-        form.resetFields();
+    const activeMutationHook = mutationHook || crud?.useAddOneAsync;
+    const [triggerMutation, { error: mutationError, isLoading, isSuccess, reset }] = activeMutationHook();
+    const onSubmit = async (formValues) => {
+        let payload;
+        if (formDataKey) {
+            payload = {
+                ...(initialHookArgs || {}),
+                [formDataKey]: formValues
+            };
+        } else {
+            payload = { ...(initialHookArgs || {}), ...formValues };
+        }
+
+        console.log("Submitting with :", payload);
+        try {
+            await triggerMutation(payload).unwrap();
+            setShowAddOneForm(false);
+        } catch (err) {
+            console.error("Mutation failed:", err);
+        }
     };
 
     return (
@@ -61,4 +73,4 @@ const StandartForm = ({ control, properties, crud, mutationHook, hookArgs, title
     );
 };
 
-export default StandartForm;
+export default StandartSubmitForm;

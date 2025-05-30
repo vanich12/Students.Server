@@ -149,6 +149,7 @@ public static class Mapper
             Phone = student.Person?.Phone,
             Email = student.Person?.Email,
             SNILS = student.SNILS,
+            Sex = student.Person?.Sex,
             Nationality = student.Person?.Nationality,
             TypeEducationId = student.Person?.TypeEducationId,
             Speciality = student.Speciality,
@@ -165,6 +166,12 @@ public static class Mapper
             GroupStartDate = groupStudent?.Group?.StartDate,
             GroupEndDate = groupStudent?.Group?.EndDate
         };
+    }
+
+    public static async Task StudentDTOToStudent(StudentDTO form,Student student)
+    {
+        student.SNILS = form.SNILS;
+        student.Speciality = form.Speciality;
     }
 
     public static async Task<PersonDTO> PersonToPersonDTO(Person person)

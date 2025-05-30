@@ -7,6 +7,7 @@ using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
 using Students.Infrastructure.Storages;
 using Students.Models;
+using Students.Models.Enums;
 
 namespace Students.Application.Services
 {
@@ -56,6 +57,7 @@ namespace Students.Application.Services
             try
             {
                 var student = await studentRepository.FindById(studentId);
+                await Mapper.StudentDTOToStudent(form,student);
                 if (student is null)
                     throw new ArgumentException("Error while trying find student by Id for update");
 
@@ -68,6 +70,7 @@ namespace Students.Application.Services
                 person.BirthDate = form.BirthDate.Value;
                 person.IT_Experience = form.IT_Experience;
                 person.Sex = form.Sex.Value;
+                person.Nationality = form.Nationality;
 
                 if (person is null)
                     throw new ArgumentException("Error while trying find person by Id for update");

@@ -4,6 +4,7 @@ import {
     useGetPersonsPagedQuery,
     useGetPersonByIdQuery,
     useAddPersonMutation,
+    useCreateStudentBasedOnPersonMutation,
     useCreatePersonBasedOnPRequestMutation,
     useEditPersonMutation,
     useUpdatePersonBasedOnPRequestMutation,
@@ -28,6 +29,12 @@ const useGetAllPagedAsync = ({ pageNumber, pageSize, filterDataReq: queryString 
 };
 const useAddOneByPRequest = () =>{
     const [addTrigger, addResult] = useCreatePersonBasedOnPRequestMutation();
+    const { data, error, isUninitialized, isLoading, isSuccess, isError, reset } = addResult;
+
+    return [addTrigger, addResult];
+};
+const useAddOneStudentByPerson = () =>{
+    const [addTrigger, addResult] = useCreateStudentBasedOnPersonMutation();
     const { data, error, isUninitialized, isLoading, isSuccess, isError, reset } = addResult;
 
     return [addTrigger, addResult];
@@ -69,6 +76,7 @@ export {
     useGetAllPagedAsync,
     useGetPersonByIdQuery as useGetOneByIdAsync,
     useAddPersonMutation as useAddOneAsync,
+    useAddOneStudentByPerson,
     useAddOneByPRequest,
     useEditPersonMutation as useEditOneAsync,
      useEditOneByPRequest,

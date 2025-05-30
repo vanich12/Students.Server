@@ -47,6 +47,15 @@ export const personApi = createApi({
             }),
             invalidatesTags: { type: 'Persons', id: 'LIST' },
         }),
+        CreateStudentBasedOnPerson: builder.mutation({
+            query: ({ personId, form }) => ({
+                url: 'CreatePersonBasedOnPRequest',
+                method: 'POST',
+                params: { personId },
+                body: form,
+            }),
+            invalidatesTags: [{type: 'Persons', id: 'LIST'}],
+        }),
 
         CreatePersonBasedOnPRequest: builder.mutation({
             query: ({ pendingRequestId, form }) => ({
@@ -107,6 +116,7 @@ export const {
     useGetPersonsPagedQuery,
     useGetPersonByIdQuery,
     useAddPersonMutation,
+    useCreateStudentBasedOnPersonMutation,
     useCreatePersonBasedOnPRequestMutation,
     useEditPersonMutation,
     useUpdatePersonBasedOnPRequestMutation,

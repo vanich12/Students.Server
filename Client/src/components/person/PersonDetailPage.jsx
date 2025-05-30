@@ -3,6 +3,10 @@ import { Layout, Loading, DetailsPageData, RoutingWarningModal } from '../shared
 import { useParams, useBlocker } from 'react-router-dom';
 import { Row, Col, Space, Button } from 'antd';
 import config from '../../storage/catalogConfigs/person.js'
+import { useAddOneStudentByPerson } from '../../storage/crud/personsCrud'
+import studentConfig from '../../storage/catalogConfigs/students'
+import SelectModalItemsForm from '../shared/catalogProvider/forms/SelectModalItemsForm'
+import StandartSubmitForm from '../shared/catalogProvider/forms/StandartSubmitForm'
 
 const PersonDetailsPage = () => {
     const { id } = useParams();
@@ -10,12 +14,14 @@ const PersonDetailsPage = () => {
     const [initialData, setInitialData] = useState({});
     const [isChanged, setIsChanged] = useState(false);
     const [isSaveInProgress, setIsSaveInProgress] = useState(false);
+    const [showAddOneForm,setShowAddOneForm] = useState(false);
 
     const { properties, crud } = config;
-    const { useGetOneByIdAsync, useEditOneAsync } = crud;
+    const { useGetOneByIdAsync, useEditOneAsync ,useAddOneStudentByPerson} = crud;
     const { data, isLoading, isFetching, refetch } = useGetOneByIdAsync(id);
 
     const [editPerson] = useEditOneAsync();
+    const [addTrigger] = useAddOneStudentByPerson();
 
     useEffect(() => {
         if (!isLoading && !isFetching) {
@@ -47,6 +53,7 @@ const PersonDetailsPage = () => {
     return isLoading || isFetching
         ? (<Loading />)
         : (
+            <>
             <Layout title="Персональные данные персоны">
                 <h2>{personData.family} {personData?.name} {personData?.patron}</h2>
                 <DetailsPageData
@@ -63,12 +70,26 @@ const PersonDetailsPage = () => {
                     <Col>
                         <Button onClick={onCancel} disabled={isSaveInProgress}>Отмена</Button>
                     </Col>
+                    <Col>
+                        <Button onClick={() => setShowAddOneForm(true)} type='primary' style={{ marginLeft: '10px' }}>Зачислить</Button>
+                    </Col>
                 </Row>
                 <RoutingWarningModal
                     show={blocker.state === "blocked"}
                     blocker={blocker}
                 />
+
             </Layout>
+                <StandartSubmitForm
+                    config={studentConfig}
+                    crud={studentConfig.crud}
+                    control={{ showAddOneForm, setShowAddOneForm }}
+                    properties={studentConfig.properties}
+                    title={"Создание студента"}
+                    mutationHook={crud.useAddOneStudentByPerson}
+                    initialHookArgs={{personId: id}}
+                />
+            </>
         );
 };
 

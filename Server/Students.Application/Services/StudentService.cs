@@ -61,7 +61,11 @@ namespace Students.Application.Services
                 if (student is null)
                     throw new ArgumentException("Error while trying find student by Id for update");
 
+                if (student.PersonId is null)
+                    throw new ArgumentException("Error: student dont have a person");
+
                 var person = await personRepository.FindById(student.PersonId.Value);
+
                 person.Name = form.Name;
                 person.Family = form.Family;
                 person.Patron = form.Patron;
@@ -79,6 +83,7 @@ namespace Students.Application.Services
                 var newStudent = await studentRepository.Update(studentId, student);
 
                 return newStudent;
+                
             }
             catch (ArgumentException ex)
             {

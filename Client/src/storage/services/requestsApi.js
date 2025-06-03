@@ -10,6 +10,20 @@ export const requestsApi = createApi({
     getPersonRequests: builder.query({
       query: () => '',
     }),
+    getRequestToAddInGroup: builder.query({
+      query: ({ pageNumber, pageSize, filterDataReq }) => {
+        const relativeUrlString = `GetRequestToAddInGroup?page=${pageNumber}&size=${pageSize}${filterDataReq}`;
+        const requestConfig ={
+          url: relativeUrlString,
+          method: 'GET'
+        };
+        return requestConfig;
+      },
+      providesTags: (result) => result ? [
+        ...result.data.map(({ id }) => ({ type: 'Request', id })),
+        { type: 'Requests', id: 'LIST' },
+      ]: [{ type: 'Requests', id: 'LIST' }],
+    }),
     getPersonRequestsPaged: builder.query({
       query: ({ pageNumber, pageSize, filterDataReq }) => `paged?page=${pageNumber}&size=${pageSize}${filterDataReq}`,
       providesTags: (result)=>{
@@ -19,6 +33,7 @@ export const requestsApi = createApi({
 
         return [...requestTags, listTag];
       },
+
     }),
     getPersonRequestsOfStudent: builder.query({
       query: ({studentId,hasGroup}) => {
@@ -76,6 +91,7 @@ export const requestsApi = createApi({
 
 export const {
   useGetPersonRequestsQuery,
+  useGetRequestToAddInGroupQuery,
   useGetPersonRequestsPagedQuery,
   useLazyGetPersonRequestsOfStudentQuery,
     // надо правильно называть хзуки, от этого зависят их свойства (мутации, или запрос)

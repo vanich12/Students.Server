@@ -3,6 +3,7 @@ using Students.Infrastructure.Interfaces;
 using Students.Models;
 
 namespace Students.Infrastructure.Storages;
+
 // TODO: тоже нужно создать сервис для группы
 /// <summary>
 /// Репозиторий групп.
@@ -13,6 +14,7 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
 
     private readonly StudentContext _ctx;
     private readonly IGroupStudentRepository _studentInGroupRepository;
+    private readonly IRequestRepository _requestRepository;
 
     #endregion
 
@@ -30,11 +32,15 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
         if (group is null)
             return null;
 
+        // требуется проверять нет ли такого студента уже в группе у этой заявки
+
         var bagRequestsIds = new List<Guid>();
         foreach (var requestId in requestsList)
         {
-            var request = await this._ctx.Requests.FindAsync(requestId);
-
+            var request = await this._requestRepository.FindById(requestId);
+            var groupStudent = await _studentInGroupRepository.FindByStudentInGroup(groupId,request.StudentId.Value);
+            if (groupStudent is not null)
+                throw new ArgumentException("Такой студент уже есть в группе");
             if (request?.StudentId is null || request.EducationProgramId != group.EducationProgramId ||
                 await this._studentInGroupRepository.Create(request, groupId) is null)
                 bagRequestsIds.Add(requestId);
@@ -42,6 +48,7 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
 
         return bagRequestsIds;
     }
+
     /// <summary>
     /// Удаление студентпа из группы
     /// </summary>
@@ -57,7 +64,7 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
         var student = await this._ctx.Students.FindAsync(studentId);
         if (student is null)
             return null;
-        
+
         var note = await this._studentInGroupRepository.GetOne(
             x => x.GroupId == groupId && x.StudentId == student.Id);
 
@@ -96,10 +103,12 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
     /// </summary>
     /// <param name="context">Контекст базы данных.</param>
     /// <param name="studInGroupRep">Репозиторий групп студентов.</param>
-    public GroupRepository(StudentContext context, IGroupStudentRepository studInGroupRep) : base(context)
+    public GroupRepository(StudentContext context, IGroupStudentRepository studInGroupRep,
+        IRequestRepository requestRepository) : base(context)
     {
         this._ctx = context;
         this._studentInGroupRepository = studInGroupRep;
+        this._requestRepository = requestRepository;
     }
 
     #endregion

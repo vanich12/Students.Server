@@ -3,6 +3,7 @@ import { Select } from 'antd';
 import { CheckCircleFilled } from '@ant-design/icons';
 import {
     useGetAllAsync,
+    useGetRequestToAddInGroupAsync,
     useGetAllPagedAsync,
     useGetReqByStudentId,
     useEditBinding,
@@ -65,6 +66,7 @@ export default {
     properties: personRequestsModel,
     crud: {
         useGetAllAsync,
+        useGetRequestToAddInGroupAsync,
         useGetAllPagedAsync,
         useGetReqByStudentId,
         useEditBinding,

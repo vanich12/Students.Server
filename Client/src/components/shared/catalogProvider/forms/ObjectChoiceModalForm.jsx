@@ -1,13 +1,14 @@
 ﻿import React, { useEffect, useState, useMemo } from 'react';
-import { Modal, Form, Table, Alert, Input, message } from "antd"; // Добавлены Alert, Input, message
+import { Modal, Form, Table, Alert, Input, message } from "antd";
+import { useGetRequestToAddInGroupAsync } from '../../../../storage/crud/personRequestsCrud' // Добавлены Alert, Input, message
 
 const { Search } = Input; // Компонент для поиска
-
+// TODo: Время будет,надо обязательно переделать, и вообще он не нужен будет, в модалке всё можно сжедать в ModalItem
 const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => {
     const { crud: crudData, columns, dataConverter, serverPaged } = requestConfig;
     const { crud: crudGroup } = groupConfig;
 
-    const { useGetAllPagedAsync } = crudData;
+    const { useGetRequestToAddInGroupAsync } = crudData;
 
     const { useAddSubjectRangeAsync } = crudGroup;
 
@@ -29,16 +30,16 @@ const ObjectsChoiceModalForm = ({ control, requestConfig, groupConfig, id }) => 
         isLoading: isQueryLoading,
         isFetching: isQueryFetching,
         error: queryError,
-    } = useGetAllPagedAsync({
+    } = useGetRequestToAddInGroupAsync({
         pageNumber: tableParams.pagination.current,
         pageSize: tableParams.pagination.pageSize,
-        filterDataReq: `&withoutGroups=true`,
+        filterDataReq: `&groupId=${id}&notInThisGroup=true`,
     });
 
     console.log('ObjectsChoiceModalForm - State on Render:', {
-        isQueryLoading, // Первичная загрузка
-        isQueryFetching, // Идет ли фоновый запрос?
-        dataFromServer, // Какие данные сейчас?
+        isQueryLoading,
+        isQueryFetching,
+        dataFromServer,
         queryError
     });
 

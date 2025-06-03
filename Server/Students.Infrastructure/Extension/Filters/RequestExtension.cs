@@ -15,15 +15,21 @@ namespace Students.Infrastructure.Extension.Filters
         public static IQueryable<Request> ApplyFilters(this IQueryable<Request> query,
             RequestFilterDTO filters)
         {
-            if (filters.GroupId.HasValue)
-                query = query.AsNoTracking().Where(x => x.GroupStudent.GroupId == filters.GroupId);
+            if (filters.NotInThisGroup && filters.GroupId.HasValue)
+                query = query.AsNoTracking()
+                    .Where(x => x.GroupStudent.GroupId != filters.GroupId && x.StudentId != null &&
+                                x.EducationProgramId == filters.EducationProgramId);
+
+            else if (filters.GroupId.HasValue)
+                query = query.AsNoTracking()
+                    .Where(x => x.GroupStudent.GroupId == filters.GroupId);
 
             if (filters.WithoutGroups)
                 query = query.AsNoTracking().Where(x => x.GroupStudent == null);
 
-            if (filters.HasGroup)
+            else if (filters.HasGroup)
                 query = query.AsNoTracking().Where(x => x.GroupStudent != null);
-            
+
 
             return query;
         }

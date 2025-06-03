@@ -30,11 +30,11 @@ const ModalItemsPanel = ({ control, requestConfig, studentConfig,id }) => {
         },
     });
 
-    const [triggerGetRequest, requestQueryResult] = useGetReqByStudentId();
+    const [trigger, result] = useGetReqByStudentId();
 
     const processedRequestsData = useMemo(() => {
-        return requestDataConverter(requestQueryResult.data || []);
-    }, [requestQueryResult.data, requestDataConverter]);
+        return requestDataConverter(result.data || []);
+    }, [result.data, requestDataConverter]);
 
     const {
         data: studentDataFromServer,
@@ -100,14 +100,14 @@ const ModalItemsPanel = ({ control, requestConfig, studentConfig,id }) => {
     const chooseNewStudent = useCallback((student) => {
         setViewMode('requests');
         // запрос на заявки студента к серверу
-        triggerGetRequest(student.id);
-    }, [triggerGetRequest]);
+        trigger(student.id);
+    }, [trigger]);
 
     const handleBackToStudents =()=>{
         setViewMode('students');
 
-        if (requestQueryResult.reset) {
-            requestQueryResult.reset();
+        if (result.reset) {
+            result.reset();
         }
     }
 // используется при сбросе , закрытии модального окна
@@ -116,9 +116,9 @@ const ModalItemsPanel = ({ control, requestConfig, studentConfig,id }) => {
             setViewMode('students');
             setCurrentEntity(null);
             setStudentQueryString('');
-            if (requestQueryResult.reset) {
-                requestQueryResult.reset();
-            } else if (requestQueryResult.originalArgs !== undefined) {
+            if (result.reset) {
+                result.reset();
+            } else if (result.originalArgs !== undefined) {
             }
         }
     }, [showStudentInGroupForm]);
@@ -236,13 +236,13 @@ const ModalItemsPanel = ({ control, requestConfig, studentConfig,id }) => {
                 )}
             {viewMode === 'requests' && (
                 <>
-                    {requestQueryResult.isError && (
-                        <Alert message="Ошибка загрузки заявок" description={JSON.stringify(requestQueryResult.error)} type="error" showIcon style={{ marginBottom: 16 }} />
+                    {result.isError && (
+                        <Alert message="Ошибка загрузки заявок" description={JSON.stringify(result.error)} type="error" showIcon style={{ marginBottom: 16 }} />
                     )}
-                    {(requestQueryResult.isLoading || requestQueryResult.isFetching) && (
+                    {(result.isLoading || result.isFetching) && (
                         <Spin tip="Загрузка заявок..." style={{ display: 'block', textAlign: 'center', margin: '20px 0' }} />
                     )}
-                    {!requestQueryResult.isLoading && !requestQueryResult.isFetching && !requestQueryResult.isError && (
+                    {!result.isLoading && !result.isFetching && !result.isError && (
                         <Table
                             rowKey="id"
                             dataSource={processedRequestsData}

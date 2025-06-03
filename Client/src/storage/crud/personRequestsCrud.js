@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import useNotifications from '../../notifications/useNotifications.js';
 import { 
     useGetPersonRequestsQuery,
+    useGetRequestToAddInGroupQuery,
     useGetPersonRequestsPagedQuery,
     useLazyGetPersonRequestsOfStudentQuery,
     useEditBindRequestToPersonMutation,
@@ -25,6 +26,11 @@ const useGetAllPagedAsync = ({ pageNumber, pageSize, filterDataReq: queryString 
   
     return { data, isError, isSuccess, error, isLoading, isFetching, refetch };
 };
+const useGetRequestToAddInGroupAsync = ({ pageNumber, pageSize, filterDataReq: queryString }) => {
+    const { data, isError, isSuccess, error, isLoading, isFetching, refetch } = useGetRequestToAddInGroupQuery({ pageNumber, pageSize, filterDataReq: queryString });
+
+    return { data, isError, isSuccess, error, isLoading, isFetching, refetch };
+};
 
 /*const useGetReqByStudentId = ({studentId}) => {
     const { data, isError, isSuccess, error, isLoading, isFetching, refetch } = useGetPersonRequestsOfStudentQuery({ studentId });
@@ -41,14 +47,7 @@ const useGetReqByStudentId = (studentId, options) => { // (1) Принимаем
         }
     }, [studentId, trigger, options]);
 
-    return {
-        data: result.data, // или result.currentData, в зависимости от того, что вам нужно
-        isLoading: result.isLoading,
-        isFetching: result.isFetching,
-        error: result.error,
-        isSuccess: result.isSuccess,
-        isUninitialized: result.isUninitialized,
-    };
+    return [trigger,result];
 };
 
 const useEditBinding = () => {
@@ -104,6 +103,7 @@ const useEditOneAsync = () => {
 
 export {
     useGetPersonRequestsQuery as useGetAllAsync,
+    useGetRequestToAddInGroupAsync,
     useGetPersonRequestsPagedQuery as useGetAllPagedAsync,
     useGetReqByStudentId,
     useEditBinding,

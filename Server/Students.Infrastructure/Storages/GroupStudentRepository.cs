@@ -22,6 +22,12 @@ public class GroupStudentRepository : GenericRepository<GroupStudent>, IGroupStu
     {
         return await this._ctx.GroupStudent.Include(s => s.Student).ToListAsync();
     }
+    // TODO вынести в сервисы и проверять на ошибки
+    public async Task<GroupStudent> FindByStudentInGroup(Guid groupId, Guid studentId)
+    {
+        var item = await this._ctx.GroupStudent.FirstOrDefaultAsync(x => x.GroupId == groupId && x.StudentId == studentId);
+        return item;
+    }
 
     /// <summary>
     /// Добавление студента по заявке в группу.
@@ -32,7 +38,6 @@ public class GroupStudentRepository : GenericRepository<GroupStudent>, IGroupStu
     public async Task<GroupStudent?> Create(Request request, Guid groupId)
     {
         //делает именно яв­ную под­груз­ку навигационного свойства Student у уже отслеживаемого объекта
-        await this._ctx.Entry(request).Reference(r => r.Student).LoadAsync();
         if (request.Student is null)
             return null;
 

@@ -9,7 +9,6 @@ import {
   useRemoveGroupMutation,
 } from '../services/groupsApi.js';
 
-// --- ПРАВИЛЬНАЯ ОБЕРТКА ---
 const useAddSubjectRangeAsync = () => {
   // 1. Вызываем оригинальный хук БЕЗ аргументов данных
   const [trigger, result] = useAddStudentInGroupMutation();
@@ -22,7 +21,6 @@ const useAddSubjectRangeAsync = () => {
 
 const useRemoveSubjectRangeAsync = () => {
   // 1. Вызываем оригинальный хук БЕЗ аргументов данных
-
   const [trigger, result] = useRemoveStudentFromGroupMutation();
 
   // 2. Возвращаем полученный массив [функцияЗапуска, объектРезультата]

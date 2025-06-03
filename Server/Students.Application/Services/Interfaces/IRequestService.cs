@@ -27,6 +27,9 @@ namespace Students.Application.Services.Interfaces
         /// <returns>Список заявок</returns>
         Task<IEnumerable<RequestsDTO>?> GetListRequestsOfStudentExists(Guid studentId, RequestFilterDTO? filter);
 
+        Task<PagedPage<RequestsDTO>> GetRequestToAddInGroup(int page, int pageSize,
+            RequestFilterDTO filters);
+
         /// <summary>
         /// Создание заявки 
         /// </summary>

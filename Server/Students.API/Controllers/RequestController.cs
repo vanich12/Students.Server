@@ -52,6 +52,22 @@ public class RequestController : GenericAPiController<Request>
     /// Список заявок с разделением по страницам.
     /// </summary>
     /// <returns>Состояние запроса + список заявок с разделением по страницам.</returns>
+    [HttpGet("GetRequestToAddInGroup")]
+    public async Task<IActionResult> GetRequestToAddInGroup([FromQuery] Pageable pageable, RequestFilterDTO filters)
+    {
+        try
+        {
+            var items = await this._requestService.GetRequestToAddInGroup(pageable.PageNumber, pageable.PageSize,
+                filters);
+            return this.Ok(items);
+        }
+        catch (Exception e)
+        {
+            this._logger.LogError(e, "Error while getting Entities");
+            return this.Exception();
+        }
+    }
+
     [HttpGet("paged")]
     public async Task<IActionResult> ListAllPagedDTO([FromQuery] Pageable pageable, RequestFilterDTO filters)
     {
@@ -67,6 +83,8 @@ public class RequestController : GenericAPiController<Request>
             return this.Exception();
         }
     }
+
+
 
     /// <summary>
     /// Получение заявки по идентификатору.

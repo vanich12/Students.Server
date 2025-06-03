@@ -16,12 +16,11 @@ namespace Students.Infrastructure.Extension.Filters
             if (filters == null)
                 return query;
 
-
             if (filters.BirthDate.HasValue)
                 query = query.AsNoTracking().Where(s => s.Person.BirthDate == filters.BirthDate.Value);
 
             if (filters.ProgramEducationId.HasValue)
-                query = query.AsNoTracking().Where(s =>
+                query = query.AsNoTracking().Where(s => 
                     s.Groups.Any(x => x.EducationProgramId == filters.ProgramEducationId));
 
             if (filters.GroupId.HasValue)

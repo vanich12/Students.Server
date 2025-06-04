@@ -25,6 +25,7 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
     /// <returns>Приказы.</returns>
     public async Task<IEnumerable<OrderDTO>> GetListOrdersWithStudentAsync()
     {
+        // TODO: переделать, вынести в маппер маппинг, сделать пагинацию
         var orders = await _context.Orders
             .Include(k => k.KindOrder)
             .Include(r => r.Request)

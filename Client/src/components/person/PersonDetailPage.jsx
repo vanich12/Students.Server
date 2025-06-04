@@ -3,9 +3,8 @@ import { Layout, Loading, DetailsPageData, RoutingWarningModal } from '../shared
 import { useParams, useBlocker } from 'react-router-dom';
 import { Row, Col, Space, Button } from 'antd';
 import config from '../../storage/catalogConfigs/person.js'
-import { useAddOneStudentByPerson } from '../../storage/crud/personsCrud'
 import studentConfig from '../../storage/catalogConfigs/students'
-import SelectModalItemsForm from '../shared/catalogProvider/forms/SelectModalItemsForm'
+import enrollConfig from '../../storage/catalogConfigs/enrollingPerson'
 import StandartSubmitForm from '../shared/catalogProvider/forms/StandartSubmitForm'
 
 const PersonDetailsPage = () => {
@@ -84,7 +83,7 @@ const PersonDetailsPage = () => {
                     config={studentConfig}
                     crud={studentConfig.crud}
                     control={{ showAddOneForm, setShowAddOneForm }}
-                    properties={studentConfig.properties}
+                    properties={enrollConfig.properties}
                     title={"Создание студента"}
                     mutationHook={crud.useAddOneStudentByPerson}
                     initialHookArgs={{personId: id}}

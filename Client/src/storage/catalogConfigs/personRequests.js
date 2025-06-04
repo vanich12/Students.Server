@@ -117,7 +117,7 @@ export default {
         },
         {
             title: 'Обучающийся',
-            key: 'trined',
+            key: 'trained',
             render: (_, { trained }) => {
                 return trained && (<CheckCircleFilled style={{ color: "#52c41a" }}/>);
             },

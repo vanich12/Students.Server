@@ -8,6 +8,7 @@ import kindOrderModel from './kindOrder.js';
 import personRequestsModel from './personRequests.js';
 import pendingRequestsModel from './pendingRequests.js';
 import requestStatusModel from './requestStatus.js';
+import specificStudentsModel from './specificStudents.js';
 import scopeOfActivityModel from './scopeOfActivity.js';
 import studentsModel from './students.ts';
 import personModel from './person.js';
@@ -27,9 +28,10 @@ export {
     personRequestsModel,
     requestStatusModel,
     scopeOfActivityModel,
+    specificStudentsModel,
     studentsModel,
     personModel,
     studentStatusModel,
     typeEducationModel,
-    orderModel
+    orderModel,
 };

@@ -3,6 +3,7 @@ import Date from '../../components/shared/business/common/Date.jsx';
 import KindOrderSelect from '../../components/shared/business/selects/KindOrderSelect.jsx'
 import StudentsSelect from '../../components/shared/business/selects/StudentsSelect.jsx'
 import GroupSelect from '../../components/shared/business/selects/GroupSelector.jsx'
+import CumulativelistSelector from '../../components/shared/business/selects/CumulativelistSelector'
 const model = {
     name: { 
         name: 'Номер приказа',
@@ -22,7 +23,7 @@ const model = {
     },
     student: { 
         name: 'Обучающийся', 
-        type: StudentsSelect,
+        type: CumulativelistSelector,
     },
   
 };

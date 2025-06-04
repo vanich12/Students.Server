@@ -26,6 +26,10 @@ namespace Students.Infrastructure.DTO
     /// Вид приказа.
     /// </summary>
     public string? KindOrderName { get; set; }
+    /// <summary>
+    /// заявки в приказе
+    /// </summary>
+    public IEnumerable<Guid> RequestId { get; set; }
 
     /// <summary>
     /// Группы.

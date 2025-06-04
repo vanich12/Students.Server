@@ -7,7 +7,7 @@
     useEditOneAsync,
     useRemoveOneAsync,
 } from '../crud/studentsCrud.js';
-import { studentsModel } from '../models/index.js';
+import { specificStudentsModel } from '../models/index.js';
 import BirthDate from '../../components/shared/business/BirthDate.jsx';
 import EducationProgramSelect from '../../components/shared/business/selects/EducationProgramSelect'
 import DateFilter from '../../components/shared/catalogProvider/filters/DateFilter.tsx'
@@ -16,7 +16,7 @@ export default {
     detailsLink: 'student',
     hasDetailsPage: true,
     serverPaged: true,
-    properties: studentsModel,
+    properties: specificStudentsModel,
     crud: {
         useGetAllAsync,
         useGetAllPagedAsync,

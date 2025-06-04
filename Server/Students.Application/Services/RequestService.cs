@@ -95,9 +95,6 @@ namespace Students.Application.Services
             return await requestRepository.GetRequestsDTOByPage(page, pageSize, filters);
         }
 
-        #region PendingRequest
-
-        #endregion
 
 
         public async Task<Guid?> AddOrderToRequest(Guid requestId, Order order)

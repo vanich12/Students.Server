@@ -48,6 +48,20 @@ public class RequestController : GenericAPiController<Request>
         }
     }
 
+    public override async Task<IActionResult> ListAll()
+    {
+        try
+        {
+            var requests = await _requestRepository.GetAllReqDTO();
+            return requests is null ? this.NotFoundException() : this.Ok(requests);
+        }
+        catch (Exception e)
+        {
+            this._logger.LogError(e, "Error while getting Entities");
+            return this.Exception();
+        }
+    }
+
     /// <summary>
     /// Список заявок с разделением по страницам.
     /// </summary>
@@ -242,9 +256,9 @@ public class RequestController : GenericAPiController<Request>
     /// <param name="requestRepository">Репозиторий заявок (как будто лучше использовать этот параметр вместо двух???).</param>
     /// <param name="statusRequestRepository">Репозиторий состояний заявок.</param>
     /// <param name="studentRepository">Репозиторий студентов).</param>
-    public RequestController(IGenericRepository<Request> repository, ILogger<Request> logger,
+    public RequestController( ILogger<Request> logger,
         IRequestRepository requestRepository,
-        IRequestService requestService) : base(repository, logger)
+        IRequestService requestService) : base(requestRepository, logger)
     {
         this._requestRepository = requestRepository;
         this._requestService = requestService;

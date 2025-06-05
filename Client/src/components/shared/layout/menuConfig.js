@@ -41,7 +41,7 @@ const useMenuConfig = () => {
         { type: 'divider' },
         {
             key: '/persons',
-            label: 'Подававшие заявки',
+            label: 'Кандидаты',
             onClick: () => {navigate('/persons')},
         },
         {

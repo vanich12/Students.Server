@@ -4,6 +4,7 @@ import KindOrderSelect from '../../components/shared/business/selects/KindOrderS
 import StudentsSelect from '../../components/shared/business/selects/StudentsSelect.jsx'
 import GroupSelect from '../../components/shared/business/selects/GroupSelector.jsx'
 import CumulativelistSelector from '../../components/shared/business/selects/CumulativelistSelector'
+import RequestSelectWithSearch from '../../components/shared/business/selects/RequestSelectWithSearch'
 const model = {
     name: { 
         name: 'Номер приказа',
@@ -22,8 +23,8 @@ const model = {
         type: GroupSelect,
     },
     student: { 
-        name: 'Обучающийся', 
-        type: CumulativelistSelector,
+        name: 'Заявка',
+        type: RequestSelectWithSearch,
     },
   
 };

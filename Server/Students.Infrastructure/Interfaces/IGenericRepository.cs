@@ -24,7 +24,7 @@ public interface IGenericRepository<TEntity> where TEntity : class
   /// Список объектов.
   /// </summary>
   /// <returns>Список объектов.</returns>
-  Task<IEnumerable<TEntity>> Get();
+  Task<IEnumerable<TEntity>> GetAll();
 
   /// <summary>
   /// Список объектов, с указанным условием.

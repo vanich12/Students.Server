@@ -40,8 +40,12 @@ const DefaultConflictResolveForm = ({currentValue, newValue,handleRadioChange, d
     </>)
 }
 
-const DefaultEditFormComponent = ({ onChange, placeholder, formParams, dataById, allData }) => {
-    const { key, labelKey } = formParams;
+const DefaultEditFormComponent = ({ onChange, placeholder, formParams, dataById, allData, options }) => {
+    const { key, labelKey,optionRender } = formParams;
+    const currentOptions = options ?? (allData || []).map((d) => ({
+        value: d.id,
+        label: d[labelKey],
+    }));
     return (
         <Select
             key={key}
@@ -53,10 +57,8 @@ const DefaultEditFormComponent = ({ onChange, placeholder, formParams, dataById,
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
             }
             onChange={onChange}
-            options={(allData || []).map((d) => ({
-                value: d.id,
-                label: d[labelKey],
-            }))}
+            options={currentOptions}
+            optionRender={optionRender}
         />
     );
 };

@@ -32,4 +32,6 @@ public interface IRequestRepository : IGenericRepository<Request>
   /// <param name="pageSize">Размер страницы.</param>
   /// <returns>Пагинированные DTO заявок.</returns>
   Task<PagedPage<RequestsDTO>> GetRequestsDTOByPage(int page, int pageSize, RequestFilterDTO filters);
+
+  Task<IEnumerable<RequestsDTO>> GetAllReqDTO();
 }

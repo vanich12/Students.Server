@@ -30,7 +30,7 @@ public abstract class GenericAPiController<TEntity> : ControllerBase where TEnti
     {
         try
         {
-            return this.Ok(await this._rep.Get());
+            return this.Ok(await this._rep.GetAll());
         }
         catch (Exception e)
         {

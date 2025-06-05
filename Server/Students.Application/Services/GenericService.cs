@@ -24,7 +24,7 @@ namespace Students.Application.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public async Task<TEntity> Create(TEntity item)
+        public virtual async Task<TEntity> Create(TEntity item)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Students.Application.Services
         {
             try
             {
-                return await repository.Get();
+                return await repository.GetAll();
             }
             catch (Exception e)
             {

@@ -35,8 +35,8 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
   /// <returns>Список данных.</returns>
   public async Task<List<FRDOModel>> Get()
   {
-    var listStudents = await _studentRepository.Get();
-    var typeEducationList = await _typeEducationRepository.Get();
+    var listStudents = await _studentRepository.GetAll();
+    var typeEducationList = await _typeEducationRepository.GetAll();
     return (from student in listStudents
       let typeEducation = typeEducationList.FirstOrDefault(x => x.Id == student.Person.TypeEducationId)
       select new FRDOModel

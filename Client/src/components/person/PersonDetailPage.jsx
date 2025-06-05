@@ -53,7 +53,7 @@ const PersonDetailsPage = () => {
         ? (<Loading />)
         : (
             <>
-            <Layout title="Персональные данные персоны">
+            <Layout title="Данные кандидата">
                 <h2>{personData.family} {personData?.name} {personData?.patron}</h2>
                 <DetailsPageData
                     items={properties}
@@ -70,7 +70,7 @@ const PersonDetailsPage = () => {
                         <Button onClick={onCancel} disabled={isSaveInProgress}>Отмена</Button>
                     </Col>
                     <Col>
-                        <Button onClick={() => setShowAddOneForm(true)} type='primary' style={{ marginLeft: '10px' }}>Зачислить</Button>
+                        <Button onClick={() => setShowAddOneForm(true)} type='primary' style={{ marginLeft: '10px' }}>Дополнить данные</Button>
                     </Col>
                 </Row>
                 <RoutingWarningModal

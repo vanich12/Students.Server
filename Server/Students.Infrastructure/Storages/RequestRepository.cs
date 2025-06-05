@@ -24,6 +24,26 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
 
     #region Методы
 
+    public override async Task<IEnumerable<Request>> GetAll()
+    {
+        var items = await this._ctx.Requests.AsNoTracking().Include(x => x.Person).ToListAsync();
+        return items;
+    }
+
+    public async Task<IEnumerable<RequestsDTO>> GetAllReqDTO()
+    {
+        var query = this._ctx.Requests.AsNoTracking();
+        query = IncludeDetails(query);
+
+        var requests = await query.ToListAsync();
+
+        var dtoTasks = requests.Select(request => Mapper.RequestToRequestDTO(request));
+
+        var dtos = await Task.WhenAll(dtoTasks);
+
+        return dtos;
+    }
+
     /// <summary>
     /// Добавление приказа в заявку.
     /// </summary>
@@ -94,7 +114,7 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
         return await PagedPage<RequestsDTO>.ToPagedPage<string>(dtoQuery, page, pageSize, x => x.StudentFullName);
     }
 
- 
+
     // возможно стоит поменять на Expression для отправки предиката через IQueryable
     public override async Task<IEnumerable<Request>> Get(Predicate<Request> predicate)
     {
@@ -110,6 +130,7 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
 
         return validItems;
     }
+
     private IQueryable<Request> IncludeDetails(IQueryable<Request> query)
     {
         return query
@@ -121,6 +142,7 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
             .Include(x => x.GroupStudent)
             .ThenInclude(gs => gs.Group);
     }
+
     /// <summary>
     /// Поиск сущности по идентификатору.
     /// </summary>
@@ -129,7 +151,7 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     public override async Task<Request?> FindById(Guid id)
     {
         var query = this._ctx.Requests.AsNoTracking();
-        query = IncludeDetails(query); 
+        query = IncludeDetails(query);
 
         return await query.FirstOrDefaultAsync(x => x.Id == id);
     }

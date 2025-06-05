@@ -8,7 +8,7 @@ import { Flex } from 'antd'
 const StudentsPage = () => {
 
     return (
-        <Layout title="Студенты">
+        <Layout title="Обучающиеся / Обучавшиеся">
             <EntityTable config={config} />
         </Layout>
     );

@@ -78,7 +78,7 @@ const StudentDetailsPage = () => {
                     <Button onClick={onCancel} disabled={isSaveInProgress}>Отмена</Button>
                 </Col>
                 <Col>
-                    <Button disabled={isSaveInProgress} onClick={()=>setShowModal(true)} style={{ marginLeft: '10px' }} type="primary">История обучения</Button>
+                    <Button disabled={isSaveInProgress} onClick={()=>setShowModal(true)} style={{ marginLeft: '10px' }} type="primary">История обучений</Button>
                 </Col>
             </Row>
             <RoutingWarningModal

@@ -8,7 +8,7 @@ import { Flex } from 'antd'
 const PersonsPage = () => {
 
     return (
-        <Layout title="Подававшие заявки">
+        <Layout title="Кандидаты">
             <EntityTable config={config} />
         </Layout>
     );

@@ -52,8 +52,8 @@ namespace Students.Infrastructure.Extension.Filters
 
             if (filters.Patron is not null)
                 query = query.Where(p => p.Patron == filters.Patron);
-
-
+            // то есть отображаем только тех у кого нет связи со студентом, то есть кандидат еще не студент
+            query = query.Where(x => x.Student == null);
             return query;
         }
     }

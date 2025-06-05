@@ -23,7 +23,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     /// Получение списка сущностей с загрузкой из базы данных.
     /// </summary>
     /// <returns>Список сущностей с загрузкой из базы данных.</returns>
-    public virtual async Task<IEnumerable<TEntity>> Get()
+    public virtual async Task<IEnumerable<TEntity>> GetAll()
     {
         return await this._dbSet.AsNoTracking().ToListAsync();
     }
@@ -50,6 +50,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     /// </summary>
     /// <param name="predicate">Функция, по условию которой производится отбор данных из БД.</param>
     /// <returns>Сущность.</returns>
+    /// ПЕРЕДЕЛАТЬ на EXPRession
     public async Task<TEntity?> GetOne(Predicate<TEntity> predicate)
     {
         await foreach (var item in this._dbSet.AsAsyncEnumerable())

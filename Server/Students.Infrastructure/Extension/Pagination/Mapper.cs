@@ -28,7 +28,8 @@ public static class Mapper
             Id = Guid.NewGuid(),
             Email = form.Email,
             Phone = form.Phone,
-            EducationProgramId = (await educationProgramRepository.GetOne(x => x.Name?.ToLower() == form.Education))?.Id,
+            EducationProgramId =
+                (await educationProgramRepository.GetOne(x => x.Name?.ToLower() == form.Education))?.Id,
             StatusRequestId = (await statusRequestRepository.GetOne(x => x.Name?.ToLower() == "новая заявка"))?.Id,
             Agreement = Convert.ToBoolean(Convert.ToInt32(form.Agreement))
         };
@@ -276,7 +277,8 @@ public static class Mapper
             patron = form.Patron,
             EducationProgram = form.Education,
             EducationLevel = form.EducationLevel,
-            EducationProgramId = (await educationProgramRepository.GetOne(x => x.Name?.ToLower() == form.Education))?.Id,
+            EducationProgramId =
+                (await educationProgramRepository.GetOne(x => x.Name?.ToLower() == form.Education))?.Id,
             IT_Experience = form.IT_Experience,
             BirthDate = DateOnly.FromDateTime(Convert.ToDateTime(form.Birthday)),
             Address = form.Address,
@@ -394,6 +396,16 @@ public static class Mapper
             //Ебать-кололить
             ScopeOfActivityLevelOneId = Guid.Parse("a5e1e718-4747-47f4-b7c3-08e56bb7ea34"),
             //Speciality = form.speciality
+        };
+    }
+
+    public static Order OrderDTOToOrder(OrderDTO form)
+    {
+        return new Order
+        {
+            Date = DateTime.Now,
+            KindOrderId = form.KindOrderId!.Value,
+            RequestId = form.RequestId,
         };
     }
 }

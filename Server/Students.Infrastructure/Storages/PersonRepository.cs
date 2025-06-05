@@ -20,6 +20,7 @@ namespace Students.Infrastructure.Storages
 
         public async Task<PagedPage<PersonDTO>> GetStudentsByPage(int page, int pageSize, PersonFilterDTO filters)
         {
+
             IQueryable<Person> personQuery = this._ctx.Persons;
             var filteredItems = personQuery.ApplyFilters(filters);
             var dtoQuery = filteredItems.Select(x => Mapper.PersonToPersonDTO(x).Result);

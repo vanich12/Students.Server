@@ -18,7 +18,7 @@ public class GroupStudentRepository : GenericRepository<GroupStudent>, IGroupStu
 
     #region
 
-    public override async Task<IEnumerable<GroupStudent>> Get()
+    public override async Task<IEnumerable<GroupStudent>> GetAll()
     {
         return await this._ctx.GroupStudent.Include(s => s.Student).ToListAsync();
     }

@@ -20,6 +20,7 @@ export const ordersApi = createApi({
     addOrder: builder.mutation({
       query: (item) => ({
         method: 'POST',
+        url:'PostDTO',
         body: item,
       }),
       invalidatesTags: ['Orders'],

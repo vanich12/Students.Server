@@ -61,20 +61,21 @@ namespace Students.Application.Services
             }
         }
 
-        public async Task<PagedPage<RequestsDTO>> GetRequestToAddInGroup(int page, int pageSize, 
+        public async Task<PagedPage<RequestsDTO>> GetRequestToAddInGroup(int page, int pageSize,
             RequestFilterDTO filters)
         {
             try
             {
                 var groupId = filters.GroupId;
                 if (groupId is null)
-                    throw new ArgumentException("Error: filter dont have GroupId, while we trying execute GetRequestToAddInGroup method in service");
-                
+                    throw new ArgumentException(
+                        "Error: filter dont have GroupId, while we trying execute GetRequestToAddInGroup method in service");
+
                 var group = await groupRepository.FindById(groupId.Value);
                 filters.EducationProgramId = group?.EducationProgramId;
-               var items =  await this.GetRequestsDTOByPage(page, pageSize, filters);
+                var items = await this.GetRequestsDTOByPage(page, pageSize, filters);
 
-               return items;
+                return items;
             }
             catch (Exception e)
             {
@@ -94,7 +95,6 @@ namespace Students.Application.Services
         {
             return await requestRepository.GetRequestsDTOByPage(page, pageSize, filters);
         }
-
 
 
         public async Task<Guid?> AddOrderToRequest(Guid requestId, Order order)
@@ -182,14 +182,16 @@ namespace Students.Application.Services
                     if (matchingStudentsList is null || !matchingStudentsList.Any())
                     {
                         var requestStatus =
-                            await statusRequestRepository.GetOne(x => x.Name?.ToLower() == "требует создание персоны");
+                            await statusRequestRepository.GetOne(x =>
+                                x.Name != null && x.Name.ToLower() == "требует создание персоны");
                         request.Status = requestStatus;
                         await requestRepository.Create(request);
                         return;
                     }
 
                     var requestStatus2 =
-                        await statusRequestRepository.GetOne(x => x.Name?.ToLower() == "ожидает подтверждения");
+                        await statusRequestRepository.GetOne(x =>
+                            x.Name != null && x.Name.ToLower() == "ожидает подтверждения");
                     request.Status = requestStatus2;
                     await requestRepository.Create(request);
                 }
@@ -198,7 +200,8 @@ namespace Students.Application.Services
                     // если совпадение точное
                     request.IsAlreadyStudied = true;
                     request.PersonId = person.Id;
-                    var statusMatched = await statusRequestRepository.GetOne(x => x.Name?.ToLower() == "новая заявка");
+                    var statusMatched =
+                        await statusRequestRepository.GetOne(x => x.Name != null && x.Name.ToLower() == "новая заявка");
                     request.Status = statusMatched;
                     var newPerson = await Mapper.NewRequestDTOToPerson(form);
 

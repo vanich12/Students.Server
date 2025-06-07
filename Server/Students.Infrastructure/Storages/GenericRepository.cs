@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Students.DBCore.Contexts;
 using Students.Infrastructure.Interfaces;
 
@@ -33,14 +34,9 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     /// </summary>
     /// <param name="predicate">Функция, по условию которой производится отбор данных из БД.</param>
     /// <returns>Список сущностей.</returns>
-    public virtual async Task<IEnumerable<TEntity>> Get(Predicate<TEntity> predicate)
+    public virtual async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> predicate)
     {
-        var items = new List<TEntity>();
-        await foreach (var item in this._dbSet.AsNoTracking().AsAsyncEnumerable())
-        {
-            if (predicate(item))
-                items.Add(item);
-        }
+        var items = await this._dbSet.AsNoTracking().Where(predicate).ToListAsync();
 
         return items;
     }
@@ -50,17 +46,13 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     /// </summary>
     /// <param name="predicate">Функция, по условию которой производится отбор данных из БД.</param>
     /// <returns>Сущность.</returns>
-    /// ПЕРЕДЕЛАТЬ на EXPRession
-    public async Task<TEntity?> GetOne(Predicate<TEntity> predicate)
+    public async Task<TEntity?> GetOne(Expression<Func<TEntity, bool>> predicate)
     {
-        await foreach (var item in this._dbSet.AsAsyncEnumerable())
-        {
-            if (predicate(item))
-                return item;
-        }
+        var correctItem = await this._dbSet.FirstOrDefaultAsync(predicate);
 
-        return null;
+        return correctItem;
     }
+
 
     /// <summary>
     /// Поиск сущности по идентификатору.
@@ -101,6 +93,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         await this._context.SaveChangesAsync();
         return item;
     }
+
     /// <summary>
     /// Частичное обновление сущности
     /// </summary>
@@ -123,8 +116,8 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
             object newValue = property.GetValue(item);
 
             if (oldItemProperty.Name.Equals("Id", StringComparison.OrdinalIgnoreCase))
-                continue; 
-            
+                continue;
+
             if (!object.Equals(oldValue, newValue))
                 oldItemProperty.SetValue(oldItem, newValue);
         }

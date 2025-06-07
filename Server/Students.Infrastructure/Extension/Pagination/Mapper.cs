@@ -29,8 +29,10 @@ public static class Mapper
             Email = form.Email,
             Phone = form.Phone,
             EducationProgramId =
-                (await educationProgramRepository.GetOne(x => x.Name?.ToLower() == form.Education))?.Id,
-            StatusRequestId = (await statusRequestRepository.GetOne(x => x.Name?.ToLower() == "новая заявка"))?.Id,
+                (await educationProgramRepository.GetOne(x => x.Name != null && x.Name.ToLower() == form.Education))
+                ?.Id,
+            StatusRequestId =
+                (await statusRequestRepository.GetOne(x => x.Name != null && x.Name.ToLower() == "новая заявка"))?.Id,
             Agreement = Convert.ToBoolean(Convert.ToInt32(form.Agreement))
         };
     }
@@ -62,7 +64,7 @@ public static class Mapper
             IT_Experience = form.IT_Experience,
             Email = form.Email,
             Phone = form.Phone,
-            TypeEducationId = (await typeEducationRepository.GetOne(x => x.Name?.ToLower() == form.EducationLevel))?.Id,
+            TypeEducationId = (await typeEducationRepository.GetOne(x => x.Name.ToLower() == form.EducationLevel))?.Id,
             ScopeOfActivityLevelOneId =
                 (await scopeOfActivityRepository.GetOne(x => x.Id == Guid.Parse(form.ScopeOfActivityLevelOneId!)))!.Id,
             ScopeOfActivityLevelTwoId =
@@ -109,7 +111,10 @@ public static class Mapper
             ScopeOfActivityLevelOneId = form.Person?.ScopeOfActivityLevelOneId,
             ScopeOfActivityLevelTwoId = form.Person?.ScopeOfActivityLevelTwoId,
             agreement = form.Agreement,
-            trained = form.Orders != null && form.Orders!.Any(x => x.KindOrder?.Name?.ToLower() == "о зачислении")
+            trained =
+                form.Orders != null &&
+                form.Orders.Any(x => x.KindOrder?.Name?.ToLower() == "о зачислении") && 
+                !form.Orders.Any(x => x.KindOrder?.Name?.ToLower() == "об отчислении")
         };
     }
 
@@ -243,7 +248,8 @@ public static class Mapper
             //StudentId = requestDTO.StudentId,
             EducationProgramId = form.educationProgramId,
             //DocumentRiseQualificationId = requestDTO.
-            StatusRequestId = (await _statusRequestRepository.GetOne(x => x.Name?.ToLower() == "новая заявка"))?.Id,
+            StatusRequestId =
+                (await _statusRequestRepository.GetOne(x => x.Name != null && x.Name.ToLower() == "новая заявка"))?.Id,
             StatusEntrancExams = (StatusEntrancExams)form.statusEntrancExams,
             Email = form.email,
             Phone = form.phone,
@@ -278,7 +284,8 @@ public static class Mapper
             EducationProgram = form.Education,
             EducationLevel = form.EducationLevel,
             EducationProgramId =
-                (await educationProgramRepository.GetOne(x => x.Name?.ToLower() == form.Education))?.Id,
+                (await educationProgramRepository.GetOne(x => x.Name != null && x.Name.ToLower() == form.Education))
+                ?.Id,
             IT_Experience = form.IT_Experience,
             BirthDate = DateOnly.FromDateTime(Convert.ToDateTime(form.Birthday)),
             Address = form.Address,
@@ -286,7 +293,7 @@ public static class Mapper
             Email = form.Email,
             ScopeOfActivityLevelOneId = scopeActivityFirstLevelId,
             ScopeOfActivityLevelTwoId = scopeActivitySecondLevelId,
-            TypeEducationId = (await typeEducationRepository.GetOne(x => x.Name?.ToLower() == form.EducationLevel))?.Id,
+            TypeEducationId = (await typeEducationRepository.GetOne(x => x.Name.ToLower() == form.EducationLevel))?.Id,
             agreement = form.Agreement,
             IsArchive = form.IsArchive
         };
@@ -324,8 +331,10 @@ public static class Mapper
             Phone = form.Phone,
             Agreement = Convert.ToBoolean(form.Agreement),
             EducationProgramId =
-                (await educationProgramRepository.GetOne(x => x.Name?.ToLower() == form.Education))?.Id,
-            StatusRequestId = (await statusRequestRepository.GetOne(x => x.Name?.ToLower() == "новая заявка"))?.Id,
+                (await educationProgramRepository.GetOne(x => x.Name != null && x.Name.ToLower() == form.Education))
+                ?.Id,
+            StatusRequestId =
+                (await statusRequestRepository.GetOne(x => x.Name != null && x.Name.ToLower() == "новая заявка"))?.Id,
         };
     }
 

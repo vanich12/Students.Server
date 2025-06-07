@@ -45,7 +45,9 @@ const DefaultEditFormComponent = ({ onChange, placeholder, formParams, dataById,
     const currentOptions = options ?? (allData || []).map((d) => ({
         value: d.id,
         label: d[labelKey],
+        searchLabel: d[labelKey]
     }));
+
     return (
         <Select
             key={key}
@@ -54,7 +56,7 @@ const DefaultEditFormComponent = ({ onChange, placeholder, formParams, dataById,
             style={{ minWidth: '200px' }}
             placeholder={placeholder}
             filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                (option?.searchLabel ?? '').toLowerCase().includes(input.toLowerCase())
             }
             onChange={onChange}
             options={currentOptions}

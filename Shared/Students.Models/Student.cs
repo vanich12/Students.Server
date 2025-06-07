@@ -108,7 +108,7 @@ namespace Students.Models
         /// Группы
         /// Многие ко многим (мапирование через третью таблицу GroupPerson)
         /// </summary>
-        //[JsonIgnore]
+        [JsonIgnore]
         public virtual ICollection<Group>? Groups { get; set; }
 
         //public string EmailPrepared { get { return Email.ToLower(); } }
@@ -124,7 +124,7 @@ namespace Students.Models
         /// <summary>
         /// Заявки на обучение
         /// </summary>
-        //[JsonIgnore]
+         [JsonIgnore]
         public virtual ICollection<Request>? Requests { get; set; }
     }
 }

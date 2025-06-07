@@ -157,12 +157,6 @@ namespace Students.Application.Services
                 // ToDo убрать это говно
                 var pendingReq =
                     await Mapper.RequestDTOToPendingRequest(form);
-                if (form.EducationProgramId is  null)
-                    throw new ArgumentException("Error: Request dont have a valid education program in field");
-                
-                var educationProgram = await educationProgramRepository.FindById(form.EducationProgramId.Value);
-                if (educationProgram is not null)
-                    pendingReq.Education = educationProgram.Name;
 
                 var newPendingReq = await pendingRequestRepository.Update(id, pendingReq);
                 if (newPendingReq is null)

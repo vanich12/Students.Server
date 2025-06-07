@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Students.DBCore.Contexts;
 using Students.Infrastructure.DTO;
@@ -116,19 +117,12 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
 
 
     // возможно стоит поменять на Expression для отправки предиката через IQueryable
-    public override async Task<IEnumerable<Request>> Get(Predicate<Request> predicate)
+    public override async Task<IEnumerable<Request>> Get(Expression<Func<Request, bool>> predicate)
     {
-        var itemsQuery = this._ctx.Requests.AsNoTracking();
-        itemsQuery = IncludeDetails(itemsQuery);
-        var validItems = new List<Request>();
+        var itemsQuery = this._ctx.Requests.AsNoTracking().Where(predicate);
+        var itemsWithDetails = await IncludeDetails(itemsQuery).ToListAsync();
 
-        await foreach (var item in itemsQuery.AsAsyncEnumerable())
-        {
-            if (predicate(item))
-                validItems.Add(item);
-        }
-
-        return validItems;
+        return itemsWithDetails;
     }
 
     private IQueryable<Request> IncludeDetails(IQueryable<Request> query)

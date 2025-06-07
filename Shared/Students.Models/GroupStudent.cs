@@ -3,7 +3,7 @@
 namespace Students.Models;
 
 /// <summary>
-/// Группа студентов.
+/// Студент в группе по заявке
 /// </summary>
 public class GroupStudent
 {
@@ -21,6 +21,10 @@ public class GroupStudent
   /// Идентификатор заявки.
   /// </summary>
   public required Guid RequestId { get; set; }
+    /// <summary>
+    /// В архиве
+    /// </summary>
+  public bool IsArchive { get; set; }
 
   /// <summary>
   /// Студент (навигационное свойство).

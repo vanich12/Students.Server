@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,14 +38,14 @@ namespace Students.Application.Services.Interfaces
         /// </summary>
         /// <param name="predicate">Условие.</param>
         /// <returns>Список объектов, с указанным условием.</returns>
-        Task<IEnumerable<TEntity>> Get(Predicate<TEntity> predicate);
+        Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Получение подходящей сущности.
         /// </summary>
         /// <param name="predicate">Функция, по условию которой производится отбор данных из БД.</param>
         /// <returns>Сущность.</returns>
-        Task<TEntity?> GetOne(Predicate<TEntity> predicate);
+        Task<TEntity?> GetOne(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Удаление объекта.

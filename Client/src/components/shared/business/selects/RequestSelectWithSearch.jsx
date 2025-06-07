@@ -22,6 +22,7 @@ const RequestSelectWithSearch = ({ value, formParams, ...props }) => {
     const { crud } = config;
     const { useGetOneByIdAsync, useGetAllAsync } = crud;
     const { data: dataById } = useGetOneByIdAsync(value);
+    // Todo: сделать фильтры, чтобы выводились заявки без обучающихся, то есть не внесенные в приказ о зачислении
     const { data: allData } = useGetAllAsync();
     console.log( allData);
 
@@ -39,7 +40,7 @@ const RequestSelectWithSearch = ({ value, formParams, ...props }) => {
             </div>
         ),
         // Чтобы поиск работал корректно, можно добавить дополнительное поле
-        searchLabel: `${request.surname} ${request.name} ${request.position}`
+        searchLabel: `${request.studentFullName} ${request.educationProgram}`
     }));
 
     return (

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Office2010.Excel;
@@ -78,7 +79,7 @@ namespace Students.Application.Services
         /// </summary>
         /// <param name="predicate">предикат</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> Get(Predicate<TEntity> predicate)
+        public async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -97,7 +98,7 @@ namespace Students.Application.Services
         /// </summary>
         /// <param name="predicate">предикат</param>
         /// <returns></returns>
-        public async Task<TEntity?> GetOne(Predicate<TEntity> predicate)
+        public async Task<TEntity?> GetOne(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {

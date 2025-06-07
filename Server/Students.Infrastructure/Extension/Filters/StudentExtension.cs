@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Students.Infrastructure.DTO;
 using Students.Infrastructure.DTO.FilterDTO;
@@ -20,12 +19,14 @@ namespace Students.Infrastructure.Extension.Filters
                 query = query.AsNoTracking().Where(s => s.Person.BirthDate == filters.BirthDate.Value);
 
             if (filters.ProgramEducationId.HasValue)
-                query = query.AsNoTracking().Where(s => 
+                query = query.AsNoTracking().Where(s =>
                     s.Groups.Any(x => x.EducationProgramId == filters.ProgramEducationId));
 
             if (filters.GroupId.HasValue)
-                query = query.AsNoTracking().Where(s => s.Groups.Any(x => x.Id == filters.GroupId));
-        
+                query = query.AsNoTracking().Where(s =>
+                    s.Groups.Any(x => x.Id == filters.GroupId) &&
+                    !s.GroupStudent.FirstOrDefault(x => x.GroupId == filters.GroupId).IsArchive);
+
 
             return query;
         }

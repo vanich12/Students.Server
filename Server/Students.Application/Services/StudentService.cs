@@ -31,7 +31,7 @@ namespace Students.Application.Services
                 var student = await studentRepository.FindById(studentId);
                 if (student is null) throw new StudentNotFoundException(studentId);
 
-                var items = await requestRepository.Get(p => p.StudentId == studentId);
+                var items = await requestRepository.Get(p => p.StudentId == studentId && p.GroupStudent != null);
 
                 return items.Select(entity => Mapper.RequestToLearningHistoryDTO(entity).Result).ToList();
             }

@@ -1,16 +1,14 @@
 import String from '../../components/shared/business/common/String.jsx';
 import Date from '../../components/shared/business/common/Date.jsx';
 import KindOrderSelect from '../../components/shared/business/selects/KindOrderSelect.jsx'
-import StudentsSelect from '../../components/shared/business/selects/StudentsSelect.jsx'
 import GroupSelect from '../../components/shared/business/selects/GroupSelector.jsx'
-import CumulativelistSelector from '../../components/shared/business/selects/CumulativelistSelector'
 import RequestSelectWithSearch from '../../components/shared/business/selects/RequestSelectWithSearch'
 const model = {
-    name: { 
+    number: {
         name: 'Номер приказа',
         type: String,
     },
-    kindOrder: { 
+    kindOrderId: {
         name: 'Вид приказа', 
         type: KindOrderSelect,
     },
@@ -18,11 +16,11 @@ const model = {
         name: 'Дата начала', 
         type: Date, 
     },
-    group: { 
+    groupId: {
         name: 'Группа', 
         type: GroupSelect,
     },
-    student: { 
+    requestId: {
         name: 'Заявка',
         type: RequestSelectWithSearch,
     },

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Students.Application.Services.Interfaces;
 using Students.Infrastructure.DTO;
+using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
 using Students.Models;
+using Exception = System.Exception;
 
 namespace Students.API.Controllers;
 
@@ -23,6 +25,7 @@ public class OrderController : GenericAPiController<Order>
     #endregion
 
     #region Методы
+
     [HttpPost("PostDTO")]
     public async Task<IActionResult> PostDTO(OrderDTO form)
     {
@@ -34,6 +37,25 @@ public class OrderController : GenericAPiController<Order>
         catch (Exception e)
         {
             this._logger.LogError(e, "Error while creating new Entity");
+            return this.Exception();
+        }
+    }
+    /// <summary>
+    /// Пагинация приказов
+    /// </summary>
+    /// <param name="pageable"></param>
+    /// <returns></returns>
+    [HttpGet("paged")]
+    public async Task<IActionResult> ListAllPage([FromQuery] Pageable pageable)
+    {
+        try
+        {
+            var orders = await this._orderRepository.GetOrdersByPage(pageable.PageNumber, pageable.PageSize);
+            return this.Ok(orders);
+        }
+        catch (Exception e)
+        {
+            this._logger.LogError(e.Message, "Error while tried get list of orders");
             return this.Exception();
         }
     }

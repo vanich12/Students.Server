@@ -42,7 +42,8 @@ const EntityTable = ({ config }) => {
             console.log(normalizedData);
             const total = serverPaged ? dataFromServer?.totalCount : dataFromServer?.length;
             setData(normalizedData);
-            console.log(dataConverter(data));
+            console.log();
+            console.log(dataConverter(normalizedData.data));
             setLoading(false);
             setTableParams({
                 ...tableParams,

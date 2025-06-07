@@ -27,34 +27,39 @@ export default {
     columns: [
         {
             title: 'Номер приказа',
-            dataIndex: 'numberOrder',
-            key: 'numberOrder',
+            dataIndex: 'number',
+            key: 'number',
         },
         {
             title: 'Вид приказа',
-            dataIndex: 'kindOrder',
-            key: 'kindOrder',
+            dataIndex: 'kindOrderName',
+            key: 'kindOrderName',
         },
         {
             title: 'Дата',
-            dataIndex: 'orderDate',
-            key: 'orderDate',
+            dataIndex: 'date',
+            key: 'date',
         },
         {
             title: 'Группа',
-            dataIndex: 'startGroupDate',
-            key: 'startGroupDate',
+            dataIndex: 'groupName',
+            key: 'groupName',
         },
         {
-            title: 'Обучающийся',
-            dataIndex: 'student',
-            key: 'student',
+            title: 'Заявка',
+            dataIndex: 'requestFullName',
+            key: 'requestFullName',
         },
     ],
-    dataConverter: (data) => {
-        return data?.map(({ orderDate, ...props }) => {
+    dataConverter: (response) => {
+        const dataArray = response?.data || response;
+        if (!Array.isArray(dataArray)) {
+            return [];
+        }
+
+        return dataArray.map(({ date, ...props }) => {
             const orderDate1 = (
-                <OrderDate value={orderDate} mode='info' />
+                <OrderDate value={date} mode='info' />
             );
             return { ...props, orderDate1 };
         });

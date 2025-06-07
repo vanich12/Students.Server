@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Students.DBCore.Contexts;
 using Students.Infrastructure.DTO;
+using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
 using Students.Models;
 
@@ -33,10 +36,9 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .ThenInclude(g => g != null ? g.Groups : null)
             .Select(order => new OrderDTO()
             {
-                Id = order.Id,
                 Date = order.Date,
                 Number = order.Number,
-                StudentName = order.Request != null && order.Request.Student != null
+                RequestFullName = order.Request != null && order.Request.Student != null
                     ? order.Request.Student.Person.FullName
                     : null,
                 KindOrderName = order.KindOrder != null ? order.KindOrder.Name : null,
@@ -47,6 +49,26 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .ToListAsync();
 
         return orders;
+    }
+    /// <summary>
+    /// Пагинация приказов
+    /// </summary>
+    /// <param name="page"></param>
+    /// <param name="pageSize"></param>
+    /// <returns></returns>
+    public async Task<PagedPage<OrderDTO>> GetOrdersByPage(int page, int pageSize)
+    {
+        IQueryable<Order> orders = _context.Orders
+            .Include(k => k.KindOrder)
+            .Include(r => r.Request)
+            .ThenInclude(p => p.Person)
+            .ThenInclude(s => s != null ? s.Student : null)
+            .ThenInclude(g => g != null ? g.Groups : null)
+            .Include(r => r.Request) // СНОВА начинаем с Include(r => r.Request)
+            .ThenInclude(req => req.GroupStudent);
+
+        var dtoQuery = orders.Select(x => Mapper.OrderToOrderDTO(x).Result);
+        return await PagedPage<OrderDTO>.ToPagedPage(dtoQuery, page, pageSize, x => x.RequestFullName);
     }
 
     #endregion

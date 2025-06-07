@@ -62,6 +62,7 @@ export default {
         }
     ],
     dataConverter: (data) => {
+        console.log(data)
         return data?.map(({ birthDate, ...props }) => {
             const birthDate1 = (
                 <BirthDate value={birthDate} mode='info' />

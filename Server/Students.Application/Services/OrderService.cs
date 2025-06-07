@@ -18,6 +18,7 @@ namespace Students.Application.Services
         IRequestRepository requestRepository,
         IStudentRepository studentRepository,
         IGroupStudentRepository groupStudentRepository,
+        IGroupRepository groupRepository,
         IGenericRepository<KindOrder> kindOrderRepository,
         ILogger<Order> logger)
         : GenericService<Order>(orderRepository, logger), IOrderService
@@ -52,16 +53,24 @@ namespace Students.Application.Services
                 if (student is null)
                     throw new Exception("Не удалось создать студента");
                 request.StudentId = student.Id;
+                var group = await groupRepository.FindById(form.GroupId);
+                if (group is null)
+                    throw new Exception($"Не удалось найти группу по Id {form.GroupId}");
 
-                var groupStudent = await groupStudentRepository.Create(request, form.Groups!.FirstOrDefault()!.Id);
+                var groupStudent = await groupStudentRepository.Create(request, group.Id);
+
                 if (groupStudent is null)
                     throw new ArgumentException("Не удалось создать groupStudent");
 
-                var order = Mapper.OrderDTOToOrder(form);
+                var newOrder = await Mapper.OrderDTOToOrder(form, kindOrderRepository);
+                var order = await orderRepository.Create(newOrder);
+                if (order is null)
+                    throw new InvalidOperationException("Не удалось создать приказ");
 
                 return order;
             }
-            return Mapper.OrderDTOToOrder(form);
+
+            return await Mapper.OrderDTOToOrder(form, kindOrderRepository);
         }
     }
 }

@@ -399,13 +399,30 @@ public static class Mapper
         };
     }
 
-    public static Order OrderDTOToOrder(OrderDTO form)
+    public static async Task<Order> OrderDTOToOrder(OrderDTO form, IGenericRepository<KindOrder> kindOrderRepository)
     {
         return new Order
         {
             Date = DateTime.Now,
             KindOrderId = form.KindOrderId!.Value,
+            KindOrder = (await kindOrderRepository.FindById(form.KindOrderId.Value)),
+            Number = form.Number,
             RequestId = form.RequestId,
+        };
+    }
+
+    public static async Task<OrderDTO> OrderToOrderDTO(Order form)
+    {
+        return new OrderDTO
+        {
+            Date = form.Date,
+            KindOrderId = form.KindOrderId,
+            KindOrderName = form.KindOrder?.Name,
+            RequestFullName = form.Request.Person.FullName,
+            RequestId = form.RequestId,
+            Number = form.Number,
+            GroupId = form.Request.GroupStudent.GroupId,
+            GroupName = form.Request.GroupStudent.Group.Name ?? "Нету без группы"
         };
     }
 }

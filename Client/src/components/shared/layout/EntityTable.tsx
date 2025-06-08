@@ -22,7 +22,6 @@ const EntityTable = ({ config }) => {
     });
     const navigate = useNavigate();
 
-    // происхожит запрос при каждом ререндере, че?
     const { 
         data: dataFromServer,
         error,
@@ -93,6 +92,7 @@ const EntityTable = ({ config }) => {
 
     const openDetailsInfo = useCallback((item) => {
         console.log(detailsLink)
+        console.log(item)
         navigate(`/${detailsLink}/${item.id}`);
     });
 

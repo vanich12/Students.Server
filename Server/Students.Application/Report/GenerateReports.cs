@@ -20,9 +20,9 @@ namespace Studens.Application.Report
         /// Генерировать отчет для Росстата.
         /// </summary>
         /// <returns>Книга.</returns>
-        public async Task<XLWorkbook?> GenerateRosstatReport()
+        public async Task<XLWorkbook?> GenerateRosstatReport(DateOnly startDate, DateOnly endDate)
         {
-            var listReportData = await _reportRosstatRepository.Get() ?? throw new ArgumentNullException("Нет данных.");
+            var listReportData = await _reportRosstatRepository.Get(startDate, endDate) ?? throw new ArgumentNullException("Нет данных.");
             var template = new XLTemplate(Directory.GetCurrentDirectory() + @"\Report\Templates\Form1-PK.xlsx");
             template.AddVariable(listReportData.FirstOrDefault());
             template.Generate();
@@ -34,9 +34,9 @@ namespace Studens.Application.Report
         /// Генерировать отчет ФРДО.
         /// </summary>
         /// <returns>Книга.</returns>
-        public async Task<XLWorkbook?> GenerateFRDOReport()
+        public async Task<XLWorkbook?> GenerateFRDOReport(DateOnly startDate, DateOnly endDate)
         {
-            var listReportData = await _reportPFDORepository.Get() ?? throw new ArgumentNullException("Нет данных.");
+            var listReportData = await _reportPFDORepository.Get(startDate, endDate) ?? throw new ArgumentNullException("Нет данных.");
             var workbook = new XLWorkbook(Directory.GetCurrentDirectory() + @"\Report\Templates\FRDO.xlsx");
             var worksheet = workbook.Worksheet("Шаблон");
             FillingCells(worksheet, listReportData);

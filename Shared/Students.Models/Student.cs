@@ -123,7 +123,7 @@ namespace Students.Models
 
         /// <summary>
         /// Заявки на обучение
-        /// </summary>
+        /// </summary
          [JsonIgnore]
         public virtual ICollection<Request>? Requests { get; set; }
     }

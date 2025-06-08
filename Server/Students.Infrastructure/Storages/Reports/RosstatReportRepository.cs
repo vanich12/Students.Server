@@ -20,7 +20,7 @@ public class RosstatReportRepository : IReportRepository<RosstatModel>
   /// Получить список сущностей.
   /// </summary>
   /// <returns>Список сущностей.</returns>
-  public async Task<List<RosstatModel>> Get()
+  public async Task<List<RosstatModel>> Get(DateOnly startDate, DateOnly endDate)
   {
     var listStudents = await _studentRepository.GetAll();
     return new List<RosstatModel>() { new() { StudentCount = listStudents.Count() } };

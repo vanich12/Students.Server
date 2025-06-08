@@ -30,7 +30,7 @@ namespace Students.Infrastructure.Storages
             IQueryable<PersonHistory> personQuery = this._ctx.PersonHistory;
             var filterItems = personQuery.ApplyFilters(filters);
             var dtoQuery = filterItems.Select(x => Mapper.PersonHistoryToPersonHistoryDTO(x).Result);
-            return await PagedPage<PersonHistoryDTO>.ToPagedPage(dtoQuery, page, pageSize, x => x.NewFamily);
+            return await PagedPage<PersonHistoryDTO>.ToPagedPage(dtoQuery, page, pageSize, x => x.ChangeDate);
         }
 
         public PersonHistoryRepository(StudentContext context) : base(context)

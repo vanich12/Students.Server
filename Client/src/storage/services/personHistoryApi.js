@@ -31,7 +31,9 @@ export const personHistoryApi = createApi({
         }),
         getPersonHistoryById: builder.query({
             query: (id) => id,
-            providesTags: ['PersonHistoryById'],
+            providesTags: (result, error, id) => [
+                { type: 'PersonHistory', id: id},
+            ],
         }),
         editPersonHistory: builder.mutation({
             query: ({ id, item }) => ({

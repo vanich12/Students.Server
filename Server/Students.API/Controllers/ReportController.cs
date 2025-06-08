@@ -25,9 +25,9 @@ public class  ReportController : ControllerBase
   /// </summary>
   /// <returns>Отчет.</returns>
   [HttpPost("GetRostatReport")]
-  public async Task<FileResult> GetRosstatReport()
+  public async Task<FileResult> GetRosstatReport(DateOnly startDate, DateOnly endDate)
   {
-    var workbook = await _report.GenerateRosstatReport() ?? throw new ArgumentNullException("Нет данных.");
+    var workbook = await _report.GenerateRosstatReport(startDate,endDate) ?? throw new ArgumentNullException("Нет данных.");
     return CreateFileReport(workbook, "Росстат");
   }
 
@@ -36,9 +36,9 @@ public class  ReportController : ControllerBase
   /// </summary>
   /// <returns>Отчет.</returns>
   [HttpPost("GetPFDOReport")]
-  public async Task<FileResult> GetPFDOReport()
+  public async Task<FileResult> GetPFDOReport([FromQuery] DateOnly startDate, DateOnly endDate)
   {
-    var workbook = await _report.GenerateFRDOReport()
+    var workbook = await _report.GenerateFRDOReport(startDate, endDate)
                    ?? throw new ArgumentNullException("Нет данных.");
     return CreateFileReport(workbook, "ФРДО");
   }

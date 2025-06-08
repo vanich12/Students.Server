@@ -11,6 +11,10 @@ namespace Students.Infrastructure.DTO
     /// </summary>
     public class PersonHistoryDTO
     {
+        /// <summary>
+        /// Id Истории
+        /// </summary>
+        public Guid Id { get; set; }
         public string? OldFamily { get; set; }
         /// <summary>
         /// Новая фамилия

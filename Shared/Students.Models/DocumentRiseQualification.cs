@@ -29,8 +29,13 @@ public class DocumentRiseQualification
   public required string Number { get; set; } = string.Empty;
 
   /// <summary>
-  /// Вид документа повышения квалификации
+  /// Заявка, на которую выдается документ о повышении квалификации
   /// </summary>
-  [JsonIgnore]
+  public Guid? RequestId { get; set; }
+
+    /// <summary>
+    /// Вид документа повышения квалификации
+    /// </summary>
+    [JsonIgnore]
   public virtual KindDocumentRiseQualification? KindDocumentRiseQualification { get; set; }
 }

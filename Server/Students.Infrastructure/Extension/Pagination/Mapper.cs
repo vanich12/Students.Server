@@ -201,6 +201,7 @@ public static class Mapper
     {
         return new PersonHistoryDTO()
         {
+            Id = form.Id,
             OldFamily = form.OldFamily,
             PersonId = form.PersonId,
             ChangeDate = form.ChangeDate,
@@ -442,6 +443,7 @@ public static class Mapper
     {
         return new OrderDTO
         {
+            Id = form.Id,
             Date = form.Date,
             KindOrderId = form.KindOrderId,
             KindOrderName = form.KindOrder?.Name,
@@ -450,6 +452,32 @@ public static class Mapper
             Number = form.Number,
             GroupId = form.Request.GroupStudent.GroupId,
             GroupName = form.Request.GroupStudent.Group.Name ?? "Нету без группы"
+        };
+    }
+
+    public static async Task<DocumentRiseQualificationDTO> DocumentRiseQualificationToDocumentRiseQualificationDTO(
+        DocumentRiseQualification form, IGenericRepository<KindDocumentRiseQualification> repository)
+    {
+        return new DocumentRiseQualificationDTO
+        {
+            Id = form.Id,
+            KindDocumentRiseQualificationId = form.KindDocumentRiseQualificationId,
+            Date = form.Date,
+            Number = form.Number,
+            RequestId = form.RequestId,
+            KindDocumentRiseQualificationName = (await repository.GetOne(x=>x.Id == form.KindDocumentRiseQualificationId))?.Name, 
+        };
+    }
+    public static  DocumentRiseQualification DocumentRiseQualificationDTOToDocumentRiseQualification(
+        DocumentRiseQualificationDTO form)
+    {
+        return new DocumentRiseQualification
+        {
+            Id = form.Id,
+            KindDocumentRiseQualificationId = form.KindDocumentRiseQualificationId,
+            Date = form.Date,
+            Number = form.Number,
+            RequestId = form.RequestId,
         };
     }
 }

@@ -7,6 +7,8 @@ namespace Students.Infrastructure.DTO
     /// </summary>
     public class OrderDTO
     {
+        public Guid Id { get; set; }
+
         /// <summary>
         /// Номер приказа.
         /// </summary>

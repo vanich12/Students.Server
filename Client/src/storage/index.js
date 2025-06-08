@@ -18,6 +18,7 @@ import { requestsApi }  from './services/requestsApi.js';
 import { pendingRequestsApi }  from './services/pendingRequestsApi.js';
 import { scopeOfActivityApi }  from './services/scopeOfActivityApi.js';
 import { ordersApi } from './services/orderApi.js';
+import { personHistoryApi } from './services/personHistoryApi.js';
 
 export default configureStore({
   reducer: {
@@ -25,6 +26,7 @@ export default configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [studentsApi.reducerPath]: studentsApi.reducer,
     [personApi.reducerPath]:personApi.reducer,
+    [personHistoryApi.reducerPath]:personHistoryApi.reducer,
     [educationFormApi.reducerPath]: educationFormApi.reducer,
     [requestStatusApi.reducerPath]: requestStatusApi.reducer,
     [typeEducationApi.reducerPath]: typeEducationApi.reducer,
@@ -45,6 +47,7 @@ export default configureStore({
     .concat(authApi.middleware)
     .concat(studentsApi.middleware)
         .concat(personApi.middleware)
+        .concat(personHistoryApi.middleware)
     .concat(educationFormApi.middleware)
     .concat(requestStatusApi.middleware)
     .concat(typeEducationApi.middleware)

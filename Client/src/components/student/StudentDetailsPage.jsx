@@ -5,6 +5,7 @@ import { Row, Col, Space, Button } from 'antd';
 import config from '../../storage/catalogConfigs/students.js'
 import SelectModalItemsForm from '../shared/catalogProvider/forms/SelectModalItemsForm'
 import studentHistoryConfig from '../../storage/catalogConfigs/studentHistory.js';
+import personHistoryConfig from '../../storage/catalogConfigs/personHistory.js';
 
 
 const StudentDetailsPage = () => {
@@ -14,7 +15,11 @@ const StudentDetailsPage = () => {
 
     const [isChanged, setIsChanged] = useState(false);
     const [isSaveInProgress, setIsSaveInProgress] = useState(false);
-    const [showModal, setShowModal] = useState(false);
+    // для модалки с  истории обучений
+    const [showModalLearningHistory, setShowModalLearningHistory] = useState(false);
+    // для модалки с истории изменения ФИО
+    const [showModalDataHistory, setShowModalDataHistory] = useState(false);
+
 
     const { properties, crud } = config;
     const { useGetOneByIdAsync, useEditOneAsync } = crud;
@@ -28,6 +33,7 @@ const StudentDetailsPage = () => {
         delete newData.id;
         setStudentData(newData);
         setInitialData(newData);
+        console.log(newData)
       }
     }, [isLoading, isFetching,data]);
 
@@ -52,11 +58,13 @@ const StudentDetailsPage = () => {
         <>
             <Button key="confirm" type="primary"
                     onClick={() => {
-                        setShowModal(false)
+                        setShowModalLearningHistory(false)
                     }}>Подтвердить</Button>
-            <Button key="close" onClick={() => setShowModal(false)}>Закрыть</Button>
+            <Button key="close" onClick={() => setShowModalLearningHistory(false)}>Закрыть</Button>
         </>
     );
+
+
     return isLoading || isFetching
     ? (<Loading />)
     : (
@@ -72,13 +80,29 @@ const StudentDetailsPage = () => {
             <hr />
             <Row>
                 <Col>
-                    <Button onClick={onSave} style={{ marginRight: '10px' }}>Сохранить</Button>
+                    <Button onClick={onSave}
+                            style={{ marginRight: '10px' }}>
+                        Сохранить</Button>
                 </Col>
                 <Col>
-                    <Button onClick={onCancel} disabled={isSaveInProgress}>Отмена</Button>
+                    <Button onClick={onCancel}
+                            disabled={isSaveInProgress}>
+                        Отмена</Button>
                 </Col>
                 <Col>
-                    <Button disabled={isSaveInProgress} onClick={()=>setShowModal(true)} style={{ marginLeft: '10px' }} type="primary">История обучений</Button>
+                    <Button disabled={isSaveInProgress}
+                            onClick={()=>setShowModalLearningHistory(true)}
+                            style={{ marginLeft: '10px' }}
+                            type="primary">
+                        История обучений</Button>
+                </Col>
+                <Col>
+                    <Button disabled={isSaveInProgress}
+                            onClick={()=>setShowModalDataHistory(true)}
+                            style={{ marginLeft: '10px' }}
+                            type="primary">
+                        История ФИО обучающегося
+                    </Button>
                 </Col>
             </Row>
             <RoutingWarningModal
@@ -90,13 +114,22 @@ const StudentDetailsPage = () => {
                 useDataHook={config.crud.useGetLearningHistoryOfStudent}
                 dataHookArgs={{ studentId: id, hasGroup: true }}
                 config={studentHistoryConfig}
-                modalTitle = {"История обучений студента"}
+                modalTitle = {"История обучений обучающегося"}
                 modalFooter={modalFooter}
                 control={{
-                    showForm: showModal,
-                    setShowForm: setShowModal,
+                    showForm: showModalLearningHistory,
+                    setShowForm: setShowModalLearningHistory,
                 }}
                 filterString={""}
+            />
+            <SelectModalItemsForm
+                config={personHistoryConfig}
+                filterString={`&personId=${studentData.personId}`}
+                modalTitle = {"История изменений ФИО обучающегося"}
+                control={{
+                    showForm: showModalDataHistory,
+                    setShowForm: setShowModalDataHistory,
+                }}
             />
         </>
   );

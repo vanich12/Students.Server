@@ -113,7 +113,7 @@ public static class Mapper
             agreement = form.Agreement,
             trained =
                 form.Orders != null &&
-                form.Orders.Any(x => x.KindOrder?.Name?.ToLower() == "о зачислении") && 
+                form.Orders.Any(x => x.KindOrder?.Name?.ToLower() == "о зачислении") &&
                 !form.Orders.Any(x => x.KindOrder?.Name?.ToLower() == "об отчислении")
         };
     }
@@ -162,6 +162,7 @@ public static class Mapper
             Speciality = student.Speciality,
             IT_Experience = student.Person?.IT_Experience,
             RequestId = groupStudent?.Request?.Id,
+            PersonId = student.PersonId,
             StatusRequestId = groupStudent?.Request?.StatusRequestId,
             StatusRequestName = groupStudent?.Request?.Status?.Name,
             EducationProgramId = groupStudent?.Group?.EducationProgramId,
@@ -193,6 +194,23 @@ public static class Mapper
             Email = person.Email,
             PersonPatron = person.Patron,
             PhoneNumber = person.Phone
+        };
+    }
+
+    public static async Task<PersonHistoryDTO> PersonHistoryToPersonHistoryDTO(PersonHistory form)
+    {
+        return new PersonHistoryDTO()
+        {
+            OldFamily = form.OldFamily,
+            PersonId = form.PersonId,
+            ChangeDate = form.ChangeDate,
+            ChangeType = form.ChangeType,
+            LastChangedUserId = form.LastChangedUserId,
+            NewFamily = form.NewFamily,
+            OldName = form.OldName,
+            NewPatron = form.NewPatron,
+            NewName = form.NewName,
+            OldPatron = form.OldPatron
         };
     }
 

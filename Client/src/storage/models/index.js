@@ -12,6 +12,7 @@ import specificStudentsModel from './specificStudents.js';
 import scopeOfActivityModel from './scopeOfActivity.js';
 import studentsModel from './students.ts';
 import personModel from './person.js';
+import personHistoryModel from './personHistory.js';
 import orderModel from './order.js'
 import studentStatusModel from './studentStatus.js';
 import typeEducationModel from './typeEducation.js';
@@ -26,6 +27,7 @@ export {
     kindDocumentRiseQualificationModel,
     kindOrderModel,
     personRequestsModel,
+    personHistoryModel,
     requestStatusModel,
     scopeOfActivityModel,
     specificStudentsModel,

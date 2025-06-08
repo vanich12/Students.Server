@@ -2,24 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Students.Models
+namespace Students.Infrastructure.DTO
 {
     /// <summary>
-    /// Изменение записи студента
+    /// История изменений ФИО персоны
     /// </summary>
-    public class PersonHistory
+    public class PersonHistoryDTO
     {
-        /// <summary>
-        /// Id изменения
-        /// </summary>
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// Старая фамилия
-        /// </summary>
         public string? OldFamily { get; set; }
         /// <summary>
         /// Новая фамилия
@@ -44,25 +35,19 @@ namespace Students.Models
         /// <summary>
         /// Дата изменения
         /// </summary>
-        public required DateOnly ChangeDate { get; set; }
+        public DateOnly? ChangeDate { get; set; }
         /// <summary>
         /// Тип изменения
         /// </summary>
-        public string ChangeType { get; set; }
+        public string? ChangeType { get; set; }
 
         /// <summary>
         /// Последний, изменивший данные пользователь системы
         /// </summary>
         public Guid? LastChangedUserId { get; set; }
-
-        public Guid? PersonId { get; set; }
-
         /// <summary>
-        /// Студент, чьи изменения зафиксированы
+        /// Персона, чьи данные были изменены
         /// </summary>
-        [JsonIgnore]
-        public virtual Person? Person { get; set; }
-
-
+        public Guid? PersonId { get; set; }
     }
 }

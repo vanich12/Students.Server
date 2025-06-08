@@ -4,7 +4,7 @@ import apiUrl from './apiUrl.js';
 export const personHistoryApi = createApi({
     reducerPath: 'personHistory',
     keepUnusedDataFor:0,
-    baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/Request` }), //  TODO: уточнить url
+    baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/PersonHistory` }), //  TODO: уточнить url
     tagTypes: ['PersonHistory','PersonHistoryById','PersonHistories'],
     endpoints: (builder) => ({
         getPersonHistories: builder.query({
@@ -12,15 +12,22 @@ export const personHistoryApi = createApi({
         }),
 
         getPersonHistoryPaged: builder.query({
-            query: ({ pageNumber, pageSize, filterDataReq }) => `paged?page=${pageNumber}&size=${pageSize}`,
-            providesTags: (result)=>{
+            query: ({ pageNumber, pageSize, filterDataReq }) => {
+                console.log('>>> [RTK Query] Вызван эндпоинт getPersonHistoryPaged');
+                console.log('>>> Полученные аргументы:', { pageNumber, pageSize, filterDataReq });
+
+                const url = `paged?page=${pageNumber}&size=${pageSize}${filterDataReq}`;
+                console.log('>>> Сгенерирован URL:', url);
+
+                return url;
+            },
+            providesTags: (result) => {
                 var requestTags = result?.data ?
-                    result.data.map(({id})=>({type: 'PersonHistory', id })):[];
+                    result.data.map(({id}) => ({type: 'PersonHistory', id })) : [];
                 const listTag = { type: 'PersonHistories', id: 'LIST' };
 
                 return [...requestTags, listTag];
             },
-
         }),
         getPersonHistoryById: builder.query({
             query: (id) => id,
@@ -33,7 +40,7 @@ export const personHistoryApi = createApi({
                 body: item,
             }),
 
-            invalidatesTags: (result, error, { id }) => [{ type: 'Request', id }],
+            invalidatesTags: (result, error, { id }) => [{ type: 'PersonHistory', id }],
         }),
         removePersonHistory: builder.mutation({
             query: (id) => ({

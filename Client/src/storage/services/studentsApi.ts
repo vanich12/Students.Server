@@ -116,6 +116,7 @@ export const studentsApi = createApi({
       },
       invalidatesTags: (result, error, { id }) => [
         { type: 'Student', id },
+        'PersonHistories',
         'Students'
       ],
     }),

@@ -38,7 +38,6 @@ const SelectModalItemsForm = ({ control, config, filterString,request,modalFoote
         error: queryError,
     } = actualUseDataHook(
         queryArgs,
-
     );
 
     const dataItems = dataFromServerResponse?.data || dataFromServerResponse || [];
@@ -104,7 +103,6 @@ const SelectModalItemsForm = ({ control, config, filterString,request,modalFoote
                 width={900}
                 onCancel={() => {
                     setShowForm(false)
-
                 }}
                 destroyOnClose
             >

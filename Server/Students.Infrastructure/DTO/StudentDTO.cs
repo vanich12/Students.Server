@@ -89,6 +89,11 @@ namespace Students.Infrastructure.DTO
     /// </summary>
     public Guid? RequestId { get; set; }
     /// <summary>
+    /// Id Персоны
+    /// </summary>
+    public Guid? PersonId { get; set; }
+
+    /// <summary>
     /// Сфера деятельности ур.1
     /// </summary>
     public Guid? ScopeOfActivityLevelOneId { get; set; }

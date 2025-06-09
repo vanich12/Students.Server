@@ -36,9 +36,39 @@ namespace Studens.Application.Report
         /// <returns>Книга.</returns>
         public async Task<XLWorkbook?> GenerateFRDOReport(DateOnly startDate, DateOnly endDate)
         {
-            var listReportData = await _reportPFDORepository.Get(startDate, endDate) ?? throw new ArgumentNullException("Нет данных.");
-            var workbook = new XLWorkbook(Directory.GetCurrentDirectory() + @"\Report\Templates\FRDO.xlsx");
-            var worksheet = workbook.Worksheet("Шаблон");
+            // 1. Получаем данные для отчета
+            var listReportData = await _reportPFDORepository.Get(startDate, endDate);
+            if (listReportData == null || !listReportData.Any())
+                return null;
+            
+
+            string templateDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Report", "Templates");
+            string templatePath = Path.Combine(templateDirectory, "FRDO.xlsx");
+
+       
+            if (!Directory.Exists(templateDirectory))
+            {
+                Directory.CreateDirectory(templateDirectory);
+                // ВАЖНО: После создания папки, шаблон там не появится сам.
+                // Вы должны либо скопировать его туда при развертывании приложения,
+                // либо программа должна сообщить об ошибке.
+            }
+
+            // 4. Проверяем, существует ли сам файл шаблона
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException("Файл шаблона отчета не найден по пути: " + templatePath);
+
+
+            // 5. Открываем шаблон и заполняем его
+      
+            var workbook = new XLWorkbook(templatePath);
+
+            var worksheet = workbook.Worksheet("Шаблон"); // Убедитесь, что лист называется именно так
+            if (worksheet == null)
+            {
+                throw new InvalidOperationException("В шаблоне отчета не найден лист с названием 'Шаблон'.");
+            }
+
             FillingCells(worksheet, listReportData);
 
             return workbook;
@@ -60,7 +90,8 @@ namespace Studens.Application.Report
                 PropertyInfo[] cells = row.GetType().GetProperties();
                 foreach (PropertyInfo cell in cells)
                 {
-                    var cellValue = cell.GetValue(row) is null ? string.Empty : cell.GetValue(row)!.ToString();
+                    var prop = cell.GetValue(row)?.ToString();
+                    var cellValue = cell.GetValue(row) is null ? string.Empty : prop;
                     xLWorksheet.Cell(ExcelMetadata.ExcelColumnName[charCounter].ToString() + cellCounter).Value = cellValue;
                     charCounter++;
                 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Students.DBCore.Contexts;
 using Students.Infrastructure.Interfaces;
 
@@ -34,9 +35,17 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     /// </summary>
     /// <param name="predicate">Функция, по условию которой производится отбор данных из БД.</param>
     /// <returns>Список сущностей.</returns>
-    public virtual async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> predicate)
+    public virtual async Task<IEnumerable<TEntity>> Get(
+        Expression<Func<TEntity, bool>> predicate,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? eagerQuery = null) 
     {
-        var items = await this._dbSet.AsNoTracking().Where(predicate).ToListAsync();
+        IQueryable<TEntity> query = this._dbSet.AsNoTracking();
+
+        if (eagerQuery != null)
+            query = eagerQuery(query);
+        
+
+        var items = await query.Where(predicate).ToListAsync();
 
         return items;
     }

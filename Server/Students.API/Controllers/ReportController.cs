@@ -38,9 +38,18 @@ public class  ReportController : ControllerBase
   [HttpPost("GetPFDOReport")]
   public async Task<FileResult> GetPFDOReport([FromQuery] DateOnly startDate, DateOnly endDate)
   {
-    var workbook = await _report.GenerateFRDOReport(startDate, endDate)
-                   ?? throw new ArgumentNullException("Нет данных.");
-    return CreateFileReport(workbook, "ФРДО");
+      try
+      {
+          var workbook = await _report.GenerateFRDOReport(startDate, endDate)
+                         ?? throw new ArgumentNullException("Нет данных.");
+          return CreateFileReport(workbook, "ФРДО");
+      }
+      catch (Exception e)
+      {
+          Console.WriteLine(e);
+          throw;
+      }
+ 
   }
 
   /// <summary>

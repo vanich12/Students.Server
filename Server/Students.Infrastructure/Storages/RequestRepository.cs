@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Students.DBCore.Contexts;
 using Students.Infrastructure.DTO;
 using Students.Infrastructure.DTO.FilterDTO;
@@ -116,13 +117,17 @@ public class RequestRepository : GenericRepository<Request>, IRequestRepository
     }
 
 
-    // возможно стоит поменять на Expression для отправки предиката через IQueryable
-    public override async Task<IEnumerable<Request>> Get(Expression<Func<Request, bool>> predicate)
+    public override async Task<IEnumerable<Request>> Get(Expression<Func<Request, bool>> predicate,Func<IQueryable<Request>,
+        IIncludableQueryable<Request,object>>? eadgerQuery = null)
     {
         var itemsQuery = this._ctx.Requests.AsNoTracking().Where(predicate);
-        var itemsWithDetails = await IncludeDetails(itemsQuery).ToListAsync();
+        if (eadgerQuery is not null)
+            itemsQuery = eadgerQuery(itemsQuery);
+        else
+            itemsQuery = IncludeDetails(itemsQuery);
+        var listItems = await itemsQuery.ToListAsync();
 
-        return itemsWithDetails;
+        return listItems;
     }
 
     private IQueryable<Request> IncludeDetails(IQueryable<Request> query)

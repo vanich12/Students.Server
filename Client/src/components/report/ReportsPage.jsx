@@ -2,23 +2,16 @@ import React, { useState } from 'react';
 import { Layout } from '../shared/layout/index.js';
 import { Card, Button, DatePicker, Space, Typography, Divider, message } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-import config from '../../storage/catalogConfigs/report.js'
-import dayjs from 'dayjs';
-import { useAddPFDOAsync } from '../../storage/crud/reportsCrud'
+import { useAddPFDOReportMutation } from '../../storage/services/reportApi';
 
-// Деструктурируем нужные компоненты для удобства
+
 const { Title, Paragraph } = Typography;
 const { RangePicker } = DatePicker;
 
 const ReportsPage = () => {
-    const { fields, properties, detailsLink, crud, columns, serverPaged, dataConverter } = config;
-    const {useAddPFDOAsync} = crud;
-    const [ addPFDO, { error, isLoading } ] = useAddPFDOAsync();
+    const [addPFDOReport, { isLoading }] = useAddPFDOReportMutation();
 
-    // Состояние для хранения выбранного диапазона дат
     const [dateRange, setDateRange] = useState(null);
-    // Состояние для отслеживания процесса загрузки
-    const [loading, setLoading] = useState(false);
 
     const handleDownloadFRDO = async () => {
         if (!dateRange || !dateRange[0] || !dateRange[1]) {
@@ -26,47 +19,35 @@ const ReportsPage = () => {
             return;
         }
 
-        // Форматируем даты в строку 'YYYY-MM-DD' для отправки на бэкенд
         const startDate = dateRange[0].format('YYYY-MM-DD');
         const endDate = dateRange[1].format('YYYY-MM-DD');
 
         try {
-            // Шаг 2.4: Вызываем триггер мутации.
-            // Метод unwrap() возвращает промис, который либо успешно разрешится с данными,
-            // либо будет отклонен с ошибкой. Это позволяет использовать try/catch.
-            const response = await addPFDO({ startDate, endDate }).unwrap();
 
-            // Вся остальная логика остается почти такой же,
-            // потому что мы получаем тот же самый объект Response.
-            if (!response.ok) {
-                throw new Error(`Ошибка сети: ${response.statusText}`);
-            }
+            const arrayBuffer = await addPFDOReport({ startDate, endDate }).unwrap();
 
-            const contentDisposition = response.headers.get('content-disposition');
-            let filename = 'FRDO_Report.xlsx'; // Имя по умолчанию
-            if (contentDisposition && contentDisposition.includes('attachment')) {
-                const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
-                if (filenameMatch && filenameMatch[1]) {
-                    filename = filenameMatch[1];
-                }
-            }
+            const blob = new Blob([arrayBuffer], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
 
-            const blob = await response.blob();
+            const filename = `Отчет_ФРДО_${startDate}_${endDate}.xlsx`;
+
             const downloadUrl = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = downloadUrl;
             link.setAttribute('download', filename);
             document.body.appendChild(link);
             link.click();
-            link.parentNode.removeChild(link);
+
+            document.body.removeChild(link);
             window.URL.revokeObjectURL(downloadUrl);
 
             message.success('Отчет успешно сформирован и скачан!');
 
         } catch (error) {
             console.error("Ошибка при скачивании отчета:", error);
-            // RTK Query может вернуть более детальную ошибку
-            const errorMessage = error.data?.message || 'Не удалось скачать отчет. Пожалуйста, попробуйте еще раз.';
+            // Ошибка теперь приходит из нашего rawBaseQuery
+            const errorMessage = error.error || 'Не удалось скачать отчет. Пожалуйста, попробуйте еще раз.';
             message.error(errorMessage);
         }
     };
@@ -74,7 +55,6 @@ const ReportsPage = () => {
     return (
         <Layout title="Формирование отчетов">
             <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                {/* --- Карточка для отчета ФРДО --- */}
                 <Card bordered={true}>
                     <Title level={4}>Отчет для ФИС ФРДО</Title>
                     <Paragraph type="secondary">
@@ -90,7 +70,6 @@ const ReportsPage = () => {
                         </Paragraph>
                         <RangePicker
                             onChange={(dates) => setDateRange(dates)}
-                            // Можно задать форматы или локализацию, если нужно
                         />
 
                         <Paragraph style={{ marginBottom: 0 }}>
@@ -99,15 +78,14 @@ const ReportsPage = () => {
                         <Button
                             type="primary"
                             icon={<DownloadOutlined />}
-                            loading={loading}
+                            loading={isLoading}
                             onClick={handleDownloadFRDO}
                         >
-                            {loading ? 'Формирование...' : 'Сформировать и скачать .xlsx'}
+                            {isLoading ? 'Формирование...' : 'Сформировать и скачать .xlsx'}
                         </Button>
                     </Space>
                 </Card>
 
-                {/* --- Здесь можно добавить карточку для другого отчета, например, Росстат --- */}
                 <Card bordered={true}>
                     <Title level={4}>Отчет для Росстата (Форма 1-ПК)</Title>
                     <Paragraph type="secondary">

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using Students.Infrastructure.Interfaces;
 using Students.Models;
 using Students.Models.ReferenceModels;
@@ -44,46 +45,54 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
     {
         DateTime startDateTime = startDate.ToDateTime(TimeOnly.MinValue);
         DateTime endDateTime = endDate.AddDays(1).ToDateTime(TimeOnly.MinValue);
-        var completedStatusId = (await _StatusRequestRepository.GetOne(s => s.Name == "Обучение завершено"))?.Id;
         var completedRequests =
             await _requestRepository.Get(x =>
-                completedStatusId.HasValue && x.StatusRequestId == completedStatusId &&
-                x.DocumentRiseQualification.Date >= startDateTime && x.DocumentRiseQualification.Date <= endDateTime);
+                x.DocumentRiseQualification.Date >= startDateTime && x.DocumentRiseQualification.Date <= endDateTime, 
+                q=>q.Include(x=>x.Student)
+                    .ThenInclude(q=> q.Person)
+                    .ThenInclude(p=>p.TypeEducation)
+                    .Include(r => r.EducationProgram)
+                    .ThenInclude(ep => ep.EducationForm)
+                    .Include(r => r.EducationProgram)
+                    .ThenInclude(ep => ep.FinancingType)
+                    .Include(r => r.DocumentRiseQualification)
+                );
         var typeEducationList = await _typeEducationRepository.GetAll();
 
         List<FRDOModel> reports = new();
+        // TODO: надо сделать один общий запрос к базе чтоб не делать кучу мелких, агрегировать данные и сформировать запрос, либо запросить до цикла заявок
         foreach (var request in completedRequests)
         {
             var student = request.Student;
             if (student is null)
-                throw new NullReferenceException("Для составления отчета требуется студент, он равен null");
-
-            var person = await _personRepository.FindById(student!.PersonId!.Value);
+                throw new NullReferenceException("студент не должен быть null");
+            
+            var person = student.Person;
             if (person is null)
-                throw new NullReferenceException("Для составления отчета требуется персона, она равна null");
-
+                throw new NullReferenceException("персона не должна быть null");
+            
+            var educationProgram = request.EducationProgram;
             var typeEducation = typeEducationList.FirstOrDefault(x => x.Id == person.TypeEducationId);
-            var educationProgram = await _educationProgramRepository.GetOne(x => x.Id == request.EducationProgramId);
 
             reports.Add(new FRDOModel
             {
-                FormEducation = educationProgram?.EducationForm?.Name,
-                DocumentNumber = student.DocumentNumber,
-                RegistrationNumber = request.RegistrationNumber,
-                NameAdditionalProfessionalProgram = educationProgram?.Name,
-                RecipientLastName = person.Family,
-                SourceFundingForTraining = educationProgram.FinancingType.SourceName,
-                DateOfIssueDocument = student.DateTakeDiplom.ToString(),
-                RecipientName = person.Name,
-                RecipientPatronymic = person.Patron,
+                FormEducation = educationProgram?.EducationForm?.Name ?? "",
+                DocumentNumber = student.DocumentNumber ?? "",
+                RegistrationNumber = request.RegistrationNumber ?? "",
+                NameAdditionalProfessionalProgram = educationProgram?.Name ?? "",
+                RecipientLastName = person.Family ?? "",
+                SourceFundingForTraining = educationProgram.FinancingType.SourceName ?? "",
+                DateOfIssueDocument = student.DateTakeDiplom.ToString() ?? "",
+                RecipientName = person.Name ?? "",
+                RecipientPatronymic = person.Patron ?? "",
                 RecipientDateBirth = person.BirthDate,
-                RecipientGender = person.Sex.ToString(),
-                RecipientSNILS = student.SNILS,
-                SurnameIndicatedHE = student.FullNameDocument,
-                SeriesHE = student.DocumentSeries,
-                NumberHE = student.DocumentNumber,
-                LevelEducationHE = typeEducation?.Name,
-                NameQualification = student.Speciality,
+                RecipientGender = person.Sex.ToString() ?? "",
+                RecipientSNILS = student.SNILS ?? "",
+                SurnameIndicatedHE = student.FullNameDocument ?? "",
+                SeriesHE = student.DocumentSeries ?? "",
+                NumberHE = student.DocumentNumber ?? "",
+                LevelEducationHE = typeEducation?.Name ?? "",
+                NameQualification = student.Speciality ?? "",
             });
         }
 

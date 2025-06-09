@@ -27,4 +27,10 @@
       <ProjectReference Include="..\Students.Application\Students.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Report\Templates\FRDO.xlsx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import { Modal, Form } from "antd";
 // что-то типо формы под разные хуки мутаций
-const StandartSubmitForm = ({ control, properties, crud, mutationHook, initialHookArgs, formDataKey, title}) => {
+const StandartSubmitForm = ({ control, properties, crud, mutationHook, initialHookArgs, initialValues,formDataKey,title}) => {
     const { useAddOneAsync } = crud;
     const { showAddOneForm, setShowAddOneForm } = control;
     const [form] = Form.useForm();
@@ -45,6 +45,7 @@ const StandartSubmitForm = ({ control, properties, crud, mutationHook, initialHo
                     form={form}
                     name="form_in_modal"
                     scrollToFirstError
+                    initialValues={initialValues}
                     onFinish={(values) => onSubmit(values)}
                 >
                     {dom}

@@ -14,6 +14,7 @@ import studentsModel from './students.ts';
 import personModel from './person.js';
 import personHistoryModel from './personHistory.js';
 import orderModel from './order.js'
+import FRDOModel from './report.js'
 import studentStatusModel from './studentStatus.js';
 import typeEducationModel from './typeEducation.js';
 
@@ -36,4 +37,5 @@ export {
     studentStatusModel,
     typeEducationModel,
     orderModel,
+    FRDOModel
 };

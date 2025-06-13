@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using Students.Models.ReportsModel;
 
 namespace Studens.Application.Report.Interfaces
 {
@@ -18,5 +19,12 @@ namespace Studens.Application.Report.Interfaces
         /// </summary>
         /// <returns>Книга.</returns>
         public Task<T?> GenerateFRDOReport(DateOnly startDate, DateOnly endDate);
+
+        /// <summary>
+        /// Получить данные для отчета ФРДО c клиента.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        Task<T?> GenerateFRDOReportFromData(List<FRDOModel> data);
     }
 }

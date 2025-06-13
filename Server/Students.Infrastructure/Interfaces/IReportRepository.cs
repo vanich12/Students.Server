@@ -10,4 +10,6 @@ public interface IReportRepository<TEntity> where TEntity : class
   /// </summary>
   /// <returns>Список сущностей.</returns>
   public Task<List<TEntity>> Get(DateOnly startDate, DateOnly endDate);
+
+
 }

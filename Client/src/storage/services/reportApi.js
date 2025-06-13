@@ -1,25 +1,22 @@
 ﻿import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import apiUrl from './apiUrl.js';
 
-// СОЗДАЕМ СВОЮ ФУНКЦИЮ ДЛЯ ЗАПРОСОВ. ОНА ПРОСТАЯ И НАДЕЖНАЯ.
-const rawBaseQuery = async (args, api, extraOptions) => {
-    const { url, method, body } = args;
-    const baseUrl = `${apiUrl}/report`;
+const baseUrl = `${apiUrl}/report`;
 
+
+// Он будет использоваться по умолчанию для всех запросов, которые возвращают JSON.
+const jsonBaseQuery = fetchBaseQuery({ baseUrl });
+
+const arrayBufferBaseQuery = async (args, api, extraOptions) => {
+    const { url, method, body } = args;
     try {
-        const response = await fetch(`${baseUrl}${url}`, {
-            method,
-            body
-        });
+        const response = await fetch(`${baseUrl}${url}`, { method, body });
 
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(errorText || `Сетевая ошибка: ${response.status}`);
         }
 
-        // САМОЕ ГЛАВНОЕ ИЗМЕНЕНИЕ:
-        // Вместо всего объекта Response, мы сразу получаем его содержимое как ArrayBuffer
-        // и возвращаем только его. ArrayBuffer - это просто массив байтов.
         const buffer = await response.arrayBuffer();
         return { data: buffer };
 
@@ -28,31 +25,74 @@ const rawBaseQuery = async (args, api, extraOptions) => {
     }
 };
 
+
+const hybridBaseQuery = async (args, api, extraOptions) => {
+    if (extraOptions?.responseHandler === 'arraybuffer') {
+        // Если флаг установлен, используем обработчик для ArrayBuffer
+        return arrayBufferBaseQuery(args, api, extraOptions);
+    }
+
+    return jsonBaseQuery(args, api, extraOptions);
+};
+
+
 export const reportApi = createApi({
     reducerPath: 'report',
     keepUnusedDataFor: 0,
-    // ИСПОЛЬЗУЕМ НАШУ НОВУЮ ФУНКЦИЮ
-    baseQuery: rawBaseQuery,
+    // --- Используем наш новый гибридный baseQuery ---
+    baseQuery: hybridBaseQuery,
     tagTypes: ['report', 'reports'],
     endpoints: (builder) => ({
         addPFDOReport: builder.mutation({
-            // Теперь query просто возвращает объект для нашего rawBaseQuery
             query: ({ startDate, endDate }) => ({
                 url: `/GetPFDOReport?startDate=${startDate}&endDate=${endDate}`,
                 method: 'POST'
-                // formData: true БОЛЬШЕ НЕ НУЖНО И НЕ БУДЕТ РАБОТАТЬ
             }),
-
-            // responseHandler БОЛЬШЕ НЕ НУЖЕН ЗДЕСЬ, мы все делаем в компоненте
-            // УДАЛИ ЕГО!
-
+            extraOptions: { responseHandler: 'arraybuffer' },
             invalidatesTags: [{ type: 'reports', id: 'LIST' }]
         }),
-        // ... другие твои эндпоинты
+        // В вашем файле reportApi.js
+
+// ...
+        addPFDOReportFromClient: builder.mutation({
+            // Заменяем 'query' на 'queryFn'
+            queryFn: async (body, queryApi, extraOptions, baseQuery) => {
+                console.log('--- ОТПРАВКА НА СЕРВЕР ---');
+                console.log('Эндпоинт: /GenerateEditedPFDOReport');
+
+                const bodyAsJsonString = JSON.stringify(body, null, 2);
+                console.log('Тело запроса (body):', bodyAsJsonString);
+
+                const result = await baseQuery({
+                    url: `/GenerateEditedPFDOReport`,
+                    method: 'POST',
+                    body: body,
+                    responseHandler: (response) => response.arrayBuffer()
+                });
+
+                if (result.error) {
+                    console.error('Ошибка от сервера:', result.error);
+                } else {
+                    console.log('Ответ от сервера получен (arrayBuffer).');
+                }
+
+                return result;
+            },
+            invalidatesTags: [{ type: 'reports', id: 'LIST' }]
+        }),
+// ...
+        getPFDOPreview: builder.query({
+            query: ({ startDate, endDate }) => ({
+                url: `/PreviewPFDOReport?startDate=${startDate}&endDate=${endDate}`,
+                method: 'GET',
+            }),
+            providesTags: ['reports'],
+        }),
     }),
 });
 
 export const {
     useAddPFDOReportMutation,
-    useAddRostatReportMutation,
+    useAddPFDOReportFromClientMutation,
+    useGetPFDOPreviewQuery,
 } = reportApi;

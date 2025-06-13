@@ -37,6 +37,7 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
 
     #region Методы
 
+
     /// <summary>
     /// Данные для формирования отчета.
     /// </summary>
@@ -97,24 +98,9 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
         }
 
         return reports;
-
-        //return (from student in listStudents
-        //    let typeEducation = typeEducationList.FirstOrDefault(x => x.Id == person.TypeEducationId)
-        //  select new FRDOModel
-        //  { 
-        //    RecipientLastName = person.Family,
-        //    RecipientName = person.Name,
-        //    RecipientPatronymic = person.Patron,
-        //    RecipientDateBirth = person.BirthDate,
-        //    RecipientGender = person.Sex.ToString(),
-        //    RecipientSNILS = student.SNILS,
-        //    SurnameIndicatedHE = student.FullNameDocument,
-        //    SeriesHE = student.DocumentSeries,
-        //    NumberHE = student.DocumentNumber,
-        //    LevelEducationHE = typeEducation.Name,
-        //    NameQualification = student.Speciality,
-        //  }).ToList();
     }
+
+
 
     #endregion
 

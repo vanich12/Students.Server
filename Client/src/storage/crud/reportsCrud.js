@@ -1,9 +1,11 @@
 ﻿import {
     useAddPFDOReportMutation,
-    useAddRostatReportMutation,
+    useAddPFDOReportFromClientMutation,
+    useGetPFDOPreviewQuery,
 } from '../services/reportApi.js';
 
 export {
     useAddPFDOReportMutation as useAddPFDOAsync,
-    useAddRostatReportMutation as useAddRostatAsync,
+    useAddPFDOReportFromClientMutation as useAddPFDOAsyncFromClient,
+    useGetPFDOPreviewQuery
 }

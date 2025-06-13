@@ -5,7 +5,7 @@ import { Row, Col, Space, Button } from 'antd';
 import config from '../../storage/catalogConfigs/person.js'
 import studentConfig from '../../storage/catalogConfigs/students'
 import enrollConfig from '../../storage/catalogConfigs/enrollingPerson'
-import StandartSubmitForm from '../shared/catalogProvider/forms/StandartSubmitForm'
+import StandartSubmitDataHookForm from '../shared/catalogProvider/forms/StandartSubmitDataHookForm'
 
 const PersonDetailsPage = () => {
     const { id } = useParams();
@@ -79,7 +79,7 @@ const PersonDetailsPage = () => {
                 />
 
             </Layout>
-                <StandartSubmitForm
+                <StandartSubmitDataHookForm
                     config={studentConfig}
                     crud={studentConfig.crud}
                     control={{ showAddOneForm, setShowAddOneForm }}

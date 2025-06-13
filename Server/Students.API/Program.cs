@@ -55,6 +55,7 @@ builder.Services.AddScoped<IReportRepository<FRDOModel>, FRDOReportRepository>()
 builder.Services.AddScoped<IReportRepository<RosstatModel>, RosstatReportRepository>();
 builder.Services.AddScoped<IReport<XLWorkbook>, GenerateReports>();
 builder.Services.AddScoped<IEducationProgramRepository, EducationProgramRepository>();
+builder.Services.AddScoped<IFRDOService, FRDOService>();
 //builder.Services.AddScoped<IReportRepository, CSVReportRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IFEAProgramRepository, FEAProgramRepository>();

@@ -22,12 +22,22 @@ namespace Studens.Application.Report
         /// <returns>Книга.</returns>
         public async Task<XLWorkbook?> GenerateRosstatReport(DateOnly startDate, DateOnly endDate)
         {
-            var listReportData = await _reportRosstatRepository.Get(startDate, endDate) ?? throw new ArgumentNullException("Нет данных.");
+            var listReportData = await _reportRosstatRepository.Get(startDate, endDate) ??
+                                 throw new ArgumentNullException("Нет данных.");
             var template = new XLTemplate(Directory.GetCurrentDirectory() + @"\Report\Templates\Form1-PK.xlsx");
             template.AddVariable(listReportData.FirstOrDefault());
             template.Generate();
 
             return template.Workbook as XLWorkbook;
+        }
+
+        public async Task<IEnumerable<FRDOModel>> GetReportDataForFRDO(DateOnly startDate, DateOnly endDate)
+        {
+            var listReportData = await _reportPFDORepository.Get(startDate, endDate);
+            if (listReportData == null || !listReportData.Any())
+                return null;
+
+            return listReportData;
         }
 
         /// <summary>
@@ -40,37 +50,36 @@ namespace Studens.Application.Report
             var listReportData = await _reportPFDORepository.Get(startDate, endDate);
             if (listReportData == null || !listReportData.Any())
                 return null;
-            
 
             string templateDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Report", "Templates");
             string templatePath = Path.Combine(templateDirectory, "FRDO.xlsx");
 
-       
-            if (!Directory.Exists(templateDirectory))
-            {
-                Directory.CreateDirectory(templateDirectory);
-                // ВАЖНО: После создания папки, шаблон там не появится сам.
-                // Вы должны либо скопировать его туда при развертывании приложения,
-                // либо программа должна сообщить об ошибке.
-            }
+            var workbook = await GenerateReportFromTemplate(templatePath, listReportData);
 
-            // 4. Проверяем, существует ли сам файл шаблона
+            return workbook;
+        }
+
+        public async Task<XLWorkbook?> GenerateFRDOReportFromData(List<FRDOModel> data)
+        {
+            if (data == null || !data.Any())
+                return null;
+            string templateDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Report", "Templates");
+            string templatePath = Path.Combine(templateDirectory, "FRDO.xlsx");
+
+            var workbook = await GenerateReportFromTemplate(templatePath, data);
+
+            return workbook;
+        }
+
+        private async Task<XLWorkbook?> GenerateReportFromTemplate(string templatePath, List<FRDOModel> data)
+        {
             if (!File.Exists(templatePath))
                 throw new FileNotFoundException("Файл шаблона отчета не найден по пути: " + templatePath);
-
-
-            // 5. Открываем шаблон и заполняем его
-      
             var workbook = new XLWorkbook(templatePath);
-
-            var worksheet = workbook.Worksheet("Шаблон"); // Убедитесь, что лист называется именно так
+            var worksheet = workbook.Worksheet("Шаблон");
             if (worksheet == null)
-            {
                 throw new InvalidOperationException("В шаблоне отчета не найден лист с названием 'Шаблон'.");
-            }
-
-            FillingCells(worksheet, listReportData);
-
+            FillingCells(worksheet, data);
             return workbook;
         }
 
@@ -92,12 +101,15 @@ namespace Studens.Application.Report
                 {
                     var prop = cell.GetValue(row)?.ToString();
                     var cellValue = cell.GetValue(row) is null ? string.Empty : prop;
-                    xLWorksheet.Cell(ExcelMetadata.ExcelColumnName[charCounter].ToString() + cellCounter).Value = cellValue;
+                    xLWorksheet.Cell(ExcelMetadata.ExcelColumnName[charCounter].ToString() + cellCounter).Value =
+                        cellValue;
                     charCounter++;
                 }
+
                 charCounter = 0;
                 cellCounter++;
             }
+
             return xLWorksheet;
         }
 
@@ -106,7 +118,8 @@ namespace Studens.Application.Report
         /// </summary>
         /// <param name="reportPFDORepository">Репозиторий.</param>
         /// <param name="reportRosstatRepository">Репозиторий.</param>
-        public GenerateReports(IReportRepository<FRDOModel> reportPFDORepository, IReportRepository<RosstatModel> reportRosstatRepository)
+        public GenerateReports(IReportRepository<FRDOModel> reportPFDORepository,
+            IReportRepository<RosstatModel> reportRosstatRepository)
         {
             _reportRosstatRepository = reportRosstatRepository;
             _reportPFDORepository = reportPFDORepository;

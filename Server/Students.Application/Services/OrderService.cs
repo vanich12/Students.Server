@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Students.Application.Services.Interfaces;
+using Students.DBCore.Contexts;
 using Students.Infrastructure.DTO;
 using Students.Infrastructure.Extension.Pagination;
 using Students.Infrastructure.Interfaces;
@@ -20,6 +21,7 @@ namespace Students.Application.Services
         IGroupStudentRepository groupStudentRepository,
         IGroupRepository groupRepository,
         IGenericRepository<KindOrder> kindOrderRepository,
+        StudentContext context,
         IGenericRepository<StatusRequest> requestStatusRepository,
         ILogger<Order> logger)
         : GenericService<Order>(orderRepository, logger), IOrderService
@@ -34,78 +36,90 @@ namespace Students.Application.Services
         /// <exception cref="Exception"></exception>
         public async Task<Order> CreateOrder(OrderDTO form)
         {
-            if (form.KindOrderId != null)
+            await using var transaction = await context.Database.BeginTransactionAsync();
+
+            try
             {
+                if (form.KindOrderId == null)
+                {
+                    // Если здесь просто нужно вернуть результат маппинга,
+                    // то транзакция не нужна, но для консистентности можно оставить.
+                    return await Mapper.OrderDTOToOrder(form, kindOrderRepository);
+                }
+
+                // --- Все ваши проверки и получение данных ---
                 var kindOrder = await kindOrderRepository.FindById(form.KindOrderId.Value);
+                if (kindOrder is null) throw new KeyNotFoundException("Вид приказа не найден."); 
 
                 var request = await requestRepository.FindById(form.RequestId);
-                if (request is null)
-                    throw new ArgumentException($"Не удалось найти заявку по id {form.RequestId}");
-                if (request.PersonId is null)
-                    throw new Exception("Не нашлось персоны у заявки");
+                if (request is null) throw new KeyNotFoundException($"Не удалось найти заявку по id {form.RequestId}");
+                if (request.PersonId is null) throw new InvalidOperationException("Не нашлось персоны у заявки");
 
                 var group = await groupRepository.FindById(form.GroupId);
-                if (group is null)
-                    throw new Exception($"Не удалось найти группу по Id {form.GroupId}");
+                if (group is null) throw new KeyNotFoundException($"Не удалось найти группу по Id {form.GroupId}");
+
                 var person = request.Person;
 
-                if (kindOrder?.Name?.ToLower() == "о зачислении")
+                if (kindOrder?.Name?.Equals("о зачислении", StringComparison.OrdinalIgnoreCase) == true)
                 {
                     if (request.StudentId is null)
                     {
-                        var newStudent = new Student()
-                        {
-                            PersonId = person.Id
-                        };
-
-                        var student = await studentRepository.Create(newStudent);
-                        if (student is null)
-                            throw new Exception("Не удалось создать студента");
+                        var newStudent = new Student { PersonId = person.Id };
+                        var student = await studentRepository.Create(newStudent); 
                         request.StudentId = student.Id;
                     }
 
                     request.StatusRequestId = (await requestStatusRepository.GetOne(x => x.Name == "Обучение"))?.Id;
                     var groupStudent = await groupStudentRepository.FindById(request.Id);
                     if (groupStudent is null)
-                        groupStudent = await groupStudentRepository.Create(request, group.Id);
-                    request.GroupStudent.IsArchive = false;
-
-                    if (groupStudent is null)
-                        throw new ArgumentException("Не удалось создать groupStudent");
+                    {
+                        groupStudent = await groupStudentRepository.Create(request, group.Id); 
+                    }
+                    groupStudent.IsArchive = false;
                 }
 
-                if (kindOrder?.Name?.ToLower() == "об отчислении")
+              
+                if (kindOrder?.Name?.Equals("об отчислении", StringComparison.OrdinalIgnoreCase) == true)
                 {
-                    //var groupStudent = await groupStudentRepository.FindByStudentInGroup(request.);
-                    if (request.GroupStudent is null)
-                        throw new NullReferenceException(
-                            "у заявки остутсвует GroupStudent (по крайней мере на уровне EF)");
+                    if (request.GroupStudent is null) throw new NullReferenceException("У заявки отсутствует GroupStudent.");
 
-                    request.GroupStudent.IsArchive = true;
-                    var requestStatusId = request.StatusRequestId.Value;
-                    request.StatusRequestId =
-                        (await requestStatusRepository.GetOne(s => s.Name != null && s.Name == "Отчислен"))
-                        ?.Id ??
-                        requestStatusId;
-          
+                    var groupStudent = await groupStudentRepository.FindById(request.Id);
+
+                    if (groupStudent is null) throw new KeyNotFoundException($"Не удалось найти группу по Id {form.GroupId}");
+                    
+                    groupStudent.IsArchive = true; 
+                    var expelledStatus = await requestStatusRepository.GetOne(s => s.Name == "Отчислен");
+
+                    if (expelledStatus != null)
+                        request.StatusRequestId = expelledStatus.Id; 
                 }
-                var newGroupStudent = await groupStudentRepository.Update(request.Id, request.GroupStudent);
-                if (newGroupStudent is null)
-                    throw new InvalidOperationException("Не удалось создать приказ");
+
+                if (request.GroupStudent != null)
+                    await groupStudentRepository.Update(request.Id, request.GroupStudent);
+                
 
                 var newOrder = await Mapper.OrderDTOToOrder(form, kindOrderRepository);
                 var order = await orderRepository.Create(newOrder);
-                if (order is null)
-                    throw new InvalidOperationException("Не удалось создать приказ");
 
-                var newRequest = await requestRepository.Update(request.Id, request);
-                if (newRequest is null)
-                    throw new InvalidOperationException("Не удалось обновить заявку");
+                await requestRepository.Update(request.Id, request);
+
+                // Здесь EF Core сам сохраняет все изменения.
+                // Если у вас нет явного SaveChangesAsync() в репозиториях,
+                // то его нужно вызвать здесь.
+                // await dbContext.SaveChangesAsync();
+
+                // Если мы дошли до сюда без ошибок, применяем все изменения в базе данных
+                await transaction.CommitAsync();
 
                 return order;
             }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Произошла ошибка при создании приказа. Откатываем транзакцию.");
 
-            return await Mapper.OrderDTOToOrder(form, kindOrderRepository);
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
     }
 }

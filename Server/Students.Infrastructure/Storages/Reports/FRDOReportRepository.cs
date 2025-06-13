@@ -29,6 +29,7 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
     private readonly IGenericRepository<Group> _groupRepository;
     private readonly IPersonRepository _personRepository;
     private readonly IRequestRepository _requestRepository;
+    private readonly IGroupStudentRepository _groupStudentRepository;
     private readonly IGenericRepository<ScopeOfActivity> _scopeOfActivityRepository;
     private readonly IGenericRepository<TypeEducation> _typeEducationRepository;
     private readonly IGenericRepository<StudentStatus> _studentStatusRepository;
@@ -36,7 +37,6 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
     #endregion
 
     #region Методы
-
 
     /// <summary>
     /// Данные для формирования отчета.
@@ -48,16 +48,21 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
         DateTime endDateTime = endDate.AddDays(1).ToDateTime(TimeOnly.MinValue);
         var completedRequests =
             await _requestRepository.Get(x =>
-                x.DocumentRiseQualification.Date >= startDateTime && x.DocumentRiseQualification.Date <= endDateTime, 
-                q=>q.Include(x=>x.Student)
-                    .ThenInclude(q=> q.Person)
-                    .ThenInclude(p=>p.TypeEducation)
+                    x.DocumentRiseQualification.Date >= startDateTime &&
+                    x.DocumentRiseQualification.Date <= endDateTime,
+                q => q.Include(x => x.Student)
+                    .ThenInclude(q => q.Person)
+                    .ThenInclude(p => p.TypeEducation)
                     .Include(r => r.EducationProgram)
                     .ThenInclude(ep => ep.EducationForm)
                     .Include(r => r.EducationProgram)
                     .ThenInclude(ep => ep.FinancingType)
+                    .Include(r => r.EducationProgram)
+                    .ThenInclude(ep => ep.KindDocumentRiseQualification)
                     .Include(r => r.DocumentRiseQualification)
-                );
+                    .Include(x => x.GroupStudent)
+                    .ThenInclude(x => x.Group)
+            );
         var typeEducationList = await _typeEducationRepository.GetAll();
 
         List<FRDOModel> reports = new();
@@ -67,22 +72,27 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
             var student = request.Student;
             if (student is null)
                 throw new NullReferenceException("студент не должен быть null");
-            
+
             var person = student.Person;
             if (person is null)
                 throw new NullReferenceException("персона не должна быть null");
-            
+
             var educationProgram = request.EducationProgram;
             var typeEducation = typeEducationList.FirstOrDefault(x => x.Id == person.TypeEducationId);
 
             reports.Add(new FRDOModel
             {
+                TypeDocument = educationProgram?.KindDocumentRiseQualification?.Name,
+                FormEducationAtTimeTerminationEducation = educationProgram?.EducationForm?.Name,
+                DurationTraining = educationProgram?.HoursCount.ToString(),
+                YearGraduation = request.GroupStudent?.Group?.EndDate.Year.ToString() ?? "",
+                YearBeginningTraining = request.GroupStudent?.Group?.StartDate.Year.ToString() ?? "",
                 FormEducation = educationProgram?.EducationForm?.Name ?? "",
                 DocumentNumber = student.DocumentNumber ?? "",
                 RegistrationNumber = request.RegistrationNumber ?? "",
                 NameAdditionalProfessionalProgram = educationProgram?.Name ?? "",
                 RecipientLastName = person.Family ?? "",
-                SourceFundingForTraining = educationProgram.FinancingType.SourceName ?? "",
+                SourceFundingForTraining = educationProgram?.FinancingType?.SourceName ?? "",
                 DateOfIssueDocument = student.DateTakeDiplom.ToString() ?? "",
                 RecipientName = person.Name ?? "",
                 RecipientPatronymic = person.Patron ?? "",
@@ -99,8 +109,6 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
 
         return reports;
     }
-
-
 
     #endregion
 
@@ -132,11 +140,13 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
         IGenericRepository<Group> groupRepository,
         IRequestRepository requestRepository,
         IPersonRepository personRepository,
+        IGroupStudentRepository groupStudentRepository,
         IGenericRepository<ScopeOfActivity> scopeOfActivityRepository,
         IGenericRepository<TypeEducation> typeEducationRepository,
         IGenericRepository<StudentStatus> studentStatusRepository
     )
     {
+        _groupStudentRepository = groupStudentRepository;
         _studentRepository = studentRepository;
         _educationFormRepository = educationFormRepository;
         _educationProgramRepository = educationProgramRepository;

@@ -178,7 +178,7 @@ const ReportsPage = () => {
                         <RangePicker
                             onChange={(dates) => setDateRange(dates)}
                         />
-                        <Paragraph><strong>2. Выполните действие:</strong></Paragraph>
+                        <Paragraph><strong>2а. Добавьте необходимы поля и скачайте отчёт:</strong></Paragraph>
                         {/* Группа кнопок */}
                         <Space>
                             <Button
@@ -199,7 +199,7 @@ const ReportsPage = () => {
                             </Button>
                         </Space>
                         <Paragraph style={{ marginBottom: 0 }}>
-                            <strong>2. Сформируйте и скачайте отчет:</strong>
+                            <strong>2б. Сформируйте и скачайте отчёт на основе данных из системы:</strong>
                         </Paragraph>
                         <Button
                             type="primary"
@@ -232,10 +232,8 @@ const ReportsPage = () => {
             >
                 <Table
                     columns={reportConfig.columns}
-                    // ШАГ 5: Таблица всегда использует наш локальный, редактируемый массив
                     dataSource={reportArray}
                     loading={isPreviewLoading}
-                    // Используем наше новое свойство 'key'
                     rowKey="key"
                     scroll={{ x: 'max-content' }}
                     pagination={{ pageSize: 10 }}

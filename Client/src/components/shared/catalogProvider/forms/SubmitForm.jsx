@@ -14,7 +14,7 @@ const SubmitForm = ({ control, properties, data = {}, onSubmit, title }) => {
             for (const key in data) {
 
                 if (data[key] && typeof data[key] === 'object' && !Array.isArray(data[key]) && !(data[key] instanceof Date)) {
-                    preparedData[key] = data[key].id; // Предполагаем, что нам нужен ID
+                    preparedData[key] = data[key].id;
                 } else {
                     preparedData[key] = data[key];
                 }
@@ -52,16 +52,10 @@ const SubmitForm = ({ control, properties, data = {}, onSubmit, title }) => {
                     return (
                         <Form.Item
                             key={key}
-                            name={key} // <-- Связывает поле с данными из формы
+                            name={key}
                             label={name}
                             {...formParams}
                         >
-                            {/*
-                              УБИРАЕМ ВСЕ ЛИШНИЕ ПРОПСЫ!
-                              Form.Item сам передаст value и onChange в ItemComponent.
-                              Вашему <ItemComponent> НЕ НУЖНЫ пропсы value, name, setValue.
-                              Он должен быть стандартным "контролируемым компонентом".
-                            */}
                             <Input />
                         </Form.Item>
                     );

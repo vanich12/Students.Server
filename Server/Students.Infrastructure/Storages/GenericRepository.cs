@@ -37,13 +37,13 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     /// <returns>Список сущностей.</returns>
     public virtual async Task<IEnumerable<TEntity>> Get(
         Expression<Func<TEntity, bool>> predicate,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? eagerQuery = null) 
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? eagerQuery = null)
     {
         IQueryable<TEntity> query = this._dbSet.AsNoTracking();
 
         if (eagerQuery != null)
             query = eagerQuery(query);
-        
+
 
         var items = await query.Where(predicate).ToListAsync();
 
@@ -134,6 +134,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         await this._context.SaveChangesAsync();
         return item;
     }
+
 
     /// <summary>
     /// Удаление сущности.

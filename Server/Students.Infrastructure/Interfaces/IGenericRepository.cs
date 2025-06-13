@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace Students.Infrastructure.Interfaces;
@@ -67,4 +68,5 @@ public interface IGenericRepository<TEntity> where TEntity : class
     /// <param name="item">Объект.</param>
     /// <returns>Объект.</returns>
     Task<TEntity?> Patch(Guid id, TEntity item);
+
 }

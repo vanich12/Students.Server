@@ -51,14 +51,10 @@ export const reportApi = createApi({
             extraOptions: { responseHandler: 'arraybuffer' },
             invalidatesTags: [{ type: 'reports', id: 'LIST' }]
         }),
-        // В вашем файле reportApi.js
 
-// ...
         addPFDOReportFromClient: builder.mutation({
-            // Заменяем 'query' на 'queryFn'
+
             queryFn: async (body, queryApi, extraOptions, baseQuery) => {
-                console.log('--- ОТПРАВКА НА СЕРВЕР ---');
-                console.log('Эндпоинт: /GenerateEditedPFDOReport');
 
                 const bodyAsJsonString = JSON.stringify(body, null, 2);
                 console.log('Тело запроса (body):', bodyAsJsonString);

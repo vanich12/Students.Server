@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Form } from "antd";
+import { getComponentFromRegistry } from '../../../../storage/componentRegistry'
 
 const AddOneForm = ({ control, properties, crud }) => {
   const { useAddOneAsync } = crud;
@@ -38,7 +39,7 @@ const AddOneForm = ({ control, properties, crud }) => {
         )}
     >
         {Object.entries(properties).map(([key, { name, type, formParams, params }]) => {
-            const Item = type;
+            const Item = getComponentFromRegistry(type);
 
             return (
                 <Item

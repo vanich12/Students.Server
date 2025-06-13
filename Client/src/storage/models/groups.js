@@ -1,23 +1,21 @@
-import String from '../../components/shared/business/common/String.jsx';
-import Date from '../../components/shared/business/common/Date.jsx';
-import EducationProgramSelect from '../../components/shared/business/selects/EducationProgramSelect.jsx'
+
 
 const model = {
-    name: { 
+    name: {
         name: 'Наименование группы',
-        type: String,
+        type: 'String', // Используем строку
     },
-    educationProgramId: { 
-        name: 'Программа обучения', 
-        type: EducationProgramSelect,
+    educationProgramId: {
+        name: 'Программа обучения',
+        type: 'EducationProgramSelect', // Используем строку
     },
-    startDate: { 
-        name: 'Дата начала', 
-        type: Date, 
+    startDate: {
+        name: 'Дата начала',
+        type: 'Date', // Используем строку
     },
-    endDate: { 
-        name: 'Дата окончания', 
-        type: Date,
+    endDate: {
+        name: 'Дата окончания',
+        type: 'Date', // Используем строку
     },
 };
 

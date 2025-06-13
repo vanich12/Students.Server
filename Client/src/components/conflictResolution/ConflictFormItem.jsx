@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { CheckOutlined } from '@ant-design/icons'
 import { CloseOutlined } from '@mui/icons-material'
 import styled from 'styled-components'
+import { getComponentFromRegistry } from '../../storage/componentRegistry'
 const { Text, Title } = Typography;
 
 const StyledApplyButton = styled(Button)`
@@ -40,7 +41,8 @@ const ConflictFormItem =({   identifier,
                              onChange: onChangeFormItem, }) =>{
     const { token } = theme.useToken();
     const {type, params, formParams, name} = config;
-    const ItemComponent = type;
+
+    const ItemComponent = getComponentFromRegistry(type);
     const fieldDisplayName = name || identifier;
     const [currentSolve, setCurrentSolve] = useState('');
     const [isResultApproved, setIsResultApproved] = useState(false);

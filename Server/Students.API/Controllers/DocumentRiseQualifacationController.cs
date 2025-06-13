@@ -9,9 +9,9 @@ namespace Students.API.Controllers;
 /// Контроллер Документы повышения квалификации.
 /// </summary>
 [ApiController]
-[Route("controller")]
+[Route("[controller]")]
 [ApiVersion("1.0")]
-public class DocumentRiseQualifacationController : GenericAPiController<DocumentRiseQualification>
+public class DocumentRiseQualificationController : GenericAPiController<DocumentRiseQualification>
 {
     private readonly IDocumentRiseQualificationRepository _documentRiseQualificationRepository;
     private readonly ILogger _logger;
@@ -36,7 +36,7 @@ public class DocumentRiseQualifacationController : GenericAPiController<Document
     /// </summary>
     /// <param name="repository">Репозиторий документов повышения квалификации.</param>
     /// <param name="logger">Логгер.</param>
-    public DocumentRiseQualifacationController(IDocumentRiseQualificationRepository repository,
+    public DocumentRiseQualificationController(IDocumentRiseQualificationRepository repository,
         ILogger<DocumentRiseQualification> logger) : base(repository, logger)
     {
         _documentRiseQualificationRepository = repository;

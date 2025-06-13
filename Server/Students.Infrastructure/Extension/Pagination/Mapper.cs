@@ -465,7 +465,6 @@ public static class Mapper
             Date = form.Date,
             Number = form.Number,
             RequestId = form.RequestId,
-            KindDocumentRiseQualificationName = (await repository.GetOne(x=>x.Id == form.KindDocumentRiseQualificationId))?.Name, 
         };
     }
     public static  DocumentRiseQualification DocumentRiseQualificationDTOToDocumentRiseQualification(

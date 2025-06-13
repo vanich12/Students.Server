@@ -1,63 +1,72 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import apiUrl from './apiUrl.js';
 
-export const kindDocumentRiseQualificationApi = createApi({
-  reducerPath: 'kindDocumentRiseQualification',
-  tagTypes:['KindDocumentRiseQualification','KindDocumentRiseQualifications'],
-  baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/kindDocumentRiseQualification` }),
+export const DocumentRiseQualificationApi = createApi({
+  reducerPath: 'documentRiseQualification',
+  tagTypes:['DocumentRiseQualification','DocumentRiseQualifications'],
+  baseQuery: fetchBaseQuery({ baseUrl: `${apiUrl}/documentRiseQualification` }),
   endpoints: (builder) => ({
-    getKindDocumentRiseQualification: builder.query({
+    getDocumentRiseQualification: builder.query({
       query: () => '',
       providesTags: (result)=>{
         var tags = result?.data ?
-            result.data.map(({id})=>({type: 'KindDocumentRiseQualification', id })):[];
-        const listTag = { type: 'KindDocumentRiseQualifications', id: 'LIST' };
+            result.data.map(({id})=>({type: 'DocumentRiseQualification', id })):[];
+        const listTag = { type: 'DocumentRiseQualifications', id: 'LIST' };
         return [...tags, listTag];
       },
     }),
-    getKindDocumentRiseQualificationPaged: builder.query({
-      query: ({ pageNumber, pageSize, filterDataReq }) => `paged?page=${pageNumber}&size=${pageSize}${filterDataReq}`,
+    getDocumentRiseQualificationPaged: builder.query({
+      query: ({ pageNumber, pageSize, filterDataReq }) => {
+        // Логируем входящие параметры
+        console.log('Called getDocumentRiseQualificationPaged with params:', {
+          pageNumber,
+          pageSize,
+          filterDataReq: filterDataReq || 'filterDataReq not provided'
+        });
+
+        return `paged?page=${pageNumber}&size=${pageSize}`;
+      },
       providesTags: (result)=>{
         var tags = result?.data ?
-            result.data.map(({id})=>({type: 'KindDocumentRiseQualification', id })):[];
-        const listTag = { type: 'KindDocumentRiseQualifications', id: 'LIST' };
+            result.data.map(({id})=>({type: 'DocumentRiseQualification', id })):[];
+        const listTag = { type: 'DocumentRiseQualifications', id: 'LIST' };
         return [...tags, listTag];
       },
     }),
-    getKindDocumentRiseQualificationById: builder.query({
+    getDocumentRiseQualificationById: builder.query({
       query: (id) => id,
-      providesTags: (result, error, id) => [{ type: 'KindDocumentRiseQualification', id }],
+      providesTags: (result, error, id) => [{ type: 'DocumentRiseQualification', id }],
     }),
-    addKindDocumentRiseQualification: builder.mutation({
+    addDocumentRiseQualification: builder.mutation({
       query: (item) => ({
         method: 'POST',
         body: item,
       }),
-      invalidatesTags: [{type:'KindDocumentRiseQualifications', id:'LIST' }],
+      invalidatesTags: [{type:'DocumentRiseQualifications', id:'LIST' }],
     }),
-    editKindDocumentRiseQualification: builder.mutation({
+    editDocumentRiseQualification: builder.mutation({
       query: ({ id, item }) => ({
         url: id,
         method: 'PUT',
         body: item,
       }),
-      invalidatesTags: (result, error, { id }) => [{type:'KindDocumentRiseQualifications', id:'LIST' },{type:'KindDocumentRiseQualification', id: id }],
+      invalidatesTags: (result, error, { id }) => [{type:'DocumentRiseQualification', id:'LIST' },{type:'DocumentRiseQualification', id: id }],
     }),
-    removeKindDocumentRiseQualification: builder.mutation({
+    removeDocumentRiseQualification: builder.mutation({
       query: (id) => ({
         url: id,
         method: 'DELETE',
       }),
-      invalidatesTags: [{type:'KindDocumentRiseQualifications', id:'LIST' }],
+      invalidatesTags: [{type:'DocumentRiseQualification', id:'LIST' }],
     }),
   }),
 });
 
 export const {
-  useGetKindDocumentRiseQualificationQuery,
-  useGetKindDocumentRiseQualificationPagedQuery,
-  useGetKindDocumentRiseQualificationByIdQuery,
-  useAddKindDocumentRiseQualificationMutation,
-  useEditKindDocumentRiseQualificationMutation,
-  useRemoveKindDocumentRiseQualificationMutation,
-} = kindDocumentRiseQualificationApi;
+  useGetDocumentRiseQualificationQuery,
+  useGetDocumentRiseQualificationPagedQuery,
+  useGetDocumentRiseQualificationByIdQuery,
+  useAddDocumentRiseQualificationMutation,
+  useEditDocumentRiseQualificationMutation,
+  useRemoveDocumentRiseQualificationMutation,
+} = DocumentRiseQualificationApi;

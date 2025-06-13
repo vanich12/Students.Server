@@ -69,6 +69,11 @@ const useMenuConfig = () => {
                     label: 'Приказы',
                     onClick: () => {navigate('/order')},
                 },
+                {
+                    key: '/documentRiseQualifacation',
+                    label: 'Документы о квалификации',
+                    onClick: () => {navigate('/documentRiseQualifacation')},
+                },
             ],
         },
         { type: 'divider' },

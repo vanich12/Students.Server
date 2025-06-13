@@ -6,7 +6,7 @@ import {
     useEditOneAsync,
     useRemoveOneAsync,
 } from '../crud/kindDocumentRiseQualificationCrud.js';
-import kindDocumentRiseQualificationModel from '../models/kindDocumentRiseQualification.js';
+import { kindDocumentRiseQualificationModel } from '../models/index.js';
 
 export default {
     detailsLink: 'kindDocumentRiseQualification',
@@ -23,9 +23,9 @@ export default {
     },
     columns: [
         {
-            title: 'Вид документа повышения квалификации',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Вид документа',
+            dataIndex: 'kindDocumentRiseQualificationId',
+            key: 'kindDocumentRiseQualificationId',
         },
     ],
     dataConverter: (data) => data,

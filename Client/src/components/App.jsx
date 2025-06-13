@@ -29,6 +29,8 @@ import PendingRequestsPage from './pendingRequest/PendingRequestsPage'
 import ConflictResolutionPage from './conflictResolution/ConflictResolutionPage'
 import PersonsPage from './person/PersonsPage'
 import PersonDetailsPage from './person/PersonDetailPage'
+import DocumnetRiseQualificationDetailsPage from './DocumentRiseQualificationModel/DocumentRiseQualificationDetailsPage'
+import DocumnetRiseQualificationPage from './DocumentRiseQualificationModel/DocumentRiseQualificationPage'
 
 const App = () => {
   return (
@@ -46,8 +48,17 @@ const App = () => {
                 <PrivateRoute>
                     <PendingRequestDetailPage />
                 </PrivateRoute>
-            )}
-            />
+            )}/>
+            <Route path="/documentRiseQualifacation/:id" element={(
+                <PrivateRoute>
+                    <DocumnetRiseQualificationDetailsPage />
+                </PrivateRoute>
+            )}/>
+            <Route path="/documentRiseQualifacation" element={(
+                <PrivateRoute>
+                    <DocumnetRiseQualificationPage />
+                </PrivateRoute>
+            )}/>
             <Route path="/conflictResolutions/:personId/:pendingRequestId" element={(
                 <PrivateRoute>
                     <ConflictResolutionPage />

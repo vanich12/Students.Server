@@ -38,8 +38,9 @@ namespace Students.Infrastructure.Storages
             return doc;
         }
 
-        public DocumentRiseQualifacationRepository(StudentContext context) : base(context)
+        public DocumentRiseQualifacationRepository(StudentContext context,IGenericRepository<KindDocumentRiseQualification> kindDocumentRepository) : base(context)
         {
+            this._kindDocumentRepository = kindDocumentRepository;
             this._ctx = context;
         }
     }

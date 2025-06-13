@@ -5,6 +5,7 @@ import ConflictFormItem from './ConflictFormItem'
 import { useEditOneByPRequest } from '../../storage/crud/personsCrud'
 import useNotifications from '../../notifications/useNotifications'
 import { useNavigate } from 'react-router-dom'
+import { getComponentFromRegistry } from '../../storage/componentRegistry'
 const { Text, Title } = Typography;
 
 // ToDo: нужно будет сделать единый конфиг, по которому будет происходить сравнение, чтобы из конфигов не брались лишние поля
@@ -99,7 +100,7 @@ const ConflictResolutionForm = ({ datasId, configs }) => {
                 if (!hasPRequestValue || currentValue === newValue|| newValue === null) {
                     if (personPropConfig) {
 
-                        const ItemComponent = personPropConfig.type
+                        const ItemComponent = getComponentFromRegistry(personPropConfig.type);
                         return (
                             <Form.Item
                                 key={fieldName}

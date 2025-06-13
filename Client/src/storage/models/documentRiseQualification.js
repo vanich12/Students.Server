@@ -1,28 +1,23 @@
-import String from '../../components/shared/business/common/String.jsx';
+﻿
 
 
 const model = {
-    name: {
-        name: 'Вид документа повышения квалификации',
-        type: String,
-        show: true,
-        required: true
-    },
+
     kindDocumentRiseQualificationId:{
         name:'Вид документа повышения квалификации',
-        type: String,
+        type: 'kindDocumentRiseQualificationSelect',
     },
     date:{
         name:'Дата выдачи удостоверения',
-        type: Date,
+        type: 'Date',
     },
     number:{
         name:'Номер выдачи удостоверения',
-        type: String,
+        type: 'String',
     },
     requestId:{
         name:'Заявка, на которую выдается документ',
-        type: String,
+        type: 'RequestSelectWithSearch',
     }
 
 };

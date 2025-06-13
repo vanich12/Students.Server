@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Row, Col, Space } from 'antd';
+import { getComponentFromRegistry } from '../../../storage/componentRegistry'
 
 const rowStyle = { alignItems: 'center' };
 
@@ -7,7 +8,7 @@ const DetailsPageData = ({ items, data, editData, setIsChanged }) => {
     return (
         <Space direction="vertical" size={0} style={{ display: 'flex' }}>
             {Object.entries(items).map(([key, { name, type, formParams, params }]) => {
-                const Item = type;
+                const Item = getComponentFromRegistry(type);
                 return (
                     <Row style={rowStyle} key={key}>
                         <Col span={3}>{name}</Col>

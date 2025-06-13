@@ -10,6 +10,7 @@ import { typeEducationApi }  from './services/typeEducationApi.js';
 import { studentStatusApi }  from './services/studentStatusApi.js';
 import { kindOrderApi }  from './services/kindOrderApi.js';
 import { kindDocumentRiseQualificationApi }  from './services/kindDocumentRiseQualificationApi.js';
+import { DocumentRiseQualificationApi }  from './services/DocumentRiseQualificationApi.js';
 import { financingTypeApi }  from './services/financingTypeApi.js';
 import { feaProgramApi }  from './services/feaProgramApi.js';
 import { educationProgramApi }  from './services/educationProgramApi.js';
@@ -36,6 +37,7 @@ export default configureStore({
     [ordersApi.reducerPath]: ordersApi.reducer,
     [kindOrderApi.reducerPath]: kindOrderApi.reducer,
     [kindDocumentRiseQualificationApi.reducerPath]: kindDocumentRiseQualificationApi.reducer,
+    [DocumentRiseQualificationApi.reducerPath]: DocumentRiseQualificationApi.reducer,
     [financingTypeApi.reducerPath]: financingTypeApi.reducer,
     [feaProgramApi.reducerPath]: feaProgramApi.reducer,
     [educationProgramApi.reducerPath]: educationProgramApi.reducer,
@@ -57,6 +59,7 @@ export default configureStore({
     .concat(studentStatusApi.middleware)
     .concat(kindOrderApi.middleware)
     .concat(kindDocumentRiseQualificationApi.middleware)
+    .concat(DocumentRiseQualificationApi.middleware)
     .concat(financingTypeApi.middleware)
     .concat(feaProgramApi.middleware)
     .concat(educationProgramApi.middleware)

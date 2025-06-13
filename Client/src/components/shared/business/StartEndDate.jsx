@@ -3,10 +3,7 @@ import React from 'react';
 import BaseComponent from './baseComponents/BaseComponent.jsx';
 import { AutoComplete } from 'antd';
 
-const components = {
-    form: DefaultFormComponent,
-    edit: DefaultEditComponent,
-};
+
 
 const rules = [
     {
@@ -30,7 +27,6 @@ const StartEndDate = (props) => (
         {
             ...{ 
                 ...props,
-                components,
                 formParams,
             }
         }

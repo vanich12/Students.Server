@@ -46,6 +46,7 @@ public class FRDOReportRepository : IReportRepository<FRDOModel>
     {
         DateTime startDateTime = startDate.ToDateTime(TimeOnly.MinValue);
         DateTime endDateTime = endDate.AddDays(1).ToDateTime(TimeOnly.MinValue);
+
         var completedRequests =
             await _requestRepository.Get(x =>
                     x.DocumentRiseQualification.Date >= startDateTime &&

@@ -1,4 +1,4 @@
-import {
+﻿import {
     useGetAllAsync,
     useGetAllPagedAsync,
     useGetOneByIdAsync,
@@ -9,9 +9,9 @@ import {
 import { documentRiseQualificationModel } from '../models/index.js'
 
 export default {
-    detailsLink: 'documentRiseQualification',
+    detailsLink: 'documentRiseQualifacation',
     hasDetailsPage: false,
-    serverPaged: false,
+    serverPaged: true,
     properties: documentRiseQualificationModel,
     crud: {
         useGetAllAsync,

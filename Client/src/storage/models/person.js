@@ -11,27 +11,27 @@ import PhoneNumber from '../../components/shared/business/PhoneNumber.jsx';
 const model = {
     family: {
         name: 'Фамилия',
-        type: String,
+        type: 'String',
     },
     name: {
         name: 'Имя',
-        type: String,
+        type: 'String',
     },
     patron: {
         name: 'Отчество',
-        type: String,
+        type: 'String',
     },
     birthDate: {
         name: 'Дата рождения',
-        type: BirthDate,
+        type: 'BirthDate',
     },
     sex: {
         name: 'Пол',
-        type: Gender,
+        type: 'Gender',
     },
     age: {
         name: 'Возраст',
-        type: Age,
+        type: 'Age',
         formParams: {
             rules: [
                 {
@@ -47,39 +47,39 @@ const model = {
     },
     address: {
         name: 'Место проживания',
-        type: Address,
+        type: 'Address',
     },
     phone: {
         name: 'Номер телефона',
-        type: PhoneNumber,
+        type: 'PhoneNumber',
     },
     email: {
         name: 'E-mail',
-        type: Email,
+        type: 'Email',
     },
     nationality: {
         name: 'Гражданство',
-        type: String,
+        type: 'String',
     },
     typeEducationId: {
         name: 'Уровень образования',
-        type: EducationType,
+        type: 'EducationTypeSelect',
     },
     speciality: {
         name: 'Специальность',
-        type: String,
+        type: 'String',
     },
     iT_Experience:{
         name:'Опыт в IT',
-        type: String,
+        type: 'String',
     },
     scopeOfActivityLevelOneId: {
         name: 'Сфера деятельности ур.1',
-        type: ScopeOfActivitySelect,
+        type: 'ScopeOfActivitySelect',
     },
     scopeOfActivityLevelTwoId: {
         name: 'Сфера деятельности ур.2',
-        type: ScopeOfActivitySelect,
+        type: 'ScopeOfActivitySelect',
     },
 };
 

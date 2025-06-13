@@ -9,7 +9,6 @@ import {
     useRemoveOneAsync
 } from '../crud/groupsCrud.js'
 import { groupsModel } from '../models/index.js';
-import React from 'react';
 import EducationProgramSelect from '../../components/shared/business/selects/EducationProgramSelect.jsx'
 
 export default {
@@ -35,8 +34,8 @@ export default {
         },
         {
             title: 'Программа обучения',
-            dataIndex: 'educationProgram',
-            key: 'educationProgram',
+            dataIndex: 'educationProgramId',
+            key: 'educationProgramId',
         },
         {
             title: 'Дата начала',
